@@ -173,7 +173,7 @@ module.exports = function(node, channel) {
             console.log('** Player connected: ' + p.id + ' **');
 
             // Increment Code.
-            dk.incrementUsage(p.id);
+            dk.markInvalid(p.id);
 
             // Creating a state for reconnections.
             if (!gameState[p.id]) {
@@ -213,8 +213,8 @@ module.exports = function(node, channel) {
         node.on.pdisconnect(function(p) {
             gameState[p.id].disconnected = true;
             gameState[p.id].stage = p.stage;
-            // Free up code.
-            dk.decrementUsage(p.id);
+            // Free up code.            
+            dk.markValid(p.id);
         });
 
         // This must be done manually for now (maybe change).
