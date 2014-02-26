@@ -9,6 +9,7 @@
  */
 var Stager = module.parent.exports.Stager;
 var stepRules = module.parent.exports.stepRules;
+var settings = module.parent.exports.settings;
 
 var stager = new Stager();
 
@@ -81,6 +82,11 @@ function facecat() {
             tagTr.style.display = '';
             next.disabled = false;
             next.innerHTML = 'Next';
+            node.env('auto', function() {
+                node.timer.randomExec(function() {
+                    next.click();
+                }, 2000);
+            });
         }
 
         function displayFace() {
@@ -102,6 +108,13 @@ function facecat() {
             tagTr.style.display = 'none';
             node.emit('HIDE',  helpCats);
             order = JSUS.shuffleNodes(dlcat, JSUS.sample(0,3));
+
+            node.env('auto', function() {
+                var array = ['hface', 'nhface', 'abstract', 'other'];                
+                node.timer.randomExec(function() {
+                    W.getElementById('dt_' + array[JSUS.randomInt(0,3)]).click();
+                }, 2000);
+            });
         }
 
         function onNextFaces(faces) {
@@ -123,12 +136,12 @@ function facecat() {
             var tags, faces, obj, i, len, secondSet;
             faces = node.game.faces;
             
-            if (!faces.items || node.game.counter >= faces.items.length) {
+            if (!faces.items || node.game.counter >= (faces.items.length -1)) {
                 node.get('NEXT', onNextFaces);
             }
             else {
                 tags = tagInput.value.trim().split(',');
-                // Cleaning and adding tags to the list
+                // Cleaning and adding tags to the list.
                 for (i = 0 ; i < tags.length; i++) {
                     tags[i] = tags[i].trim();
                     addTag2List(tags[i]);
@@ -225,6 +238,11 @@ function instructionsText() {
                 sampleDiv.appendChild(img);
             }
             
+            node.env('auto', function() {
+                node.timer.randomExec(function() {
+                    next.click();
+                }, 2000);
+            });
         });
         
     });
@@ -243,6 +261,13 @@ function sample() {
     sampleDiv = W.getElementById("sample");
     instructions.style.display = 'none';
     sampleDiv.style.display = '';
+
+     node.env('auto', function() {
+         node.timer.randomExec(function() {
+             next.click();
+         }, 2000);
+     });
+
     return true;
     
 }
@@ -314,3 +339,7 @@ game.metadata = {
 game.settings = {
     publishLevel: 0
 };
+
+game.env = {
+    auto: settings.AUTO
+}

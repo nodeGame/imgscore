@@ -89,7 +89,8 @@ module.exports = function(node, channel) {
     // Second parameter makes available to the required file its properties.
     var client = channel.require(__dirname + '/includes/game.client', {
         Stager: node.Stager,
-        stepRules: node.stepRules
+        stepRules: node.stepRules,
+        settings: settings
     });
 
     var gameState = {};
@@ -197,6 +198,7 @@ module.exports = function(node, channel) {
             node.remoteSetup('game_metadata',  p.id, client.metadata);
 	    node.remoteSetup('game_settings', p.id, client.settings);
 	    node.remoteSetup('plot', p.id, client.plot);
+            node.remoteSetup('env', p.id, client.env);
 
             // Setting up the global variables in the client, if necessary.
             // node.remoteSetup('env', ... );
@@ -222,7 +224,8 @@ module.exports = function(node, channel) {
 
         node.on.preconnect(function(p) {
             var p;
-            debugger
+            
+            console.log('One player reconnected ', p.id);
 
             pState = gameState[p.id];
             if (!p) {
@@ -230,17 +233,26 @@ module.exports = function(node, channel) {
             }
             if (!pState.disconnected) {
                 // error
+                throw new Error('Player was not disconnected ', p.id); 
             }
-            pState.disconnected = false;
-            // Player will continue from where he has left.
-            gameState[p.id].resume = true;
-
-            console.log('RESUME TRUE');
-
+            
             // It is not added automatically.
             // TODO: add it automatically if we return TRUE? It must be done
             // both in the alias and the real event handler
             node.game.pl.add(p);
+
+            // Player has already finished.
+            if (pState.checkedOut) {
+                console.log('Player was already checkedOut ', p.id);
+                node.redirect('/facecat/unauth.htm', p.id);
+                return;
+            }
+
+            pState.disconnected = false;
+
+
+            // Player will continue from where he has left.
+            gameState[p.id].resume = true;
 
             connectingPlayer(p);
         });
@@ -249,7 +261,6 @@ module.exports = function(node, channel) {
         node.on('NEXT', function(msg) {
             var set, state, secondSet;
             console.log('***** Received NEXT ******');
-            debugger
             state = gameState[msg.from];
 
             console.log(state);
@@ -277,7 +288,7 @@ module.exports = function(node, channel) {
                 set.items = set.items.slice(state.pic);
             }
             else if (state.completedSets) {
-                
+                state.checkedOut = true;
                 // Player has rated 2 sets (about 60 paitings).
                 node.remoteCommand('step', msg.from);
                 return;
@@ -308,7 +319,7 @@ module.exports = function(node, channel) {
             console.log(state)
             // Update the counter of the last categorized pic.
             state.pic = msg.data.round;
-            if (state.pic === state.setLength) {
+            if (state.pic === (state.setLength - 1)) {
                 ++state.completedSets;
                 state.newSetNeeded = true;
             }
