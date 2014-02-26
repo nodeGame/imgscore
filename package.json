@@ -1,7 +1,7 @@
 {
-  "name": "facecat",
-  "description": "Tags faces",
-  "version": "0.0.2",
+  "name": "imagecat",
+  "description": "Tags images",
+  "version": "0.0.3",
   "author": {
     "name": "Stefano Balietti",
     "email": "sbalietti@ethz.ch",
