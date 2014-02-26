@@ -1,0 +1,16 @@
+*.nddb
+_*
+Session.vim
+*.tar.gz
+~*
+*~
+*.tar.gz
+
+\#*
+.\#*
+
+server/csv
+server/data
+server/descil.conf.js
+
+faces
