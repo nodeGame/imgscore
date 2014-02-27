@@ -61,7 +61,7 @@ module.exports = function(node, channel, room) {
             
             console.log('MTID');
             
-            // M-Turk id
+            // M-Turk id.
             mtid = msg.data;
 	    
             if ('string' !== typeof mtid) {

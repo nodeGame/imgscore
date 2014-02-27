@@ -47,9 +47,10 @@ function facecat() {
         };
 
         var chosen_cat, order;
+        var time2cats, time2tags;
 
         node.on('radio', function(radio) {
-            console.log(radio)
+            time2cats = node.timer.getTimeSince('cats_displayed');
             chosen_cat = radio.id.substr(3);
             console.log('chosen: ' + chosen_cat);
             selectedSpan.innerHTML = translate_radio[chosen_cat];
@@ -80,6 +81,7 @@ function facecat() {
             tagTr.style.display = '';
             next.disabled = false;
             next.innerHTML = 'Next';
+            node.timer.setTimestamp('tags_displayed');
             node.env('auto', function() {
                 node.timer.randomExec(function() {
                     var tags;
@@ -105,8 +107,8 @@ function facecat() {
             var imgPath;
             imgPath = node.game.faces.items[++node.game.counter].path;
             faceImg.src = '/facecat/faces/' + imgPath;
-            console.log(imgPath);
-            
+            // console.log(imgPath);
+            node.timer.setTimestamp('cats_displayed');
             displayCats()
         }
         
@@ -115,7 +117,7 @@ function facecat() {
             if (chosen_cat) {
                 W.getElementById('radio_' + chosen_cat).checked = false;
             }
-            next.disabled = true;
+            // next.disabled = true;
             next.innerHTML = 'Select a category';
             tagTr.style.display = 'none';
             node.emit('HIDE',  helpCats);
@@ -139,6 +141,7 @@ function facecat() {
             else {
                 console.log(faces);
             }
+            
             node.game.counter = -1;
             node.game.faces = faces;
             
@@ -147,8 +150,12 @@ function facecat() {
         
         function askForNext() {
             var tags, faces, obj, i, len, secondSet;
+            time2tags = node.timer.getTimeSince('tags_displayed');
+
             faces = node.game.faces;
-            
+            next.disabled = true;
+
+            // TODO: check this condition. The last face is not rated.
             if (!faces.items || node.game.counter >= (faces.items.length -1)) {
                 node.get('NEXT', onNextFaces);
             }
@@ -168,7 +175,9 @@ function facecat() {
                     count: faces.count,
                     cat: chosen_cat,
                     tags: tags,
-                    order: order
+                    order: order,
+                    time2cats: time2cats,
+                    time2tags: time2tags
                 };
                 node.set('cat', obj);
                 
@@ -242,15 +251,15 @@ function instructionsText() {
         node.get('sample', function(sample) {
             var i = -1, len = sample.length;
             var imgPath, img;
-            console.log(sample);
+            // console.log(sample);
             for(; ++i < len;){
                 imgPath = sample[i].path;
                 img = document.createElement('img');
                 img.src = '/facecat/faces/' + imgPath;
                 img.className = 'imgSample';
                 sampleDiv.appendChild(img);
-            }
-            
+            }                         
+
             node.env('auto', function() {
                 node.timer.randomExec(function() {
                     next.click();
@@ -267,22 +276,36 @@ function instructionsText() {
 function sample() {
     console.log('*** sample ! ***');
     var sampleDiv, instructions, next;
-    
+    var doneTimer, doneTimerSpan;
+
     next = W.getElementById("doneButton");
-    next.disabled = false;
     instructions = W.getElementById("instructions");
     sampleDiv = W.getElementById("sample");
     instructions.style.display = 'none';
     sampleDiv.style.display = '';
+    doneTimerSpan = W.getElementById("doneTimer");
+    
+    doneTimer = node.widgets.add('VisualTimer', doneTimerSpan, {
+        milliseconds: 90000,
+        timeup: 'CAN_DO_NEXT',
+        name: 'candonext',
+        fieldset: null
+    });    
+    doneTimer.start();
 
-     node.env('auto', function() {
+    node.on('CAN_DO_NEXT', function() {
+        next.disabled = false;
+    });   
+
+    node.env('auto', function() {
          node.timer.randomExec(function() {
+             doneTimer.stop();
+             next.disabled = false;
              next.click();
          }, 2000);
-     });
+    });
 
-    return true;
-    
+    return true;    
 }
 
 function thankyou() {

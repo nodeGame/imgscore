@@ -336,12 +336,17 @@ module.exports = function(node, channel) {
             
             state = gameState[msg.from];
             console.log(state)
+
+            // Add the setCounter in the received data.
+            msg.data.setCounter = state.completedSets + 1;
+
             // Update the counter of the last categorized pic.
             state.pic = msg.data.round;
             if (state.pic === (state.setLength - 1)) {
                 ++state.completedSets;
                 state.newSetNeeded = true;
-            }
+            }           
+
             mdbWrite.store(msg.data);
         });
 
