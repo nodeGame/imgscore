@@ -13,6 +13,8 @@ module.exports = function(node, channel) {
 
     var path = require('path');
     var J = require('JSUS').JSUS;
+    var ngc = require('nodegame-client');
+    var GameStage = ngc.GameStage;
 
     // If NO authorization is found, local codes will be used,
     // and assigned automatically.
@@ -94,6 +96,17 @@ module.exports = function(node, channel) {
     });
 
     var gameState = {};
+
+    // Sends the BONUS msg to the client.
+    function goodbye(code) {        
+        setTimeout(function() {
+            // Send Win code;
+            node.say('WIN', code.AccessCode, {
+                win: settings.BONUS,
+                exitcode: code.ExitCode
+            });
+        }, 200);
+    }
 
     // Functions.
 
@@ -200,11 +213,20 @@ module.exports = function(node, channel) {
 	    node.remoteSetup('plot', p.id, client.plot);
             node.remoteSetup('env', p.id, client.env);
 
-            // Setting up the global variables in the client, if necessary.
-            // node.remoteSetup('env', ... );
-
-            // Start the game on the client.
-            node.remoteCommand('start', p.id);
+            // If players has been checked out already, just send him to
+            // the last stage;
+            if (gameState[p.id].checkedOut) {           
+                console.log('Player was already checkedOut ', p.id);
+                node.remoteCommand('start', p.id, {
+                    startStage: new GameStage('2.1.2')
+                });
+                goodbye(dk.codes.id.get(p.id));
+                return;            
+            }
+            else {
+                // Start the game on the client.
+                node.remoteCommand('start', p.id);
+            }
         }
 
 
@@ -223,7 +245,7 @@ module.exports = function(node, channel) {
         });
 
         node.on.preconnect(function(p) {
-            var p;
+            var p, code;
             
             console.log('One player reconnected ', p.id);
 
@@ -240,16 +262,8 @@ module.exports = function(node, channel) {
             // TODO: add it automatically if we return TRUE? It must be done
             // both in the alias and the real event handler
             node.game.pl.add(p);
-
-            // Player has already finished.
-            if (pState.checkedOut) {
-                console.log('Player was already checkedOut ', p.id);
-                node.redirect('/facecat/unauth.htm', p.id);
-                return;
-            }
-
+            
             pState.disconnected = false;
-
 
             // Player will continue from where he has left.
             gameState[p.id].resume = true;
@@ -260,6 +274,8 @@ module.exports = function(node, channel) {
         // Sends the faces (reply to a GET request from client).
         node.on('NEXT', function(msg) {
             var set, state, secondSet;
+            var code;
+
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
@@ -276,7 +292,6 @@ module.exports = function(node, channel) {
 
             // This is a reconnection.
             if (state.resume) {
-                console.log('WTF');
                 node.remoteAlert('A previous unfinished game session has ' +
                                  'been detected. You will continue from ' +
                                  'the last image you saw.', msg.from);
@@ -287,15 +302,19 @@ module.exports = function(node, channel) {
                 // Since pictures are 1-based, we do not need to do -1.
                 set.items = set.items.slice(state.pic);
             }
-            else if (state.completedSets) {
+            // Player has rated 2 sets (about 60 paitings).
+            else if (state.completedSets >= settings.NSETS) {
                 state.checkedOut = true;
-                // Player has rated 2 sets (about 60 paitings).
+                code = dk.codes.id.get(msg.from);
+                dk.checkOut(code.AccessCode, code.ExitCode, settings.BONUS);
                 node.remoteCommand('step', msg.from);
+                goodbye(code);
                 return;
             }
-
-            // Update setLength in global state.
-            state.setLength = set.items.length;
+            else {
+                // The total number of pictures  must be set for the first time.
+                state.setLength = set.items.length;
+            }
 
             console.log('COUNTER ', counter);
             console.log('SET LENGTH ', set ? set.items.length : 'no set');

@@ -33,8 +33,6 @@ stager.setOnInit(function() {
 
 ///// STAGES and STEPS
 
-var REPEAT = 2;
-
 function facecat() {
     console.log('facecat');
     W.loadFrame('/facecat/html/facepage.htm', function() {
@@ -274,7 +272,17 @@ function sample() {
 
 function thankyou() {
     console.log('thank you.');
-    W.loadFrame('/facecat/html/thankyou.html');
+    
+    W.loadFrame('/facecat/html/thankyou.html', function() {
+        node.on.data('WIN', function(msg) {
+            var win, exitcode, codeErr;
+            codeErr = 'ERROR (code not found)';
+            win = msg.data && msg.data.win || 0;
+            exitcode = msg.data && msg.data.exitcode || codeErr;
+	    W.writeln('Your bonus in this game is: ' + win);
+            W.writeln('Your exitcode is: ' + exitcode);
+	});
+    });
 }
 
 // Creating stages and steps
@@ -313,7 +321,7 @@ stager.addStage({
 
 stager.init()
     .next('instructions')
-    .repeat('facecat', REPEAT)
+    .repeat('facecat', settings.NSETS)
     .next('thankyou')
     .gameover();
 

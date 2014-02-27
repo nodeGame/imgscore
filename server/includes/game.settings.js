@@ -20,16 +20,19 @@ module.exports = {
     // Session Counter start from.
     SESSION_ID: 100,
 
+    // Number of sets of pictures to rate per player.
+    NSETS: 2,
+
     // Payment settings. *
 
     // Divider ECU / DOLLARS *
-    FIXE_BONUS: 0.5,
+    BONUS: 0.5,
 
     // DEBUG.
     DEBUG: false,
 
     // AUTO-PLAY.
-    AUTO: true,
+    AUTO: false,
 
     // DATABASE.
     DB: 'FILE', // FILE, MONGODB
