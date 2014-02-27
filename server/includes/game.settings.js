@@ -32,13 +32,13 @@ module.exports = {
     DEBUG: false,
 
     // AUTO-PLAY.
-    AUTO: false,
+    AUTO: true,
 
     // DATABASE.
     DB: 'FILE', // FILE, MONGODB
 
     // AUTHORIZATION.
-    AUTH: 'LOCAL' // MTURK, LOCAL, NO.
+    AUTH: 'NO' // MTURK, LOCAL, NO.
 
     // * = if you change this you need to update instructions and quiz
 };

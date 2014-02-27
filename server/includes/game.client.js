@@ -82,6 +82,20 @@ function facecat() {
             next.innerHTML = 'Next';
             node.env('auto', function() {
                 node.timer.randomExec(function() {
+                    var tags;
+                    if (Math.random() > 0.5) {
+                        if (Math.random() > 0.5) {
+                            tagInput.value = Math.random().toFixed(2);
+                        }
+                        else {
+                            tags = node.game.previousTags;
+                            for (var i in tags) {
+                                if (Math.random() > 0.7) {
+                                    tagInput.value += tags[i] + ', ';
+                                }
+                            }
+                        }
+                    }   
                     next.click();
                 }, 2000);
             });
@@ -108,9 +122,10 @@ function facecat() {
             order = JSUS.shuffleNodes(dlcat, JSUS.sample(0,3));
 
             node.env('auto', function() {
-                var array = ['hface', 'nhface', 'abstract', 'other'];                
+                var array = ['hface', 'nhface', 'abstract', 'other'];
+                var choice = W.getElementById('dt_' + array[JSUS.randomInt(0,3)]);
                 node.timer.randomExec(function() {
-                    W.getElementById('dt_' + array[JSUS.randomInt(0,3)]).click();
+                    node.emit('radio', choice);
                 }, 2000);
             });
         }
