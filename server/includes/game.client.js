@@ -149,17 +149,14 @@ function facecat() {
         }
         
         function askForNext() {
-            var tags, faces, obj, i, len, secondSet;
+            var tags, faces, obj, i, len, secondSet, counter;
             time2tags = node.timer.getTimeSince('tags_displayed');
 
+            counter = node.game.counter;
             faces = node.game.faces;
             next.disabled = true;
 
-            // TODO: check this condition. The last face is not rated.
-            if (!faces.items || node.game.counter >= (faces.items.length -1)) {
-                node.get('NEXT', onNextFaces);
-            }
-            else {
+            if (counter !== -1 && counter < faces.items.length) {
                 tags = tagInput.value.trim().split(',');
                 // Cleaning and adding tags to the list.
                 for (i = 0 ; i < tags.length; i++) {
@@ -169,9 +166,9 @@ function facecat() {
                 obj = {
                     session: faces.id, 
                     player: faces.player,
-                    round: faces.items[node.game.counter].round,
+                    round: faces.items[counter].round,
                     morn: faces.morn,
-                    path: faces.items[node.game.counter].path,
+                    path: faces.items[counter].path,
                     count: faces.count,
                     cat: chosen_cat,
                     tags: tags,
@@ -180,7 +177,12 @@ function facecat() {
                     time2tags: time2tags
                 };
                 node.set('cat', obj);
-                
+            }
+
+            if (!faces.items || counter >= (faces.items.length -1)) {
+                node.get('NEXT', onNextFaces);
+            }
+            else {                              
                 displayFace();
             }
         }
@@ -359,7 +361,7 @@ stager.addStage({
 
 stager.init()
     .next('instructions')
-    .repeat('facecat', settings.NSETS)
+    .next('facecat')
     .next('thankyou')
     .gameover();
 

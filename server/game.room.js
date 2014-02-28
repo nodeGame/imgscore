@@ -342,9 +342,11 @@ module.exports = function(node, channel) {
 
             // Update the counter of the last categorized pic.
             state.pic = msg.data.round;
-            if (state.pic === (state.setLength - 1)) {
+            if (state.pic === state.setLength) {
                 ++state.completedSets;
-                state.newSetNeeded = true;
+                if (state.completedSets <= settings.NSETS) {
+                    state.newSetNeeded = true;
+                }
             }           
 
             mdbWrite.store(msg.data);
