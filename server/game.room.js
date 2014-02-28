@@ -57,17 +57,32 @@ module.exports = function(node, channel) {
     });
 
     // Loads the sets of faces to send to players.
-    var sets;
+    var sets, randomSets;
+
     mdbLoad.connect(function() {
         var db = mdbLoad.getDbObj();
         var collection = db.collection('facerank_sets_ordered');
         collection.find().toArray(function(err, data) {
-            console.log('data in facerank_col:', data[0]);
+            console.log('data in facerank_sets_ordered: ', data[0]);
             console.log();
             sets = data;
             mdbLoad.disconnect();
         });
     });
+
+//    mdbLoad.connect(function() {
+//        var db = mdbLoad.getDbObj();
+//        var c = db.collection('facerank_col');
+//        var 
+//        c.find().limit( -1 ).skip( 35 * c.count()).toArray(function(err, data) {
+//            console.log('data in facerank_sets_ordered: ', data);
+//            console.log();
+//           
+//            mdbLoad.disconnect();
+//        });
+//    });
+
+
 
     // Open the collection where the categories will be stored.
     var mdbWrite = ngdb.getLayer('MongoDB', {
@@ -82,7 +97,7 @@ module.exports = function(node, channel) {
 
     // Every new connecting player will receive a new set of faces, indexed
     // by counter; also on(NEXT) a new set will be sent.
-    var counter = 0;
+    var counter = settings.SET_COUNTER;
 
     // Creating the Stager object to define the game.
     var stager = new node.Stager();
