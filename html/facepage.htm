@@ -14,7 +14,7 @@
 <tr id="trcat">
   <td id="td_radio">
     Which category do you find more adequate to describe the picture above? 
-    <a href="#" id="helpCatsLink" onclick="javascript:parent.node.emit('helpCats');">(show help)</a>
+    <em><a href="#" id="helpCatsLink" onclick="javascript:parent.node.emit('helpCats');">Show help</a>.</em>
     <span id="helpCats" style="display: none">
        <dl id="helpCatsDl" style="width: 635px">
         <dt>Human face:</dt>
@@ -45,22 +45,21 @@
 <tr id="trtags">
   <td>
     <p>
-    You can now specify what type of <strong><span id="radio_selected"></span></strong> this is.
-    <a href="#" onclick="javascript:parent.node.emit('undo_radio');">(Modify choice)</a>
-    <br/>
+      You have chosen <strong><span id="radio_selected"></span></strong>.
+      <em><a href="#" onclick="javascript:parent.node.emit('undo_radio');">Modify choice</a>.</em>
     </p>
-    <label id="label" for="tag" style="width: 635px">
-      Type some words (tags) to describe the salient features of the image. <br/>
-      Good tags help to distinguish groups of similar images within the <em style="text-decoration:underline;">same</em> category.
-      <br/>
-       If you have used a tag in one image, please be consistent and use the same tag for all images containig the same salient feature.
-      <br/><br/>
-      Do not write sentences, just nouns, adjectives, or adjective plus noun. Use comma (,) as separator.
-    </label>
+    Type some words (tags) to describe the salient features of the image. 
+    <em><a id="helpTagsLink" href="#" onclick="javascript:parent.node.emit('helpTags');">Show Help</a></em>.
     <br/><br/>
+    <p id="helpTags" style="display: none">
+      Good tags help to distinguish groups of similar images within the <em style="text-decoration:underline;">same</em> category.
+      <br/><br/>
+       If you have used a tag in one image, please be consistent and use the same tag for all images containig the same salient feature.     
+    </p>
+    Do not write sentences, just nouns, adjectives, or adjective plus noun. Use comma (,) as separator.    
     <input type="text" id="tag" class="tag"/>
     <br/><br/>
-    Previous tags by you: 
+    Previous tags by you (click to select): 
     <ul id="previousTags"></ul>
   </td>
 </tr>

@@ -37,6 +37,7 @@ function facecat() {
     console.log('facecat');
     W.loadFrame('/facecat/html/facepage.htm', function() {
         var next, faceImg, td, dlcat, tagTr, tagInput, previousTags;
+        var helpTags, helpTagsLink;
         var helpCats, helpCatsLink;
 
         var translate_radio = {
@@ -60,6 +61,7 @@ function facecat() {
         node.on('undo_radio', function() {
             console.log('undoing ' + chosen_cat);
             chosen_cat = null;
+            next.disabled = true;
             selectedSpan.innerHTML = '';
             displayCats();
         });
@@ -67,11 +69,22 @@ function facecat() {
         node.on('helpCats', function() {
             if (helpCats.style.display === 'none') {
                 helpCats.style.display = '';
-                helpCatsLink.innerHTML = '(hide help)';
+                helpCatsLink.innerHTML = 'Hide help';
             }
             else {
                 helpCats.style.display = 'none';
-                helpCatsLink.innerHTML = '(show help)';
+                helpCatsLink.innerHTML = 'Show help';
+            }
+        });
+
+        node.on('helpTags', function() {           
+            if (helpTags.style.display === 'none') {
+                helpTags.style.display = '';
+                helpTagsLink.innerHTML = 'Hide help';
+            }
+            else {
+                helpTags.style.display = 'none';
+                helpTagsLink.innerHTML = 'Show help';
             }
         });
 
@@ -82,6 +95,11 @@ function facecat() {
             next.disabled = false;
             next.innerHTML = 'Next';
             node.timer.setTimestamp('tags_displayed');
+            // Hide help at the beginning
+            if (helpTags.style.display === '') {
+                helpTags.style.display = 'none';
+                helpTagsLink.innerHTML = 'Show help';
+            }
             node.env('auto', function() {
                 node.timer.randomExec(function() {
                     var tags;
@@ -120,7 +138,13 @@ function facecat() {
             // next.disabled = true;
             next.innerHTML = 'Select a category';
             tagTr.style.display = 'none';
-            node.emit('HIDE',  helpCats);
+            
+            // Hide help at the beginning.
+            if (helpCats.style.display === '') {
+                helpCats.style.display = 'none';
+                helpCatsLink.innerHTML = 'Show help';
+            }
+
             order = JSUS.shuffleNodes(dlcat, JSUS.sample(0,3));
 
             node.env('auto', function() {
@@ -228,6 +252,9 @@ function facecat() {
         tagTr = W.getElementById('trtags');
         tagInput = W.getElementById('tag');
         previousTags = W.getElementById('previousTags');
+
+        helpTags = W.getElementById('helpTags');
+        helpTagsLink = W.getElementById('helpTagsLink');
 
         // Click!
         next.onclick = askForNext;

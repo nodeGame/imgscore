@@ -1,6 +1,7 @@
 /* facecat table */
 
 table#facecat_table {
+    width: 800px;
     border: 3px solid #CCC;
     border-spacing: 0;
     margin: auto;
@@ -75,8 +76,12 @@ div#container_done {
     background: white;
 }
 
+ul#previousTags {
+    width: 780px;
+}
+
 ul#previousTags li {
-    display: inline;
+    display: inline-block;
     list-style-type: none;
     padding-right: 10px;
 }
@@ -90,4 +95,10 @@ button {
     font-size: 18px;
     width: 98%;
     height: 40px;
+}
+
+p#helpTags {
+    width: 635px;
+    margin-top: 10px;
+    clear: both;
 }
