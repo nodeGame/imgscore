@@ -61,28 +61,25 @@ module.exports = function(node, channel) {
 
     mdbLoad.connect(function() {
         var db = mdbLoad.getDbObj();
+
+        // Load GAME SETS.
         var collection = db.collection('facerank_sets_ordered');
         collection.find().toArray(function(err, data) {
-            console.log('data in facerank_sets_ordered: ', data[0]);
+            console.log('data in facerank_sets_ordered: ', data.length);
             console.log();
             sets = data;
-            mdbLoad.disconnect();
         });
+
+        // Load SAMPLE SETS.
+        collection = db.collection('facecats_sets_random');
+        collection.find().toArray(function(err, data) {
+            console.log('data in facerank_sets_random: ', data.length);
+            console.log();
+            randomSets = data;
+            mdbLoad.disconnect();
+        });   
+
     });
-
-//    mdbLoad.connect(function() {
-//        var db = mdbLoad.getDbObj();
-//        var c = db.collection('facerank_col');
-//        var 
-//        c.find().limit( -1 ).skip( 35 * c.count()).toArray(function(err, data) {
-//            console.log('data in facerank_sets_ordered: ', data);
-//            console.log();
-//           
-//            mdbLoad.disconnect();
-//        });
-//    });
-
-
 
     // Open the collection where the categories will be stored.
     var mdbWrite = ngdb.getLayer('MongoDB', {
@@ -98,6 +95,7 @@ module.exports = function(node, channel) {
     // Every new connecting player will receive a new set of faces, indexed
     // by counter; also on(NEXT) a new set will be sent.
     var counter = settings.SET_COUNTER;
+    var counterSample = settings.SAMPLE_SET_COUNTER;
 
     // Creating the Stager object to define the game.
     var stager = new node.Stager();
@@ -110,6 +108,7 @@ module.exports = function(node, channel) {
         settings: settings
     });
 
+    // State of all players.
     var gameState = {};
 
     // Sends the BONUS msg to the client.
@@ -121,6 +120,28 @@ module.exports = function(node, channel) {
                 exitcode: code.ExitCode
             });
         }, 200);
+    }
+
+    function checkAndCreateState(pId) {
+        // Creating a state for reconnections.
+        if (!gameState[pId]) {
+            gameState[pId] = {
+                randomSetId: null,
+                // The set of pictures to evaluate.
+                setId: null,
+                // The length of the set (needed to know when to send
+                // a new one).
+                setLength: null,
+                // Current picture of the set being categorized.
+                pic: 0,
+                // Flag: is player reconnecting.
+                resume: false,
+                // Counter: how many sets already completed.
+                completedSets: 0,
+                // User has just finished a set and will need a new one
+                newSetNeeded: true
+            };
+        }
     }
 
     // Functions.
@@ -203,24 +224,7 @@ module.exports = function(node, channel) {
             // Increment Code.
             dk.markInvalid(p.id);
 
-            // Creating a state for reconnections.
-            if (!gameState[p.id]) {
-                gameState[p.id] = {
-                    // The set of pictures to evaluate.
-                    setId: null,
-                    // The length of the set (needed to know when to send
-                    // a new one).
-                    setLength: null,
-                    // Current picture of the set being categorized.
-                    pic: 0,
-                    // Flag: is player reconnecting.
-                    resume: false,
-                    // Counter: how many sets already completed.
-                    completedSets: 0,
-                    // User has just finished a set and will need a new one
-                    newSetNeeded: true
-                };
-            }
+            checkAndCreateState(p.id);
 
 	    // Setting metadata, settings, and plot
             node.remoteSetup('game_metadata',  p.id, client.metadata);
@@ -340,7 +344,12 @@ module.exports = function(node, channel) {
         // Client is requesting a random sample.
         node.on('sample', function(msg) {
             console.log('**** Received a get SAMPLE! ***');
-            return sets[counter].items.concat(sets[(counter+1)].items);
+            
+            checkAndCreateState(msg.from);
+            if (!gameState.randomSetId) {
+                gameState.randomSetId = counterSample++;
+            }
+            return randomSets[gameState.randomSetId].set;
         });
 
         // Client has categorized an image.

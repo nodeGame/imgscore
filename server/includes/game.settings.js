@@ -26,6 +26,9 @@ module.exports = {
     // Serve sets of images sequentally from set X (it is zero-indexed).
     SET_COUNTER: 0,
 
+    // Serve random samples of images sequentially from sample X.
+    SAMPLE_SET_COUNTER: 0,
+
     // Payment settings. *
 
     // Divider ECU / DOLLARS *
@@ -35,7 +38,7 @@ module.exports = {
     DEBUG: false,
 
     // AUTO-PLAY.
-    AUTO: true,
+    AUTO: false,
 
     // DATABASE.
     DB: 'FILE', // FILE, MONGODB

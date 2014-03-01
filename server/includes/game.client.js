@@ -255,7 +255,7 @@ function instructionsText() {
             var imgPath, img;
             // console.log(sample);
             for(; ++i < len;){
-                imgPath = sample[i].path;
+                imgPath = sample[i];
                 img = document.createElement('img');
                 img.src = '/facecat/faces/' + imgPath;
                 img.className = 'imgSample';

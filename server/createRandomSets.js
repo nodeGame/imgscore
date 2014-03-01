@@ -1,5 +1,6 @@
 var J = require('JSUS').JSUS;
 var path = require('path');
+var fs = require('fs');
 var ngc = require('nodegame-client');
 var node = ngc.getClient();
 node.setup('nodegame', {
@@ -18,22 +19,24 @@ var mdb = ngdb.getLayer('MongoDB', {
 var PICS4SET = 60;
 var NSETS = 400;
 
-//  // Open the collection where the categories will be stored.
-//var mdbWrite = ngdb.getLayer('MongoDB', {
-//    dbName: 'facerank_db',
-//    collectionName: 'facecats_sets_random'
-//});
+// Open the collection where the categories will be stored.
+var mdbWrite = ngdb.getLayer('MongoDB', {
+    dbName: 'facerank_db',
+    collectionName: 'facecats_sets_random'
+});
 
 // Opening the database for writing.
-//mdbWrite.connect(function(){
+mdbWrite.connect(function() {
 
     mdb.connect(function() {
-        
-        var i, j, item;
-        var totItems;
+        var db, collection;
+        var i, j, idx, item;
+        var out, totItems;
 
-        var db = mdb.getDbObj();
-        var collection = db.collection('facerank_col');
+        out = [];
+        db = mdb.getDbObj();
+        collection = db.collection('facerank_col');
+
         collection.find().toArray(function(err, data) {
             totItems = data.length;
             console.log('data in facerank_sets_ordered: ', data[0]);
@@ -46,20 +49,25 @@ var NSETS = 400;
                 j = -1;
                 set = [];
                 for ( ; ++j < PICS4SET ; ) {
-                    debugger
-                    item = data[J.randomInt(0, totItems)];
-                    
-                    console.log(item);
-                    //out.push(item);
+                    idx = J.randomInt(-1, (totItems-1));
+                    item = data[idx];
+                    // console.log(item);
+                    if ('undefined' === typeof item) {
+                        debugger
+                    }
+                    set.push(item.path);
                 }
-                //mdbWrite.store(out);
-            } 
+                debugger
+                mdbWrite.store( { set : set } );
+                // out.push(set);
+            }
+//            console.log(out.length);
+//            console.log(out[9].length);
+
+            mdb.disconnect();
+            mdbWrite.disconnect();
         });
 
-
-
-
-   
     });
 
-//});
+});
