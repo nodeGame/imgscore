@@ -1,10 +1,16 @@
 <!doctype html>
+<!-- JQUERY UI STARTS -->
+<link type="text/css" href="../js/jqueryui/css/ui-lightness/jquery-ui-1.8.20.custom.css" rel="Stylesheet" />
+<script src="../js/jqueryui/js/jquery-1.7.2.min.js" charset="utf-8"></script>
+<script src="../js/jqueryui/js/jquery-ui-1.8.20.custom.min.js" charset="utf-8"></script>
+<!-- JQUERY UI ENDS -->
 
 <!-- Loading  nodeGame libraries and CSS -->
 <!-- CSS needs to be reloaded in each iframe -->
 <link rel='stylesheet' href='/stylesheets/player.css'></link>
 <link rel='stylesheet' href='/facecat/css/main.css'></link>
 <!-- end -->
+
 
 <body>
 <table id="facecat_table">
@@ -16,51 +22,21 @@
     Which category do you find more adequate to describe the picture above? 
     <em><a href="#" id="helpCatsLink" onclick="javascript:parent.node.emit('helpCats');">Show help</a>.</em>
     <span id="helpCats" style="display: none">
-       <dl id="helpCatsDl" style="width: 635px">
-        <dt>Human face:</dt>
-        <dd>An image resembling a human face. Some traits can be missing, or be slightly distorted, or the face might look overall more like a caricature, or a cartooned version of a face.</dd>
-
-        <dt>Non-human face:</dt>
-        <dd>An image having some, or all, the characteristic traits of a face, but so distorted, or out of the normal positions (for example with the mouth above the eyes), that it cannot be human. For example, fantasy, animal, or alien faces would rather fit here than in the category above.</dd>
-
-        <dt>Any other known object or shape:</dt>
-        <dd>An image resembling a known object or shape, but not a face. For example, a car, a kitchen tool, or a full body - containing a face - would belong to this category. The image does not need to be a close representation of the object, but can just remind it.</dd>
-
-        <dt>Abstract lines:</dt>
-        <dd>An image not belonging to any of the categories above goes here.</dd>
-
-      </dl>
+      Express a quality judgement on the paintings just made by the subjects of the study. Move the slider on a scale from 0 to 10,  where 
+      <ul>
+        <li> 0 (zero) means <em>complete dislike</em> </li>
+        <li> 5 (five) means that you are <em>indifferent</em> </li>
+        <li> 10 (nine) means <em>complete like</em> </li>
+      </ul>
     </span>
-    <radio group="category_Left" id="radiocat">
-      <dl id="dlcat">
-        <dt id="dt_hface" onclick="javascript:parent.node.emit('radio', this);"><input id="radio_hface"type="radio" name="category">Human face</input></dt>
-        <dt id="dt_nhface" onclick="javascript:parent.node.emit('radio', this);"><input type="radio" name="category" id="radio_nhface">Non-human face</input></dt>
-        <dt id="dt_abstract" onclick="javascript:parent.node.emit('radio', this);"><input type="radio" id="radio_abstract" name="category">Abstract lines</input></dt>
-        <dt id="dt_other"  onclick="javascript:parent.node.emit('radio', this);"><input type="radio" id="radio_other" name="category">Any other known object or shape</input></dt>
-      </dl>
-    </radio>
   </td>
  
 </tr>
-<tr id="trtags">
-  <td>
-    <p>
-      You have chosen <strong><span id="radio_selected"></span></strong>.
-      <em><a href="#" onclick="javascript:parent.node.emit('undo_radio');">Modify choice</a>.</em>
-    </p>
-    Type some words (tags) to describe the salient features of the image. 
-    <em><a id="helpTagsLink" href="#" onclick="javascript:parent.node.emit('helpTags');">Show Help</a></em>.
-    <br/><br/>
-    <p id="helpTags" style="display: none">
-      Good tags help to distinguish groups of similar images within the <em style="text-decoration:underline;">same</em> category.
-      <br/><br/>
-       If you have used a tag in one image, please be consistent and use the same tag for all images containig the same salient feature.     
-    </p>
-    Do not write sentences, just nouns, adjectives, or adjective plus noun. Use comma (,) as separator.    
-    <input type="text" id="tag" class="tag"/>
-    <br/><br/>
-    Previous tags by you (click to select): 
-    <ul id="previousTags"></ul>
+<tr>
+  <td id="evaTd">
+    <div id="slider"></div><br/>
+    <label for="eva">Your current evaluation:</label>
+    <input id="eva" type="text" disabled="disabled" style="border:0; color:#f6931f; font-weight:bold; background: white; width: 50px"/>
   </td>
 </tr>
 <tr>

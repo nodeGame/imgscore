@@ -1,5 +1,5 @@
 /**
- * # Waiting Room for Face categorization Game
+ * # Waiting Room for Face Ranking Game
  * Copyright(c) 2014 Stefano Balietti
  * MIT Licensed
  *
@@ -84,7 +84,7 @@ module.exports = function(node, channel) {
     // Open the collection where the categories will be stored.
     var mdbWrite = ngdb.getLayer('MongoDB', {
         dbName: 'facerank_db',
-        collectionName: 'facecats'
+        collectionName: 'facescores'
     });
 
     // Opening the database for writing.
@@ -353,7 +353,7 @@ module.exports = function(node, channel) {
         });
 
         // Client has categorized an image.
-        node.on.data('cat',function(msg) {
+        node.on.data('score',function(msg) {
             var state;
             if (!msg.data) return;
             console.log('**** Received a CAT! ' + msg.data.round + '***');
