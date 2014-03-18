@@ -8,35 +8,52 @@
 <!-- Loading  nodeGame libraries and CSS -->
 <!-- CSS needs to be reloaded in each iframe -->
 <link rel='stylesheet' href='/stylesheets/player.css'></link>
-<link rel='stylesheet' href='/facecat/css/main.css'></link>
+<link rel='stylesheet' href='/facerank/css/main.css'></link>
 <!-- end -->
-
 
 <body>
 <table id="facecat_table">
 <tr>
   <td id="td_face"><img class="face" id="face" src="/facecat/faces/loading.gif" /></td>
 </tr>
-<tr id="trcat">
-  <td id="td_radio">
-    Which category do you find more adequate to describe the picture above? 
-    <em><a href="#" id="helpCatsLink" onclick="javascript:parent.node.emit('helpCats');">Show help</a>.</em>
-    <span id="helpCats" style="display: none">
-      Express a quality judgement on the paintings just made by the subjects of the study. Move the slider on a scale from 0 to 10,  where 
-      <ul>
-        <li> 0 (zero) means <em>complete dislike</em> </li>
-        <li> 5 (five) means that you are <em>indifferent</em> </li>
-        <li> 10 (nine) means <em>complete like</em> </li>
-      </ul>
-    </span>
+<tr id="tr_slider">
+  <td id="td_slider">
+    Rank the image above on a scale from 0 (lowest) to 10 (highest).
+    <br/>
+    In your evaluation, <strong>do not</strong> consider the color of the lines, but just the shapes and figures they form.
   </td>
  
 </tr>
 <tr>
   <td id="evaTd">
-    <div id="slider"></div><br/>
-    <label for="eva">Your current evaluation:</label>
-    <input id="eva" type="text" disabled="disabled" style="border:0; color:#f6931f; font-weight:bold; background: white; width: 50px"/>
+    <div id="div_overall">
+      <label for="eva_overall"><strong>Overall Appeal or Quality:</strong></label>       
+      <span style="width:50%; display: inline-block"><div id="slider_overall"></div></span>
+      <input id="eva_overall" type="text" disabled="disabled" style="text-align: center; border:0; color:#f6931f; font-weight:bold; background: white; width: 50px"/>
+      <br/><br/>
+    </div>
+
+    <div id="div_creativity">
+      <label for="eva_creativity"><strong>Creativity:</strong></label>
+      <span style="width:50%; display: inline-block"><div id="slider_creativity"></div></span>
+      <input id="eva_creativity" type="text" disabled="disabled" style="text-align: center; border:0; color:#f6931f; font-weight:bold; background: white; width: 50px"/>
+      <br/><br/> 
+    </div>
+
+    <div id="div_face">
+      <label for="eva_face"><strong>Interestingness as a face:</strong></label>
+      <span style="width:50%; display: inline-block"><div id="slider_face"></div></span>
+      <input id="eva_face" type="text" disabled="disabled" style="text-align: center; border:0; color:#f6931f; font-weight:bold; background: white; width: 50px"/>
+      <br/><br/>
+    </div>
+
+    <div id="div_abstract">
+      <label for="eva_abstract"><strong>Abstractness:</strong></label>
+      <span style="width:50%; display: inline-block"><div id="slider_abstract"></div></span>
+      <input id="eva_abstract" type="text" disabled="disabled" style="text-align: center; border:0; color:#f6931f; font-weight:bold; background: white; width: 50px"/>
+      <br/><br/>
+    </div>
+
   </td>
 </tr>
 <tr>

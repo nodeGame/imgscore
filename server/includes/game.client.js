@@ -35,38 +35,63 @@ stager.setOnInit(function() {
 
 function facerank() {
     console.log('facerank');
+
+    var sliders = ['overall', 'creativity', 'face', 'abstract'];
+
     W.loadFrame('/facerank/html/facepage.htm', function() {
         var next, faceImg, td;
         var sl, $;
+        var order;
+
+        node.on('help', function() {
+            if (help.style.display === 'none') {
+                help.style.display = '';
+                helpLink.innerHTML = 'Hide help';
+            }
+            else {
+                help.style.display = 'none';
+                helpLink.innerHTML = 'Show help';
+            }
+        });
+
+        function buildSlider(slName) {
+            $( "#slider_" + slName).slider({
+                value: 5,
+                min: 0,
+                max: 10,
+                step: 0.1,
+                slide: function( event, ui ) {
+                    $( "#eva_" + slName ).val( ui.value );
+                    node.game.evaHasChanged = true;
+                }
+            });
+            $( "#eva_" + slName ).val( $( "#slider_" + slName ).slider( "value" ) );
+        }
 
         function displayFace() {
             var imgPath;
+            var i, len;
+            
             imgPath = node.game.faces.items[++node.game.counter].path;
             faceImg.src = '/facerank/faces/' + imgPath;
             next.disabled = false;
             node.timer.setTimestamp('newpic_displayed');
 
             node.game.evaHasChanged = false;
+            
+            order = JSUS.shuffleNodes(evaTD, JSUS.sample(0,3));
    
-            $( "#slider").slider({
-                value: 5,
-                min: 0,
-                max: 10,
-                step: 0.1,
-                slide: function( event, ui ) {
-                    $( "#eva" ).val( ui.value );
-                    node.game.evaHasChanged = true;
-                }
-            });
-            $( "#eva" ).val( $( "#slider" ).slider( "value" ) ); 
-            
-            
+            i = -1, len = sliders.length;
+            for ( ; ++i < len ; ) {
+                buildSlider(sliders[i]);
+            }
+
             //AUTOPLAY
             node.env('auto', function(){
-                node.timer.randomExec(function() {
-                    $( "#slider" ).slider( "value",  Math.random()*10);
-                    $( "#eva" ).val( $( "#slider" ).slider( "value" ) );
-                }, 2000);
+//                node.timer.randomExec(function() {
+//                    $( "#slider" ).slider( "value",  Math.random()*10);
+//                    $( "#eva" ).val( $( "#slider" ).slider( "value" ) );
+//                }, 2000);
             });
 
         }
@@ -93,7 +118,10 @@ function facerank() {
             next.disabled = true;
             counter = node.game.counter;
             faces = node.game.faces;
-            score = eva.value;
+            scoreOverall = evaOverall.value;
+            scoreCreativity = evaCreativity.value;
+            scoreFace = evaFace.value;
+            scoreAbstract = evaAbstract.value;
 
             if (counter !== -1 && counter < faces.items.length) {
                 
@@ -104,8 +132,12 @@ function facerank() {
                     morn: faces.morn,
                     path: faces.items[counter].path,
                     count: faces.count,
-                    score: score,
+                    scoreOverall: scoreOverall,
+                    scoreCreativity: scoreCreativity,
+                    scoreFace: scoreFace,
+                    scoreAbstract: scoreAbstract,
                     hasChanged: node.game.evaHasChanged,
+                    order: order,
                     time2score: time2score
                     
                 };
@@ -130,12 +162,25 @@ function facerank() {
         
         // Img.
         faceImg = W.getElementById('face');
-        
+
+        // TD with all the sliders
+        evaTD = W.getElementById('evaTd');
+
         // Slider.
-        sl = W.getElementById('slider');
-        
+        slOverall = W.getElementById('slider_overall');
+        slCreativity = W.getElementById('slider_creativity');
+        slFace = W.getElementById('slider_face');
+        slAbstract = W.getElementById('slider_abstract');
+
         // Disabled input with score.
-        eva = W.getElementById('eva');
+        evaOverall = W.getElementById('eva_overall');
+        evaCreativity = W.getElementById('eva_creativity');
+        evaFace = W.getElementById('eva_face');
+        evaAbstract = W.getElementById('eva_abstract');
+
+        // Help.
+        help = W.getElementById('helpSpan');
+        helpLink = W.getElementById('helpLink');
 
         // Click!
         next.onclick = askForNext;
