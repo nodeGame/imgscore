@@ -63,13 +63,13 @@ module.exports = function(node, channel) {
         var collection, db;
         db = mdbLoad.getDbObj();
 
-//         // Load GAME SETS.
-//         var collection = db.collection('facerank_sets_ordered');
-//         collection.find().toArray(function(err, data) {
-//             console.log('data in facerank_sets_ordered: ', data.length);
-//             console.log();
-//             sets = data;
-//         });
+        // Load GAME SETS.
+        var collection = db.collection('facerank_sets_ordered');
+        collection.find().toArray(function(err, data) {
+            console.log('data in facerank_sets_random_full: ', data.length);
+            console.log();
+            sets = data;
+        });
 
         // Load SAMPLE SETS.
         collection = db.collection('facecats_sets_random');

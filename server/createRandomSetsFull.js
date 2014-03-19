@@ -38,6 +38,9 @@ mdbWrite.connect(function() {
         var globalSetIds, setIds;
         
         var pool, poolIdx, reAdd2Pool;
+        var removed;
+
+        var h, hLen;
 
         globalSetIds = {};
         out = [];
@@ -59,23 +62,36 @@ mdbWrite.connect(function() {
                 
                 // Re-add the element that was added last before the re-fill.
                 if ('undefined' !== typeof reAdd2Pool) {
-                    pool.push(reAdd2Pool);
+                    pool = pool.concat(reAdd2Pool);
+                    pool = J.shuffle(pool);
                     reAdd2Pool = undefined;
                 }
+
                 for ( ; ++j < PICS4SET ; ) {
                     poolIdx = J.randomInt(0, pool.length-1);
                     idx = pool[poolIdx];
 
                     // Remove element from pool.
-                    pool.splice(poolIdx, 1);
+                    removed = pool.splice(poolIdx, 1);
+
+                    if (removed[0] !== idx) {
+                        debugger;
+                    }
 
                     if (poolIdx === -1) {
                         console.log('AAAAAAA')
                     }
 
-                    setIds[idx] = '';
+
                     globalSetIds[idx] = (globalSetIds[idx] || 0) + 1;
                     
+                    if (setIds[idx]) {
+                        debugger;
+                    }
+                    else {
+                        setIds[idx] = idx;
+                    }
+
                     // console.log('idx', idx, poolIdx);
 
                     item = J.clone(data[idx]);
@@ -83,7 +99,6 @@ mdbWrite.connect(function() {
                     if ('undefined' === typeof item) {
                         debugger
                     }
-
                     
                     delete item._id;
                     delete item._bsontype;
@@ -94,21 +109,35 @@ mdbWrite.connect(function() {
 
                     // Re-fill pool, but not with the inserted element.
                     if (!pool.length) {
-                        pool = J.sample(0,(totItems-1));
-                        reAdd2Pool = pool.splice(idx,1);
+
+                        // Var idx is in the correct order, so we can remove it.
+
+                        pool = J.seq(0,(totItems-1));
+                        reAdd2Pool = J.obj2Array(setIds);                        
+                        reAdd2Pool.sort(function(a, b) {
+                            return (a - b) //causes an array to be sorted numerically and ascending
+                        });
+
+                        h = -1, hLen = reAdd2Pool.length;
+                        for ( ; ++h < hLen ; ) {
+                            removed = pool.splice(reAdd2Pool[h]-h,1);
+                            if (removed[0] !== reAdd2Pool[h]) {
+                                debugger
+                            }
+                        }
+
+                        // Shuffle it.
+                        pool = J.shuffle(pool);
                         console.log(item.path);
                     }
                 }
 
-
                 // mdbWrite.store( { set : set } );
                 
-                // Test randomness. Save it to csv.
-                
+                // Test randomness. Save it to csv.                
                 node.fs.writeCsv('./sets_test.csv', set, {
                     writeHeaders: i === 0
                 });
-                // out.push(set);
                 
                 // console.log(i);
             }
