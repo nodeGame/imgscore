@@ -12,6 +12,10 @@ d <- duplicated(data$setpath)
 nrow(data[d,])
 data[d,]
 
+a <- summarySE(data, "id", c("set"))
+
+plot(table(a$id))
+
 
 ## Summarizes data.
 ## Gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95%).

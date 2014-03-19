@@ -114,6 +114,7 @@ function facerank() {
         
         function askForNext() {
             var score, faces, obj, i, len, secondSet, counter;
+            var face;
             time2score = node.timer.getTimeSince('newpic_displayed');            
             next.disabled = true;
             counter = node.game.counter;
@@ -125,10 +126,12 @@ function facerank() {
 
             if (counter !== -1 && counter < faces.items.length) {
                 
+                face = faces.items[counter];
+
                 obj = {
                     session: faces.id, 
                     player: faces.player,
-                    round: faces.items[counter].round,
+                    round: face.round,
                     morn: faces.morn,
                     path: faces.items[counter].path,
                     count: faces.count,

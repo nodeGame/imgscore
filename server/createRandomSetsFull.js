@@ -132,7 +132,7 @@ mdbWrite.connect(function() {
                     }
                 }
 
-                // mdbWrite.store( { set : set } );
+                mdbWrite.store( { items : set } );
                 
                 // Test randomness. Save it to csv.                
                 node.fs.writeCsv('./sets_test.csv', set, {

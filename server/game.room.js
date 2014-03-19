@@ -64,21 +64,21 @@ module.exports = function(node, channel) {
         db = mdbLoad.getDbObj();
 
         // Load GAME SETS.
-        var collection = db.collection('facerank_sets_ordered');
+        var collection = db.collection('facecats_sets_random_full');
         collection.find().toArray(function(err, data) {
             console.log('data in facerank_sets_random_full: ', data.length);
             console.log();
             sets = data;
-        });
 
-        // Load SAMPLE SETS.
-        collection = db.collection('facecats_sets_random');
-        collection.find().toArray(function(err, data) {
-            console.log('data in facerank_sets_random: ', data.length);
-            console.log();
-            randomSets = data;
-            mdbLoad.disconnect();
-        });   
+            // Load SAMPLE SETS.
+            collection = db.collection('facecats_sets_random');
+            collection.find().toArray(function(err, data) {
+                console.log('data in facerank_sets_random: ', data.length);
+                console.log();
+                randomSets = data;
+                mdbLoad.disconnect();
+            });   
+        });
 
     });
 
@@ -308,8 +308,7 @@ module.exports = function(node, channel) {
             }
 
             // We need to clone it, otherwise it gets overwritten.
-            set = J.clone(randomSets[state.setId]);
-            debugger
+            set = J.clone(sets[state.setId]);
 
             // This is a reconnection.
             if (state.resume) {
