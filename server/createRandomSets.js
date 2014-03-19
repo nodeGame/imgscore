@@ -49,6 +49,7 @@ mdbWrite.connect(function() {
                 j = -1;
                 set = [];
                 for ( ; ++j < PICS4SET ; ) {
+                    debugger
                     idx = J.randomInt(-1, (totItems-1));
                     item = data[idx];
                     // console.log(item);
@@ -58,7 +59,7 @@ mdbWrite.connect(function() {
                     set.push(item.path);
                 }
                 debugger
-                mdbWrite.store( { set : set } );
+                // mdbWrite.store( { set : set } );
                 // out.push(set);
             }
 //            console.log(out.length);

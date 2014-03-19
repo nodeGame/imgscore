@@ -21,7 +21,7 @@ module.exports = {
     SESSION_ID: 100,
 
     // Number of sets of pictures to rate per player.
-    NSETS: 2,
+    NSETS: 1,
 
     // Serve sets of images sequentally from set X (it is zero-indexed).
     SET_COUNTER: 0,

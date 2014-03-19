@@ -60,15 +60,16 @@ module.exports = function(node, channel) {
     var sets, randomSets;
 
     mdbLoad.connect(function() {
-        var db = mdbLoad.getDbObj();
+        var collection, db;
+        db = mdbLoad.getDbObj();
 
-        // Load GAME SETS.
-        var collection = db.collection('facerank_sets_ordered');
-        collection.find().toArray(function(err, data) {
-            console.log('data in facerank_sets_ordered: ', data.length);
-            console.log();
-            sets = data;
-        });
+//         // Load GAME SETS.
+//         var collection = db.collection('facerank_sets_ordered');
+//         collection.find().toArray(function(err, data) {
+//             console.log('data in facerank_sets_ordered: ', data.length);
+//             console.log();
+//             sets = data;
+//         });
 
         // Load SAMPLE SETS.
         collection = db.collection('facecats_sets_random');
@@ -307,7 +308,8 @@ module.exports = function(node, channel) {
             }
 
             // We need to clone it, otherwise it gets overwritten.
-            set = J.clone(sets[state.setId]);
+            set = J.clone(randomSets[state.setId]);
+            debugger
 
             // This is a reconnection.
             if (state.resume) {
@@ -347,7 +349,7 @@ module.exports = function(node, channel) {
             
             checkAndCreateState(msg.from);
             if (!gameState.randomSetId) {
-                gameState.randomSetId = counterSample++;
+                gameState.randomSetId = J.randomInt(0, randomSets.length);
             }
             return randomSets[gameState.randomSetId].set;
         });
