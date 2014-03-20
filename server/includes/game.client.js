@@ -88,10 +88,23 @@ function facerank() {
 
             //AUTOPLAY
             node.env('auto', function(){
-//                node.timer.randomExec(function() {
-//                    $( "#slider" ).slider( "value",  Math.random()*10);
-//                    $( "#eva" ).val( $( "#slider" ).slider( "value" ) );
-//                }, 2000);
+                node.timer.randomExec(function() {
+                    
+                    $( "#slider_overall" ).slider( "value",  Math.random()*10);
+                    $( "#eva_overall" ).val( $( "#slider_overall" ).slider( "value" ) );
+                    
+                    $( "#slider_creativity" ).slider( "value",  Math.random()*10);
+                    $( "#eva_creativity" ).val( $( "#slider_creativity" ).slider( "value" ) );
+
+                    $( "#slider_face" ).slider( "value",  Math.random()*10);
+                    $( "#eva_face" ).val( $( "#slider_face" ).slider( "value" ) );
+
+                    $( "#slider_abstract" ).slider( "value",  Math.random()*10);
+                    $( "#eva_abstract" ).val( $( "#slider_abstract" ).slider( "value" ) );
+
+                    next.click();
+
+                }, 4000);
             });
 
         }

@@ -17,17 +17,14 @@ module.exports = {
     // Stop creating new sessions after N sessions has been dispatched.
     ACCEPT_EXTRA_SESSIONS: false,
 
-    // Session Counter start from.
+    // Session Counter start from (not used).
     SESSION_ID: 100,
 
     // Number of sets of pictures to rate per player.
     NSETS: 1,
 
     // Serve sets of images sequentally from set X (it is zero-indexed).
-    SET_COUNTER: 0,
-
-    // Serve random samples of images sequentially from sample X.
-    SAMPLE_SET_COUNTER: 0,
+    SET_COUNTER: 10,
 
     // Payment settings. *
 
@@ -38,7 +35,7 @@ module.exports = {
     DEBUG: false,
 
     // AUTO-PLAY.
-    AUTO: false,
+    AUTO: true,
 
     // DATABASE.
     DB: 'FILE', // FILE, MONGODB
