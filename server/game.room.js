@@ -69,6 +69,7 @@ module.exports = function(node, channel) {
             console.log('data in facerank_sets_random_full: ', data.length);
             console.log();
             sets = data;
+            sets.sort();
 
             // Load SAMPLE SETS.
             collection = db.collection('facecats_sets_random');
@@ -76,6 +77,7 @@ module.exports = function(node, channel) {
                 console.log('data in facerank_sets_random: ', data.length);
                 console.log();
                 randomSets = data;
+                randomSets.sort();
                 mdbLoad.disconnect();
             });   
         });

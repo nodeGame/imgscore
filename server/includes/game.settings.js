@@ -32,7 +32,7 @@ module.exports = {
     // Payment settings. *
 
     // Divider ECU / DOLLARS *
-    BONUS: 0.5,
+    BONUS: 0,
 
     // DEBUG.
     DEBUG: false,
@@ -44,7 +44,7 @@ module.exports = {
     DB: 'FILE', // FILE, MONGODB
 
     // AUTHORIZATION.
-    AUTH: 'MTURK' // MTURK, LOCAL, NO.
+    AUTH: 'NO' // MTURK, LOCAL, NO.
 
     // * = if you change this you need to update instructions and quiz
 };
