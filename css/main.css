@@ -102,3 +102,15 @@ p#helpTags {
     margin-top: 10px;
     clear: both;
 }
+
+/* Facepage */
+
+.eva_dis {
+    text-align: center;
+    border: 0;
+    color: #f6931f;
+    font-weight: bold;
+    background: white;
+    width: 50px;
+    margin-left: 10px;
+}
