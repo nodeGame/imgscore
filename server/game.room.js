@@ -351,6 +351,12 @@ module.exports = function(node, channel) {
                 state.setId = ++counter;
                 state.newSetNeeded = false;
                 state.pic = 0;
+
+                mdbWrite.store({
+                    rater: msg.from,
+                    setId: state.setId,
+                    randomSetId: state.randomSetId
+                });
             }
 
             // We need to clone it, otherwise it gets overwritten.
@@ -384,7 +390,7 @@ module.exports = function(node, channel) {
 
             console.log('COUNTER ', counter);
             console.log('SET LENGTH ', set ? set.items.length : 'no set');
-
+      
             return set;
         });
 
@@ -393,10 +399,10 @@ module.exports = function(node, channel) {
             console.log('**** Received a get SAMPLE! ***');
             
             checkAndCreateState(msg.from);
-            if (!gameState.randomSetId) {
-                gameState.randomSetId = J.randomInt(0, randomSets.length);
+            if (gameState[msg.from].randomSetId === null) {
+                gameState[msg.from].randomSetId = J.randomInt(0, randomSets.length);
             }
-            return randomSets[gameState.randomSetId].set;
+            return randomSets[gameState[msg.from].randomSetId].set;
         });
 
         // Client has categorized an image.
@@ -419,7 +425,9 @@ module.exports = function(node, channel) {
                     state.newSetNeeded = true;
                 }
             }           
-
+            
+            // Add the id of the rater to the item.
+            msg.data.rater = msg.from;
             mdbWrite.store(msg.data);
         });
 
