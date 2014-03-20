@@ -271,7 +271,6 @@ module.exports = function(node, channel) {
                 // Player never checkedIn. See if it is authorized.
                 if (code.Status === 0) {
                     dk.checkIn(p.id, function(err, resp, body) {
-                        debugger
                         if (!body.Error) {
                             startGameOnClient(p.id);
                         }

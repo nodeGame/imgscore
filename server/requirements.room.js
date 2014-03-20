@@ -92,6 +92,13 @@ module.exports = function(node, channel, room) {
                     msg: 'Code already in use: ' + mtid
 	        };
 	    }
+
+            if (code.Status === 3) {
+                return {
+                    success: false,
+                    msg: 'Code already checked out: ' + mtid
+	        };
+            }
 	    
             return {
                 success: true,
