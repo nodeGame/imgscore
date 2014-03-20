@@ -93,7 +93,7 @@ module.exports = function(node, channel, room) {
 	        };
 	    }
 
-            if (code.Status === 3) {
+            if (code.Status === 3 || code.checkedOut) {
                 return {
                     success: false,
                     msg: 'Code already checked out: ' + mtid
