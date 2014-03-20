@@ -48,6 +48,9 @@ module.exports = function(node, channel) {
 
     // 1. Setting up database connection.
 
+    // Do not save in memory the data sent by clients.
+    node.off('in.set.DATA');
+
     // Establish the connection to database to load face sets.
     var Database = require('nodegame-db').Database;
     var ngdb = new Database(node);
