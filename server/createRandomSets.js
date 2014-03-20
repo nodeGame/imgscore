@@ -17,7 +17,7 @@ var mdb = ngdb.getLayer('MongoDB', {
 });
 
 var PICS4SET = 60;
-var NSETS = 400;
+var NSETS = 1071;
 
 // Open the collection where the categories will be stored.
 var mdbWrite = ngdb.getLayer('MongoDB', {
@@ -32,6 +32,7 @@ mdbWrite.connect(function() {
         var db, collection;
         var i, j, idx, item;
         var out, totItems;
+        var setIds;
 
         out = [];
         db = mdb.getDbObj();
@@ -48,22 +49,27 @@ mdbWrite.connect(function() {
             for ( ; ++i < NSETS ; ) {
                 j = -1;
                 set = [];
+                setIds = {};
+
                 for ( ; ++j < PICS4SET ; ) {
-                    debugger
-                    idx = J.randomInt(-1, (totItems-1));
+
+                    idx = J.randomInt(0, (totItems-1));
+                    while ('undefined' !== typeof setIds[idx]) {
+                        idx = J.randomInt(0, (totItems-1));
+                    }
                     item = data[idx];
+                    setIds[idx] = '';
+
                     // console.log(item);
                     if ('undefined' === typeof item) {
                         debugger
                     }
                     set.push(item.path);
                 }
-                debugger
-                // mdbWrite.store( { set : set } );
+                mdbWrite.store( { set : set } );
                 // out.push(set);
+                // console.log(i);
             }
-//            console.log(out.length);
-//            console.log(out[9].length);
 
             mdb.disconnect();
             mdbWrite.disconnect();

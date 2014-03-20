@@ -16,11 +16,8 @@ var mdb = ngdb.getLayer('MongoDB', {
     collectionName: 'facerank_col'
 });
 
-var PICS4SET = 60;
-var NSETS = 714;
-
-// Each picture cannot be repeated more than PICLIMIT times across all sets.
-var PICLIMIT = 10;
+var PICS4SET = 40;
+var NSETS = 1071;
 
 // Open the collection where the categories will be stored.
 var mdbWrite = ngdb.getLayer('MongoDB', {

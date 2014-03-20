@@ -145,6 +145,33 @@ module.exports = function(node, channel) {
         }
     }
 
+
+    function startGameOnClient(pId) {
+        
+        checkAndCreateState(pId);
+
+	// Setting metadata, settings, and plot
+        node.remoteSetup('game_metadata',  pId, client.metadata);
+	node.remoteSetup('game_settings', pId, client.settings);
+	node.remoteSetup('plot', pId, client.plot);
+        node.remoteSetup('env', pId, client.env);
+
+        // If players has been checked out already, just send him to
+        // the last stage;
+        if (gameState[pId].checkedOut) {           
+            console.log('Player was already checkedOut ', pId);
+            node.remoteCommand('start', pId, {
+                startStage: new GameStage('2.1.2')
+            });
+            goodbye(dk.codes.id.get(pId));
+            return;            
+        }
+        else {
+            // Start the game on the client.
+            node.remoteCommand('start', pId);
+        }
+    }
+
     // Functions.
 
     // Creating an authorization function for the players.
@@ -182,9 +209,15 @@ module.exports = function(node, channel) {
             console.log('not existing token: ', token);
             return false;
         }
+        
+        if (code.checkedOut) {
+            console.log('token was already checked out: ', token);
+            return false;
+        }
 
         // Code in use.
-	if (code.usage) {
+        //  usage is for LOCAL check, IsUsed for MTURK
+	if (code.valid === false) {
             if (code.disconnected) {
                 return true;
             }
@@ -220,39 +253,50 @@ module.exports = function(node, channel) {
         console.log('** Waiting Room: Initing... **');
 
         function connectingPlayer(p) {
+            var code;
             console.log('** Player connected: ' + p.id + ' **');
 
             // Increment Code.
             dk.markInvalid(p.id);
 
-            checkAndCreateState(p.id);
+             
+            if (settings.AUTH === 'MTURK') {
+                code = dk.codeExists(p.id);
+                
+                // Player never checkedIn. See if it is authorized.
+                if (code.Status === 0) {
+                    dk.checkIn(p.id, function(err, resp, body) {
+                        debugger
+                        if (!body.Error) {
+                            startGameOnClient(p.id);
+                        }
+                        else {
+                            node.redirect("unauth.htm", p.id);
+                        }
+                    });
+                }
+                // Player has already checkedout.
+                else if (code.Status === 3) {
+                    node.redirect("unauth.htm", p.id);
+                }
+                // Player is reconnecting.
+                else {
+                    startGameOnClient(p.id);
+                }
 
-	    // Setting metadata, settings, and plot
-            node.remoteSetup('game_metadata',  p.id, client.metadata);
-	    node.remoteSetup('game_settings', p.id, client.settings);
-	    node.remoteSetup('plot', p.id, client.plot);
-            node.remoteSetup('env', p.id, client.env);
-
-            // If players has been checked out already, just send him to
-            // the last stage;
-            if (gameState[p.id].checkedOut) {           
-                console.log('Player was already checkedOut ', p.id);
-                node.remoteCommand('start', p.id, {
-                    startStage: new GameStage('2.1.2')
-                });
-                goodbye(dk.codes.id.get(p.id));
-                return;            
             }
             else {
-                // Start the game on the client.
-                node.remoteCommand('start', p.id);
+                startGameOnClient(p.id);
             }
+        
         }
-
 
         node.on.pconnect(connectingPlayer);
 
         node.on.pdisconnect(function(p) {
+            // Unauthorized client, without a state.
+            if (!gameState[p.id]) return;
+
             gameState[p.id].disconnected = true;
             gameState[p.id].stage = p.stage;
             // Free up code.            
@@ -366,7 +410,7 @@ module.exports = function(node, channel) {
             msg.data.setCounter = state.completedSets + 1;
 
             // Update the counter of the last categorized pic.
-            state.pic = msg.data.round;
+            state.pic = msg.data.pos + 1;
             if (state.pic === state.setLength) {
                 ++state.completedSets;
                 if (state.completedSets <= settings.NSETS) {

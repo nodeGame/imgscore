@@ -44,7 +44,7 @@ module.exports = {
     DB: 'FILE', // FILE, MONGODB
 
     // AUTHORIZATION.
-    AUTH: 'NO' // MTURK, LOCAL, NO.
+    AUTH: 'MTURK' // MTURK, LOCAL, NO.
 
     // * = if you change this you need to update instructions and quiz
 };

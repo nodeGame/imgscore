@@ -129,12 +129,13 @@ function facerank() {
                 face = faces.items[counter];
 
                 obj = {
-                    session: faces.id, 
-                    player: faces.player,
+                    session: face.id, 
+                    player: face.player,
                     round: face.round,
-                    morn: faces.morn,
-                    path: faces.items[counter].path,
-                    count: faces.count,
+                    morn: face.morn,
+                    path: face.path,
+                    set: face.set,
+                    pos: face.pos,
                     scoreOverall: scoreOverall,
                     scoreCreativity: scoreCreativity,
                     scoreFace: scoreFace,
