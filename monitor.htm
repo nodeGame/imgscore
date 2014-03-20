@@ -11,7 +11,7 @@
     window.onload = function() {
       var game = new Monitor(node);
       node.setup('nodegame', game);
-      node.connect('/facecat/admin');
+      node.connect('/facerank/admin');
 
       node.on('PLAYER_CREATED', function() {
         node.game.start();
