@@ -422,8 +422,9 @@ module.exports = function(node, channel) {
             // Update the counter of the last categorized pic.
             state.pic = msg.data.pos + 1;
             if (state.pic === state.setLength) {
+                debugger
                 ++state.completedSets;
-                if (state.completedSets <= settings.NSETS) {
+                if (state.completedSets < settings.NSETS) {
                     state.newSetNeeded = true;
                 }
             }           
