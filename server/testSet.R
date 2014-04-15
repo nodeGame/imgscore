@@ -1,4 +1,4 @@
-data <- read.table('./sets_test.csv', sep=",", head=TRUE)
+data <- read.table('/home/stefano/www/ngtest/games_new/facerank/server/sets_test.csv', sep=",", head=TRUE)
 
 hist(table(data$path))
 

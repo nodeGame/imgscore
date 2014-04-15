@@ -347,8 +347,6 @@ module.exports = function(node, channel) {
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
-            console.log(state);
-
             if (state.newSetNeeded) {
                 state.setId = ++counter;
                 state.newSetNeeded = false;
@@ -360,6 +358,8 @@ module.exports = function(node, channel) {
                     randomSetId: state.randomSetId
                 });
             }
+
+            console.log(state);
 
             // We need to clone it, otherwise it gets overwritten.
             set = J.clone(sets[state.setId]);
