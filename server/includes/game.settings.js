@@ -24,7 +24,7 @@ module.exports = {
     NSETS: 1,
 
     // Serve sets of images sequentally from set X (it is zero-indexed).
-    SET_COUNTER: 0,
+    SET_COUNTER: -1,
 
     // Payment settings. *
 
@@ -35,7 +35,7 @@ module.exports = {
     DEBUG: false,
 
     // AUTO-PLAY.
-    AUTO: true,
+    AUTO: false,
 
     // DATABASE.
     DB: 'FILE', // FILE, MONGODB

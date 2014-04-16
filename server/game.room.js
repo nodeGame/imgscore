@@ -349,9 +349,10 @@ module.exports = function(node, channel) {
 
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
-
+            
             if (state.newSetNeeded) {
-                state.setId = ++counter;
+                // Circular queue.
+                state.setId = ++counter % sets.length;
                 state.newSetNeeded = false;
                 state.pic = 0;
 
