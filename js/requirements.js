@@ -49,7 +49,7 @@ function Requirements() {
         addToResults: function() {
             return { token: token };
         },
-        timeoutTime: 20000
+        timeoutTime: 30000
     });
 
     req.onFail = function() {
@@ -141,7 +141,7 @@ function Requirements() {
         container.id = 'container_test';
 
         text = 'Move the slider to reach both extremities in order to pass ' +
-            'the test. If you cannot see, or move the slider, your browser ' +
+            'the test. If you cannot see or move the slider your browser ' +
             'is not compatible.';
         textNode = document.createTextNode(text)
 
