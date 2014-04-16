@@ -356,6 +356,9 @@ module.exports = function(node, channel) {
                 state.newSetNeeded = false;
                 state.pic = 0;
 
+                // There is actually a difference between setId and the set 
+                // of the images actually evaluated. setId is the idx of the
+                // array, but inside the array items are not ordered.
                 mdbWrite.store({
                     rater: msg.from,
                     setId: state.setId,
