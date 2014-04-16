@@ -66,8 +66,11 @@ module.exports = function(node, channel) {
         var collection, db;
         db = mdbLoad.getDbObj();
 
+        // var COLLECTION_NAME = 'facecats_sets_random_full';
+        var COLLECTION_NAME = 'facecats_sets_less_rated_full';
+
         // Load GAME SETS.
-        var collection = db.collection('facecats_sets_random_full');
+        var collection = db.collection(COLLECTION_NAME);
         collection.find().toArray(function(err, data) {
             console.log('data in facerank_sets_random_full: ', data.length);
             console.log();

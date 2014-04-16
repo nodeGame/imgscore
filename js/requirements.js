@@ -20,6 +20,8 @@ function Requirements() {
 
     var gameLink;
 
+    //var $ = W.getFrameWindow().$;
+
     div = W.getElementById('widgets_div');
     token = J.getQueryString('id');
 
@@ -46,12 +48,14 @@ function Requirements() {
         // overwrite the defaults.
         addToResults: function() {
             return { token: token };
-        }
+        },
+        timeoutTime: 20000
     });
-    
+
     req.onFail = function() {
         var str, args;
         console.log('failed');
+        node.emit('HIDE', 'container_test');
         str = '%spanYou are NOT allowed to take the HIT. If you ' +
             'have already taken it, you must return it.%span';
         args = {
@@ -69,6 +73,7 @@ function Requirements() {
         var str, args;
         var button, link;
         node.emit('HIDE', 'unsupported');
+        node.emit('HIDE', 'container_test');
         str = '%spanYou are allowed to take the HIT.%span';
         args = {
             '%span': {
@@ -78,7 +83,7 @@ function Requirements() {
         W.sprintf(str, args, div);
         node.store.cookie('token', token);
 
-        div.appendChild(document.createElement('br'));        
+        div.appendChild(document.createElement('br'));
         div.appendChild(document.createElement('br'));
 
         link = document.createElement('a');
@@ -106,7 +111,7 @@ function Requirements() {
     // the _result_ callback with the results of the validation
     // to be displayed on screen.
     function checkToken(result) {
-        
+
         node.connect("/requirements", function() {
             // Timeout is necessary because SERVER needs to send the player id
             setTimeout(function() {
@@ -125,6 +130,63 @@ function Requirements() {
             });
         }, 500);
     }
+
+
+    var done10, done0, done100;
+    function testSliders(result) {
+        var container, slider, eva, textNode;
+        var text;
+
+        container = document.createElement('div');
+        container.id = 'container_test';
+
+        text = 'Move the slider to reach both extremities in order to pass ' +
+            'the test. If you cannot see, or move the slider, your browser ' +
+            'is not compatible.';
+        textNode = document.createTextNode(text)
+
+        slider = document.createElement('div');
+        slider.id = 'slider_test';
+
+        eva = document.createElement('input');
+        eva.id = 'eva_test';
+        eva.disabled = true;
+        eva.value = 5;
+
+        window.req.getRoot().appendChild(container);
+        container.appendChild(textNode);
+        container.appendChild(slider);
+        container.appendChild(eva);
+
+        $( "#slider_test").slider({
+            value: 5,
+            min: 0,
+            max: 10,
+            step: 0.1,
+            slide: function( event, ui ) {
+                var str;
+                $( "#eva_test" ).val( ui.value );
+                if (ui.value === 10 && !done10) {
+                    done10 = true;
+                    str = 'Reached 10, move the slider to 0 now.';
+                    container.appendChild(document.createTextNode(str));
+                    str = '10';
+                }
+                else if (ui.value === 0 && !done0) {
+                    done0 = true;
+                    str = 'Reached 0, move the slider to 10 now.';
+                    container.appendChild(document.createTextNode(str));
+                }
+
+                if (!done100 && done0 && done10) {
+                    done100 = true;
+                    result([]);
+                }
+            }
+        });
+
+    }
+
 
     function nodeGameSetup() {
         var stager = new node.Stager();
@@ -156,13 +218,13 @@ function Requirements() {
 
             // Setting the property in game.
 
-            game.plot = stager.getState();  
+            game.plot = stager.getState();
 
             // Configuring nodegame.
             node.setup('nodegame', {
-	        // HOST needs to be specified only 
+	        // HOST needs to be specified only
 	        // if this file is located in another server
-	        // host: http://myserver.com,	  
+	        // host: http://myserver.com,
 	        window: {
 	            promptOnleave: false,
                     noEscape: true // Defaults TRUE
@@ -187,7 +249,7 @@ function Requirements() {
             errors.push(e);
         }
 
-        return errors;            
+        return errors;
     }
 
     // Skipped at the moment
@@ -215,7 +277,8 @@ function Requirements() {
         // might cause errors.
         req.loadFrameTest,
         nodeGameSetup,
-        checkToken
+        checkToken,
+        testSliders
     );
 
     req.checkRequirements();
