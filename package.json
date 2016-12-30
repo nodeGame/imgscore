@@ -1,14 +1,12 @@
 {
-  "name": "facerank",
-  "description": "Tags images",
-  "version": "0.0.3",
+  "name": "imgscore",
+  "description": "Score images on given dimensions",
+  "version": "3.5.0",
   "author": {
     "name": "Stefano Balietti",
-    "email": "sbalietti@ethz.ch",
+    "email": "s.balietti@neu.edu",
     "url": "http://www.nodegame.org"
   }
-,
-  "main": "./index.html"
 ,
   "keywords": [
     "testgame"
@@ -18,16 +16,6 @@
 ,
   "engines": {
     "node": "*",
-    "nodegame": ">= 0.2.0"
+    "nodegame": ">= 3.5.0"
   }
-,
-  "nodegame": {
-    "logic": "./server/logic.js",
-    "dependencies": {
-       "not_used": "for now"
-    },
-    "widgets": {
-       "moneytalk": "0.1.0"
-    }
-  }  
 }
