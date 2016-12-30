@@ -9,9 +9,9 @@ Session.vim
 \#*
 .\#*
 
-server/csv
-server/data
-server/descil.conf.js
+game/csv
+data
+descil.conf.js
 *.csv
 
 faces
