@@ -1,6 +1,6 @@
 /**
- * # Waiting Room for Face Ranking Game
- * Copyright(c) 2014 Stefano Balietti
+ * # Logic for Image Scoring
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
  * Handles incoming connections, sets the Face Categorization game
@@ -20,85 +20,61 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     var node = gameRoom.node;
     var channel = gameRoom.channel;
 
-    // If NO authorization is found, local codes will be used,
-    // and assigned automatically.
-    var noAuthCounter = -1;
-
-    // Still dispatching.
-    var roomClosed = false;
-
-    // Reads in descil-mturk configuration.
-//     var confPath = path.resolve(__dirname, 'descil.conf.js');
-//     var dk = require('descil-mturk')(confPath);
-//     function codesNotFound() {
-//         var nCodes = dk.codes.size();
-//         console.log('Codes found: ', nCodes);
-//         if (!nCodes) {
-//             throw new Error('game.room: no codes found.');
-//         }
-//         // Add a ref to the node obj.
-//         node.dk = dk;
-//     }
-// 
-//     if (settings.AUTH === 'MTURK') {
-//         dk.getCodes(codesNotFound);
-//     }
-//     else {
-//         dk.readCodes(codesNotFound);
-//     }
+    // Overwrite channel's stager.
+    var stager;
 
     // 1. Setting up database connection.
 
-    // Do not save in memory the data sent by clients.
-    node.off('in.set.DATA');
-
-    // Establish the connection to database to load face sets.
-    var Database = require('nodegame-db').Database;
-    var ngdb = new Database(node);
-    var mdbLoad = ngdb.getLayer('MongoDB', {
-        dbName: 'facerank_db',
-        collectionName: 'facerank_sets_ordered'
-    });
-
-    // Loads the sets of faces to send to players.
-    var sets, randomSets;
-
-    mdbLoad.connect(function() {
-        var collection, db;
-        db = mdbLoad.getDbObj();
-
-        // var COLLECTION_NAME = 'facecats_sets_random_full';
-        var COLLECTION_NAME = 'facecats_sets_less_rated_full';
-
-        // Load GAME SETS.
-        var collection = db.collection(COLLECTION_NAME);
-        collection.find().toArray(function(err, data) {
-            console.log('data in facerank_sets_random_full: ', data.length);
-            console.log();
-            sets = data;
-            sets.sort();
-
-            // Load SAMPLE SETS.
-            collection = db.collection('facecats_sets_random');
-            collection.find().toArray(function(err, data) {
-                console.log('data in facerank_sets_random: ', data.length);
-                console.log();
-                randomSets = data;
-                randomSets.sort();
-                mdbLoad.disconnect();
-            });   
-        });
-
-    });
-
-    // Open the collection where the categories will be stored.
-    var mdbWrite = ngdb.getLayer('MongoDB', {
-        dbName: 'facerank_db',
-        collectionName: 'facescores'
-    });
-
-    // Opening the database for writing.
-    mdbWrite.connect(function(){});
+//     // Do not save in memory the data sent by clients.
+//     node.off('in.set.DATA');
+// 
+//     // Establish the connection to database to load face sets.
+//     var Database = require('nodegame-db').Database;
+//     var ngdb = new Database(node);
+//     var mdbLoad = ngdb.getLayer('MongoDB', {
+//         dbName: 'facerank_db',
+//         collectionName: 'facerank_sets_ordered'
+//     });
+// 
+//     // Loads the sets of faces to send to players.
+//     var sets, randomSets;
+// 
+//     mdbLoad.connect(function() {
+//         var collection, db;
+//         db = mdbLoad.getDbObj();
+// 
+//         // var COLLECTION_NAME = 'facecats_sets_random_full';
+//         var COLLECTION_NAME = 'facecats_sets_less_rated_full';
+// 
+//         // Load GAME SETS.
+//         var collection = db.collection(COLLECTION_NAME);
+//         collection.find().toArray(function(err, data) {
+//             console.log('data in facerank_sets_random_full: ', data.length);
+//             console.log();
+//             sets = data;
+//             sets.sort();
+// 
+//             // Load SAMPLE SETS.
+//             collection = db.collection('facecats_sets_random');
+//             collection.find().toArray(function(err, data) {
+//                 console.log('data in facerank_sets_random: ', data.length);
+//                 console.log();
+//                 randomSets = data;
+//                 randomSets.sort();
+//                 mdbLoad.disconnect();
+//             });   
+//         });
+// 
+//     });
+// 
+//     // Open the collection where the categories will be stored.
+//     var mdbWrite = ngdb.getLayer('MongoDB', {
+//         dbName: 'facerank_db',
+//         collectionName: 'facescores'
+//     });
+// 
+//     // Opening the database for writing.
+//     mdbWrite.connect(function(){});
 
     // 2. Defining the single player game.
 
@@ -156,10 +132,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         
         checkAndCreateState(pId);
 
-	// Setting metadata, settings, and plot
+        // Setting metadata, settings, and plot
         node.remoteSetup('game_metadata',  pId, client.metadata);
-	node.remoteSetup('game_settings', pId, client.settings);
-	node.remoteSetup('plot', pId, client.plot);
+        node.remoteSetup('game_settings', pId, client.settings);
+        node.remoteSetup('plot', pId, client.plot);
         node.remoteSetup('env', pId, client.env);
 
         // If players has been checked out already, just send him to
@@ -311,26 +287,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             msg.data.rater = msg.from;
             mdbWrite.store(msg.data);
         });
-
     }
 
+    stager = ngc.getStager();
     stager.setOnInit(init);
 
-    // Create one waiting stage where everything will happen.
-    stager.addStage({
-        id: 'waiting',
-        cb: function() {
-            console.log('** Waiting Room: Opened! **');
-        }
-    });
-
-
-    stager.init().loop('waiting');
+    // Create one waiting stage where everything will happen.  
+    stager.next('imgscore');
 
     return {
-        nodename: 'wroom',
-	plot: stager.getState(),
-	verbosity: 1,
+        nodename: 'imgscore',
+        plot: stager.getState(),
+        verbosity: 1,
         debug: true
     };
 

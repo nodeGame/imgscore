@@ -10,7 +10,6 @@ node.setup('nodegame', {
 var Database = require('nodegame-db').Database;
 var ngdb = new Database(node);
 
-
 var mdb = ngdb.getLayer('MongoDB', {
     dbName: 'facerank_db',
     collectionName: 'facerank_col'

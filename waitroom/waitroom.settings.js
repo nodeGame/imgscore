@@ -22,4 +22,5 @@ module.exports = {
     // Use "treatment_rotate" for rotating all the treatments.
     CHOSEN_TREATMENT: 'treatment_rotate',
 
+    DISPATCH_TO_SAME_ROOM: true
 };

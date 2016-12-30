@@ -14,5 +14,5 @@ module.exports = function(stager, settings) {
     // No stages.
     // Stages are defined inside the client types.
 
-    return stager.getState();
+    return; // stager.getState();
 };
