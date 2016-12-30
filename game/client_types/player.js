@@ -15,7 +15,8 @@ var constants = ngc.constants;
 
 // Export the game-creating function. It needs the name of the treatment and
 // its options.
-module.exports = function(gameRoom, treatmentName, settings) {
+module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
+
     var stager;
     var game;
 

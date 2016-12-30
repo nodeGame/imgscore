@@ -1,0 +1,237 @@
+
+/* Header Horizontal */
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+div#ng_header {
+  height: auto;
+  /*min-height: 75px;*/
+  padding: 10px 15px;
+  box-shadow: 0 0 15px lightgrey;
+  position: relative;
+  max-width: 42em;
+  width: 100%;
+  font-size: 20px;
+}
+
+#ng_header::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.donebutton {
+  min-width: auto;
+}
+
+.ng_widget {
+  height: auto;
+  margin-bottom: 0;
+}
+
+.ng_widget::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.panel-body::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#ng_header > .ng_widget > .panel-body {
+  height: auto;
+  padding: 10px 0 !important;
+  padding-right: 10px !important;
+  line-height: 1em !important;
+  font-size: 18px !important;
+}
+
+.visualround, .visualtimer, .moneytalks {
+  padding-right: 10px;
+}
+
+.donebutton > .panel-body {
+  padding: 0 !important;
+  padding-right: 0 !important;
+}
+
+#ng_header > .ng_widget > .panel-heading {
+  padding: 10px 0 !important;
+  padding-right: 10px !important;
+  line-height: 1em !important;
+  font-size: 18px !important;
+}
+
+.requirements {
+  max-width: 42em;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.waitingroom {
+  max-width: 42em;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.ng-page-title {
+  text-align: center;
+}
+
+iframe#ng_mainframe {
+  width: 100%;
+  padding: 0;
+}
+
+div.ng_header_position-horizontal-t > .ng_widget > .panel-heading {
+    display: none;
+    background: white;
+}
+
+.visualround > .panel-body > div > div.rounddiv {
+  font-size: 16px;
+  /*float: left;*/
+}
+
+.stagediv {
+  display: none;
+}
+
+.ng_header_position-horizontal-t, .ng_header_position-horizontal-b {
+    /*width: 530px !important;*/
+    margin:0 auto !important;
+}
+
+#ng_header > .visualtimer > .panel-heading {
+    display: inline;
+    font-weight: bold;
+    float: left;
+    font-size: 18px !important;
+    /*background:#eee;*/
+    border:0;
+    margin:0;
+    /*padding:10px;*/
+    height:100% !important;
+}
+
+#ng_header > .visualtimer > .panel-body {
+    float:right;
+    margin:0;
+    /*padding:10px !important;*/
+    /*background:#eee;*/
+}
+
+#ng_header > .visualtimer > .panel-body > div {
+    font-size: 18px;
+    position:relative;
+    height:20px;
+}
+
+#ng_header > .visualtimer {
+    float: left !important;
+    border:0;
+    /*background:#eee;*/
+    -webkit-box-shadow:inset 0 0px 0px;box-shadow:inset 0 0px 0px;
+}
+
+/* Visual Round */
+
+.visualround {
+    float: left !important;
+    border:0;
+    /*background:#eee;*/
+    -webkit-box-shadow:inset 0 0px 0px;box-shadow:inset 0 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;-moz-border-radius: 0px 0px 0px 0px;border-radius: 0px 0px 0px 0px;
+}
+
+.visualround .title {
+    font-size: 18px !important;
+    margin:0;
+    padding:5;
+    display: inline-block;
+    padding-right:6px;
+    font-weight: bold;
+}
+
+.visualround > .panel-body {
+    margin:0;
+    padding:10px;
+}
+
+.number {
+    font-size: 18px !important;
+}
+
+.text {
+    font-size: 18px !important;
+}
+
+.waitTimerTitle {
+    display:none !important;
+}
+
+.waitTimerBody {
+    display:none !important;
+}
+
+/* Money Talks */
+
+#ng_header > .moneytalks > .panel-heading {
+    display: inline;
+    font-weight: bold;
+    float:left;
+    font-size: 18px !important;
+    /*background:#eee;*/
+    border:0;
+    margin:0;
+    padding:10px;
+    height:100% !important;
+}
+
+#ng_header > .moneytalks > .panel-body {
+    float: right;
+    margin: 0;
+    padding: 10px 0 !important;
+    /*background:#eee;*/
+}
+
+#ng_header > .moneytalks > .panel-body > div {
+    font-size: 18px;
+    position:relative;
+    height: 20px;
+}
+
+#ng_header > .moneytalks {
+    float: left !important;
+    border:0;
+    /* width: 175px !important; */
+    /*background:#eee;*/
+    -webkit-box-shadow:inset 0 0px 0px;
+    box-shadow:inset 0 0px 0px;
+}
+
+.moneytalks > .panel-body span.moneytalksmoney {
+    font-size: 18px;
+}
+
+
+/* Done Button */
+
+#ng_header > .donebutton {
+    float: right !important;
+    border:0;
+    -webkit-box-shadow:inset 0 0px 0px;
+    box-shadow:inset 0 0px 0px;
+}
+
+#ng_header > .donebutton > .panel-body {
+    float:right;
+}

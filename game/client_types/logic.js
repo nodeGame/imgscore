@@ -9,12 +9,16 @@
  * reconnections the player restart from where it has left.
  * ---
  */
-module.exports = function(node, channel) {
 
-    var path = require('path');
-    var J = require('JSUS').JSUS;
-    var ngc = require('nodegame-client');
-    var GameStage = ngc.GameStage;
+var path = require('path');
+var J = require('JSUS').JSUS;
+var ngc = require('nodegame-client');
+var GameStage = ngc.GameStage;
+
+module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
+
+    var node = gameRoom.node;
+    var channel = gameRoom.channel;
 
     // If NO authorization is found, local codes will be used,
     // and assigned automatically.
@@ -23,28 +27,25 @@ module.exports = function(node, channel) {
     // Still dispatching.
     var roomClosed = false;
 
-    // Load shared settings.
-    var settings = require(__dirname + '/includes/game.settings.js');
-
     // Reads in descil-mturk configuration.
-    var confPath = path.resolve(__dirname, 'descil.conf.js');
-    var dk = require('descil-mturk')(confPath);
-    function codesNotFound() {
-        var nCodes = dk.codes.size();
-        console.log('Codes found: ', nCodes);
-        if (!nCodes) {
-            throw new Error('game.room: no codes found.');
-        }
-        // Add a ref to the node obj.
-        node.dk = dk;
-    }
-
-    if (settings.AUTH === 'MTURK') {
-        dk.getCodes(codesNotFound);
-    }
-    else {
-        dk.readCodes(codesNotFound);
-    }
+//     var confPath = path.resolve(__dirname, 'descil.conf.js');
+//     var dk = require('descil-mturk')(confPath);
+//     function codesNotFound() {
+//         var nCodes = dk.codes.size();
+//         console.log('Codes found: ', nCodes);
+//         if (!nCodes) {
+//             throw new Error('game.room: no codes found.');
+//         }
+//         // Add a ref to the node obj.
+//         node.dk = dk;
+//     }
+// 
+//     if (settings.AUTH === 'MTURK') {
+//         dk.getCodes(codesNotFound);
+//     }
+//     else {
+//         dk.readCodes(codesNotFound);
+//     }
 
     // 1. Setting up database connection.
 
@@ -106,16 +107,13 @@ module.exports = function(node, channel) {
     var counter = settings.SET_COUNTER;
     var counterSample = settings.SAMPLE_SET_COUNTER;
 
-    // Creating the Stager object to define the game.
-    var stager = new node.Stager();
-
-    // Loading the game to send to each connecting client.
-    // Second parameter makes available to the required file its properties.
-    var client = channel.require(__dirname + '/includes/game.client', {
-        Stager: node.Stager,
-        stepRules: node.stepRules,
-        settings: settings
-    });
+//     // Loading the game to send to each connecting client.
+//     // Second parameter makes available to the required file its properties.
+//     var client = channel.require(__dirname + '/includes/game.client', {
+//         Stager: node.Stager,
+//         stepRules: node.stepRules,
+//         settings: settings
+//     });
 
     // State of all players.
     var gameState = {};
@@ -182,133 +180,8 @@ module.exports = function(node, channel) {
 
     // Functions.
 
-    // Creating an authorization function for the players.
-    // This is executed before the client the PCONNECT listener.
-    // Here direct messages to the client can be sent only using
-    // his socketId property, since no clientId has been created yet.
-    channel.player.authorization(function(header, cookies, room) {
-        var code, player, token;
-
-        if (settings.AUTH === 'NO') {
-            return true;
-        }
-
-        playerId = cookies.player;
-        token = cookies.token;
-
-        console.log('game.room: checking auth.');
-
-        // Weird thing.
-        if ('string' !== typeof playerId) {
-            console.log('no player: ', player)
-            return false;
-        }
-
-        // Weird thing.
-        if ('string' !== typeof token) {
-            console.log('no token: ', token)
-            return false;
-        }
-
-        code = dk.codeExists(token);
-
-        // Code not existing.
-	if (!code) {
-            console.log('not existing token: ', token);
-            return false;
-        }
-        
-        if (code.checkedOut) {
-            console.log('token was already checked out: ', token);
-            return false;
-        }
-
-        // Code in use.
-        //  usage is for LOCAL check, IsUsed for MTURK
-	if (code.valid === false) {
-            if (code.disconnected) {
-                return true;
-            }
-            else {
-                console.log('token already in use: ', token);
-                return false;
-            }
-	}
-
-        // Client Authorized.
-        return true;
-    });
-
-    // Assigns Player Ids based on cookie token.
-    channel.player.clientIdGenerator(function(headers, cookies, validCookie,
-                                              ids, info) {
-        var code;
-        if (settings.AUTH === 'NO') {
-            code = dk.codes.db[++noAuthCounter].AccessCode;
-            return code;
-        }
-
-        // Return the id only if token was validated.
-        // More checks could be done here to ensure that token is unique in ids.
-        if (cookies.token && validCookie) {
-            return cookies.token;
-        }
-    });
-
     // Init Function. Will spawn everything.
     function init() {
-
-        console.log('** Waiting Room: Initing... **');
-
-        function connectingPlayer(p) {
-            var code;
-            console.log('** Player connected: ' + p.id + ' **');
-
-            // Increment Code.
-            dk.markInvalid(p.id);
-
-             
-            if (settings.AUTH === 'MTURK') {
-                code = dk.codeExists(p.id);
-                
-                // Player never checkedIn. See if it is authorized.
-                if (code.Status === 0) {
-                    dk.checkIn(p.id, function(err, resp, body) {
-                        if (!body.Error) {
-                            startGameOnClient(p.id);
-                        }
-                        else {
-                            node.redirect("unauth.htm", p.id);
-                        }
-                    });
-                }
-                // Player has already checkedout.
-                else if (code.Status === 3) {
-                    node.redirect("unauth.htm", p.id);
-                }
-                // Player is reconnecting.
-                else {
-                    startGameOnClient(p.id);
-                }
-
-            }
-            else {
-                startGameOnClient(p.id);
-            }
-        
-        }
-
-        node.on.pconnect(connectingPlayer);
-
-        node.on.pdisconnect(function(p) {
-            // Unauthorized client, without a state.
-            if (!gameState[p.id]) return;
-
-            gameState[p.id].disconnected = true;
-            gameState[p.id].stage = p.stage;
-            // Free up code.            
-            dk.markValid(p.id);
-        });
 
         // This must be done manually for now (maybe change).
         node.on.mreconnect(function(p) {
@@ -339,7 +212,6 @@ module.exports = function(node, channel) {
             // Player will continue from where he has left.
             gameState[p.id].resume = true;
 
-            connectingPlayer(p);
         });
 
         // Sends the faces (reply to a GET request from client).
@@ -429,7 +301,6 @@ module.exports = function(node, channel) {
             // Update the counter of the last categorized pic.
             state.pic = msg.data.pos + 1;
             if (state.pic === state.setLength) {
-                debugger
                 ++state.completedSets;
                 if (state.completedSets < settings.NSETS) {
                     state.newSetNeeded = true;
@@ -450,25 +321,14 @@ module.exports = function(node, channel) {
         id: 'waiting',
         cb: function() {
             console.log('** Waiting Room: Opened! **');
-            return true;
         }
     });
 
-    stager.setOnGameOver(function() {
-	console.log('^^^^^^^^^^^^^^^^GAME OVER^^^^^^^^^^^^^^^^^^');
-    });
 
     stager.init().loop('waiting');
 
     return {
         nodename: 'wroom',
-	game_metadata: {
-	    name: 'wroom',
-	    version: '0.1.0'
-	},
-	game_settings: {
-	    publishLevel: 0,
-	},
 	plot: stager.getState(),
 	verbosity: 1,
         debug: true
