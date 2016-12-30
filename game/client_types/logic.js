@@ -20,9 +20,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     var node = gameRoom.node;
     var channel = gameRoom.channel;
 
-    // Overwrite channel's stager.
-    var stager;
-
     // 1. Setting up database connection.
 
 //     // Do not save in memory the data sent by clients.
@@ -288,12 +285,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             mdbWrite.store(msg.data);
         });
     }
-
-    stager = ngc.getStager();
+    
     stager.setOnInit(init);
 
-    // Create one waiting stage where everything will happen.  
-    stager.next('imgscore');
 
     return {
         nodename: 'imgscore',

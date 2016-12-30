@@ -14,5 +14,15 @@ module.exports = function(stager, settings) {
     // No stages.
     // Stages are defined inside the client types.
 
-    return; // stager.getState();
+    stager
+        .next('instructions')
+        .next('facerank')
+        .next('thankyou')
+        .gameover();
+
+    stager.extendStage('instructions', {
+        steps: [ 'instructionsText', 'sample' ]
+    });
+ 
+    return stager.getState();
 };

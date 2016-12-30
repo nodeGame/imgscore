@@ -19,9 +19,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     var game;
     game = {};
 
-    // Overwrite stager.
-    stager = ngc.getStager();
-
     // Default Step Rule.
     stager.setDefaultStepRule(stepRules.SOLO);
 
@@ -249,9 +246,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     function sample() {
-        console.log('*** sample ! ***');
         var sampleDiv, instructions, next;
         var doneTimer, doneTimerSpan;
+
+        console.log('*** sample ! ***');
 
         next = W.getElementById("doneButton");
         instructions = W.getElementById("instructions");
@@ -260,16 +258,14 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         sampleDiv.style.display = '';
         doneTimerSpan = W.getElementById("doneTimer");
 
-        doneTimer = node.widgets.add('VisualTimer', doneTimerSpan, {
+        doneTimer = node.widgets.append('VisualTimer', doneTimerSpan, {
             milliseconds: 90000,
-            timeup: 'CAN_DO_NEXT',
+            update: 1000,
             name: 'candonext',
-            fieldset: null
-        });
-        doneTimer.start();
-
-        node.on('CAN_DO_NEXT', function() {
-            next.disabled = false;
+            listeners: false,
+            timeup: function() {
+                next.disabled = false;
+            }
         });
 
         node.env('auto', function() {
@@ -295,46 +291,32 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     // Creating stages and steps
+    
+    // TODO: At this point, stages must be defined (also steps)
+    // in game.stages. This is quite annoying in the case where
+    // the logic does not follow the same structure as the client.
 
-    stager.addStep({
-        id: 'instructionsText',
+    stager.extendStep('instructionsText', {
         cb: instructionsText,
         frame: 'instructions.htm'
     });
 
-    stager.addStep({
-        id: 'sample',
+    stager.extendStep('sample', {
         cb: sample
     });
 
-    stager.addStage({
-        id: 'instructions',
-        steps: [ 'instructionsText', 'sample' ]
-    });
-
-    stager.addStage({
-        id: 'facerank',
+    stager.extendStep('facerank', {
         cb: facerank,
         frame: 'facepage.htm'
     });
 
-    stager.addStage({
-        id: 'thankyou',
+    stager.extendStep('thankyou', {
         cb: thankyou,
         frame: 'thankyou.htm'
     });
 
-    // Now that all the stages have been added,
-    // we can build the game plot
-
-    stager
-        .next('instructions')
-        .next('facerank')
-        .next('thankyou')
-        .gameover();
-
-    // We serialize the game sequence before sending it
     game.plot = stager.getState();
+    game.verbosity = 1000;
 
     return game;
 }
