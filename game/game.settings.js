@@ -1,5 +1,5 @@
 /**
- * # Game settings: FaceRank game.
+ * # Game settings for Face Categorization  game.
  * Copyright(c) 2014 Stefano Balietti
  * MIT Licensed
  *
@@ -8,22 +8,40 @@
  */
 module.exports = {
 
-    // Files:
+    // Waiting Room Settings. *
+    ////////////////////////////
+    
+    // How many sessions should be dispatched.
+    TARGET_SESSIONS: 1,
 
-    // logicPath: "includes/game.logic.js",
-    clientPath: "includes/game.client.js",
+    // Stop creating new sessions after N sessions has been dispatched.
+    ACCEPT_EXTRA_SESSIONS: false,
+
+    // Session Counter start from (not used).
+    SESSION_ID: 100,
+
+    // Number of sets of pictures to rate per player.
+    NSETS: 1,
+
+    // Serve sets of images sequentally from set X (it is zero-indexed).
+    SET_COUNTER: -1,
+
+    // Payment settings. *
+
+    // Divider ECU / DOLLARS *
+    BONUS: 0,
 
     // DEBUG.
-    DEBUG: true,
+    DEBUG: false,
 
     // AUTO-PLAY.
     AUTO: false,
 
     // DATABASE.
-    DB: 'MONGODB', // FILE, MONGODB
+    DB: 'FILE', // FILE, MONGODB
 
     // AUTHORIZATION.
-    AUTH: 'LOCAL' // MTURK, LOCAL, NO.
+    AUTH: 'NO' // MTURK, LOCAL, NO.
 
     // * = if you change this you need to update instructions and quiz
 };
