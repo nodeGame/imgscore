@@ -26,6 +26,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // 1. Setting up database connection.
 
+    var gameDir, randomSets;
+
+    gameDir = channel.getGameDir();
+
+    randomSets = loadRandomSets();
+
+    function loadRandomSets() {
+        var filePath;
+        filePath = gameDir + '/images/db.json';
+        
+    }
+
 //     // Do not save in memory the data sent by clients.
 //     node.off('in.set.DATA');
 // 
@@ -193,10 +205,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         });
 
         // Sends the faces (reply to a GET request from client).
-        node.on('NEXT', function(msg) {
+        node.on('get.NEXT', function(msg) {
             var set, state, secondSet;
             var code;
-
+debugger
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
             
@@ -254,7 +266,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         });
 
         // Client is requesting a random sample.
-        node.on('sample', function(msg) {
+        node.on('get.sample', function(msg) {
             console.log('**** Received a get SAMPLE! ***');
             debugger
             checkAndCreateState(msg.from);
@@ -267,6 +279,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Client has categorized an image.
         node.on.data('score',function(msg) {
             var state;
+debugger
             if (!msg.data) return;
             console.log('**** Received a CAT! ' + msg.data.round + '***');
             
@@ -287,7 +300,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             
             // Add the id of the rater to the item.
             msg.data.rater = msg.from;
-            mdbWrite.store(msg.data);
+            
+            //mdbWrite.store(msg.data);
         });
     }
     

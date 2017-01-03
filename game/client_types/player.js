@@ -49,7 +49,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             this.disabled = "disabled";
             node.done();
         };
-
+debugger
         // Preloading the sample
         node.get('sample', function(sample) {
             var i, len;
