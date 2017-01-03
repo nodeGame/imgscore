@@ -14,11 +14,15 @@ var path = require('path');
 var J = require('JSUS').JSUS;
 var ngc = require('nodegame-client');
 var GameStage = ngc.GameStage;
+var stepRules = ngc.stepRules;
 
 module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     var node = gameRoom.node;
     var channel = gameRoom.channel;
+
+    // Default Step Rule.
+    stager.setDefaultStepRule(stepRules.SOLO);
 
     // 1. Setting up database connection.
 
@@ -129,11 +133,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         
         checkAndCreateState(pId);
 
-        // Setting metadata, settings, and plot
-        node.remoteSetup('game_metadata',  pId, client.metadata);
-        node.remoteSetup('game_settings', pId, client.settings);
-        node.remoteSetup('plot', pId, client.plot);
-        node.remoteSetup('env', pId, client.env);
+//         // Setting metadata, settings, and plot
+//         node.remoteSetup('game_metadata',  pId, client.metadata);
+//         node.remoteSetup('game_settings', pId, client.settings);
+//         node.remoteSetup('plot', pId, client.plot);
+//         node.remoteSetup('env', pId, client.env);
 
         // If players has been checked out already, just send him to
         // the last stage;
@@ -155,6 +159,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // Init Function. Will spawn everything.
     function init() {
+
 
         // This must be done manually for now (maybe change).
         node.on.mreconnect(function(p) {
@@ -251,7 +256,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Client is requesting a random sample.
         node.on('sample', function(msg) {
             console.log('**** Received a get SAMPLE! ***');
-            
+            debugger
             checkAndCreateState(msg.from);
             if (gameState[msg.from].randomSetId === null) {
                 gameState[msg.from].randomSetId = J.randomInt(0, randomSets.length);

@@ -39,13 +39,72 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // STAGES and STEPS.
 
+    function instructionsText() {
+        var next, sampleDiv;
+        console.log('instructions');
+
+        sampleDiv = W.getElementById("sample");
+        node.game.nextBtn = next = W.getElementById("doneButton");
+        next.onclick = function() {
+            this.disabled = "disabled";
+            node.done();
+        };
+
+        // Preloading the sample
+        node.get('sample', function(sample) {
+            var i, len;
+            var imgPath, img;
+            // console.log(sample);
+
+            i = -1, len = sample.length;
+            for (; ++i < len;) {
+                imgPath = sample[i];
+                img = document.createElement('img');
+                img.src = '/imgscore/faces/' + imgPath;
+                img.className = 'imgSample';
+                sampleDiv.appendChild(img);
+            }
+        });
+    }
+
+    function sample() {
+        var sampleDiv, instructions, next;
+        var doneTimerSpan;
+
+        console.log('*** sample ! ***');
+
+        next = W.getElementById("doneButton");
+        instructions = W.getElementById("instructions");
+        sampleDiv = W.getElementById("sample");
+        instructions.style.display = 'none';
+        sampleDiv.style.display = '';
+        doneTimerSpan = W.getElementById("doneTimer");
+
+        node.game.doneTimer = 
+            node.widgets.append('VisualTimer', doneTimerSpan, {
+                milliseconds: 90000,
+                update: 1000,
+                name: 'candonext',
+                listeners: false,
+                title: 'Please wait <em>at least</em>:',
+                timeup: function() {
+                    next.disabled = false;
+                }
+            });
+
+        node.game.doneTimer.start();
+    }
+
     function facerank() {
         console.log('facerank');
 
         var sliders;
-        var next, faceImg, td;
-        var sl, $;
+        var next, faceImg;
+        var $;
         var order;
+        var evaTD, evaFace, evaAbstract, evaOverall, evaCreativity;
+        var help, helpLink;
+        var slOverall, slCreativity, slFace, slAbstract;
 
         sliders = [ 'overall', 'creativity', 'face', 'abstract' ];
         
@@ -81,27 +140,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 buildSlider(sliders[i]);
             }
 
-            //AUTOPLAY
-            node.env('auto', function(){
-                node.timer.randomExec(function() {
-
-                    $( "#slider_overall" ).slider( "value",  Math.random()*10);
-                    $( "#eva_overall" ).val( $( "#slider_overall" ).slider( "value" ) );
-
-                    $( "#slider_creativity" ).slider( "value",  Math.random()*10);
-                    $( "#eva_creativity" ).val( $( "#slider_creativity" ).slider( "value" ) );
-
-                    $( "#slider_face" ).slider( "value",  Math.random()*10);
-                    $( "#eva_face" ).val( $( "#slider_face" ).slider( "value" ) );
-
-                    $( "#slider_abstract" ).slider( "value",  Math.random()*10);
-                    $( "#eva_abstract" ).val( $( "#slider_abstract" ).slider( "value" ) );
-
-                    next.click();
-
-                }, 4000);
-            });
-
         }
 
         function onNextFaces(faces) {
@@ -121,8 +159,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         }
 
         function askForNext() {
-            var score, faces, obj, i, len, secondSet, counter;
+            var faces, obj, counter;
             var face;
+            var time2score;
+            var scoreOverall, scoreCreativity, scoreFace, scoreAbstract;
+
             time2score = node.timer.getTimeSince('newpic_displayed');
             next.disabled = true;
             counter = node.game.counter;
@@ -177,14 +218,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
         });
 
-
         // Elements of the page.
 
         // jQuery.
         $ = W.getFrameWindow().$;
 
         // Next button.
-        next = W.getElementById("doneButton");
+        node.game.nextBtn = next = W.getElementById("doneButton");
 
         // Img.
         faceImg = W.getElementById('face');
@@ -211,70 +251,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Click!
         next.onclick = askForNext;
         next.click();
-    };
-
-    function instructionsText() {
-        var next, sampleDiv;
-        console.log('instructions');
-
-        sampleDiv = W.getElementById("sample");
-        next = W.getElementById("doneButton");
-        next.onclick = function() {
-            this.disabled = "disabled";
-            node.emit('DONE');
-        };
-
-        // Preloading the sample
-        node.get('sample', function(sample) {
-            var i = -1, len = sample.length;
-            var imgPath, img;
-            // console.log(sample);
-            for(; ++i < len;){
-                imgPath = sample[i];
-                img = document.createElement('img');
-                img.src = '/imgscore/faces/' + imgPath;
-                img.className = 'imgSample';
-                sampleDiv.appendChild(img);
-            }
-
-            node.env('auto', function() {
-                node.timer.randomExec(function() {
-                    next.click();
-                }, 2000);
-            });
-        });
-    }
-
-    function sample() {
-        var sampleDiv, instructions, next;
-        var doneTimer, doneTimerSpan;
-
-        console.log('*** sample ! ***');
-
-        next = W.getElementById("doneButton");
-        instructions = W.getElementById("instructions");
-        sampleDiv = W.getElementById("sample");
-        instructions.style.display = 'none';
-        sampleDiv.style.display = '';
-        doneTimerSpan = W.getElementById("doneTimer");
-
-        doneTimer = node.widgets.append('VisualTimer', doneTimerSpan, {
-            milliseconds: 90000,
-            update: 1000,
-            name: 'candonext',
-            listeners: false,
-            timeup: function() {
-                next.disabled = false;
-            }
-        });
-
-        node.env('auto', function() {
-            node.timer.randomExec(function() {
-                doneTimer.stop();
-                next.disabled = false;
-                next.click();
-            }, 2000);
-        });
     }
 
     function thankyou() {
@@ -285,9 +261,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             codeErr = 'ERROR (code not found)';
             win = msg.data && msg.data.win || 0;
             exitcode = msg.data && msg.data.exitcode || codeErr;
-	    W.writeln('Your bonus in this game is: ' + win);
+            W.writeln('Your bonus in this game is: ' + win);
             W.writeln('Your exitcode is: ' + exitcode);
-	});
+        });
     }
 
     // Creating stages and steps
@@ -319,4 +295,4 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     game.verbosity = 1000;
 
     return game;
-}
+};
