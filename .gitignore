@@ -15,3 +15,5 @@ descil.conf.js
 *.csv
 
 faces
+faces_old
+*.json

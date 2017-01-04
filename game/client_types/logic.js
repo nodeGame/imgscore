@@ -12,7 +12,8 @@
 
 var path = require('path');
 var J = require('JSUS').JSUS;
-var ngc = require('nodegame-client');
+var ngc = require('nodegame-client');        
+var NDDB = ngc.NDDB;
 var GameStage = ngc.GameStage;
 var stepRules = ngc.stepRules;
 
@@ -30,13 +31,19 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     gameDir = channel.getGameDir();
 
+    // Need to load from channel (reduce latency).
+    // randomSets = channel.randomSets;
+    
     randomSets = loadRandomSets();
 
     function loadRandomSets() {
-        var filePath;
-        filePath = gameDir + '/images/db.json';
-        
+        var db, filePath;
+        filePath = gameDir + '/scripts/sets-of-images.json';
+        db = new NDDB();
+        db.loadSync(filePath);
+        return db.db;
     }
+
 
 //     // Do not save in memory the data sent by clients.
 //     node.off('in.set.DATA');
@@ -140,38 +147,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         }
     }
 
-
-    function startGameOnClient(pId) {
-        
-        checkAndCreateState(pId);
-
-//         // Setting metadata, settings, and plot
-//         node.remoteSetup('game_metadata',  pId, client.metadata);
-//         node.remoteSetup('game_settings', pId, client.settings);
-//         node.remoteSetup('plot', pId, client.plot);
-//         node.remoteSetup('env', pId, client.env);
-
-        // If players has been checked out already, just send him to
-        // the last stage;
-        if (gameState[pId].checkedOut) {           
-            console.log('Player was already checkedOut ', pId);
-            node.remoteCommand('start', pId, {
-                startStage: new GameStage('2.1.2')
-            });
-            goodbye(dk.codes.id.get(pId));
-            return;            
-        }
-        else {
-            // Start the game on the client.
-            node.remoteCommand('start', pId);
-        }
-    }
-
     // Functions.
 
     // Init Function. Will spawn everything.
     function init() {
 
+        node.game.sets = new NDDB();
 
         // This must be done manually for now (maybe change).
         node.on.mreconnect(function(p) {
@@ -208,20 +189,20 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.on('get.NEXT', function(msg) {
             var set, state, secondSet;
             var code;
-debugger
+
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
             
             if (state.newSetNeeded) {
                 // Circular queue.
-                state.setId = ++counter % sets.length;
+                state.setId = ++counter % randomSets.size();
                 state.newSetNeeded = false;
                 state.pic = 0;
 
                 // There is actually a difference between setId and the set 
                 // of the images actually evaluated. setId is the idx of the
                 // array, but inside the array items are not ordered.
-                mdbWrite.store({
+                node.game.sets.insert({
                     rater: msg.from,
                     setId: state.setId,
                     randomSetId: state.randomSetId
@@ -231,7 +212,7 @@ debugger
             console.log(state);
 
             // We need to clone it, otherwise it gets overwritten.
-            set = J.clone(sets[state.setId]);
+            set = J.clone(randomSets[state.setId]);
 
             // This is a reconnection.
             if (state.resume) {
@@ -307,7 +288,6 @@ debugger
     
     stager.setOnInit(init);
 
-
     return {
         nodename: 'imgscore',
         plot: stager.getState(),
@@ -316,3 +296,30 @@ debugger
     };
 
 };
+
+
+//     function startGameOnClient(pId) {
+//         
+//         checkAndCreateState(pId);
+// 
+// //         // Setting metadata, settings, and plot
+// //         node.remoteSetup('game_metadata',  pId, client.metadata);
+// //         node.remoteSetup('game_settings', pId, client.settings);
+// //         node.remoteSetup('plot', pId, client.plot);
+// //         node.remoteSetup('env', pId, client.env);
+// 
+//         // If players has been checked out already, just send him to
+//         // the last stage;
+//         if (gameState[pId].checkedOut) {           
+//             console.log('Player was already checkedOut ', pId);
+//             node.remoteCommand('start', pId, {
+//                 startStage: new GameStage('2.1.2')
+//             });
+//             goodbye(dk.codes.id.get(pId));
+//             return;            
+//         }
+//         else {
+//             // Start the game on the client.
+//             node.remoteCommand('start', pId);
+//         }
+//     }

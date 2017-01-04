@@ -49,7 +49,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             this.disabled = "disabled";
             node.done();
         };
-debugger
+
         // Preloading the sample
         node.get('sample', function(sample) {
             var i, len;
@@ -82,11 +82,10 @@ debugger
 
         node.game.doneTimer = 
             node.widgets.append('VisualTimer', doneTimerSpan, {
-                milliseconds: 90000,
+                milliseconds: 2000,
                 update: 1000,
                 name: 'candonext',
                 listeners: false,
-                title: 'Please wait <em>at least</em>:',
                 timeup: function() {
                     next.disabled = false;
                 }
