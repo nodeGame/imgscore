@@ -132,7 +132,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             node.game.evaHasChanged = false;
 
-            order = JSUS.shuffleNodes(evaTD, JSUS.sample(0,3));
+            order = JSUS.shuffleElements(evaTD, JSUS.sample(0,3));
 
             i = -1, len = sliders.length;
             for ( ; ++i < len ; ) {
@@ -193,7 +193,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     time2score: time2score
 
                 };
-                node.set('score', obj);
+                node.set(obj);
             }
 
             if (!faces.items || counter >= (faces.items.length -1)) {
