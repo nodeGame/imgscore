@@ -253,11 +253,12 @@ debugger
 
     // Sends the BONUS msg to the client.
     function goodbye(code) {
-        var bonusStr;
+        var bonusStr, bonus;
+        bonus = settings.BONUS;
 
         // Send Win code;
         node.say('WIN', code.AccessCode || code.id, {
-            win: settings.BONUS,
+            win: bonus,
             exitcode: code.ExitCode
         });
 
@@ -267,8 +268,7 @@ debugger
             (code.WorkerId || 'NA') + '","' +
             (code.HITId || 'NA') + '","' +
             (code.AssignmentId || 'NA') + '",' +
-            bonus + ',' + ',' +
-            totWin + ',' + Number(totWinUsd).toFixed(2) + ',"x",\n';
+            bonus + ',' + Number(bonus).toFixed(2) + ',"x",\n';
         appendToBonusFile(bonusStr);
     }
 
