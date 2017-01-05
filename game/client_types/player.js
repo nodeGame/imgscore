@@ -1,6 +1,6 @@
 /**
  * # Image scoring - Client
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * Receives links to images and goes through them displaying rating sliders.
