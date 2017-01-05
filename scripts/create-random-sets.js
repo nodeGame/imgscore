@@ -50,7 +50,7 @@ for ( ; ++i < NSETS ; ) {
 
         set.push(item.filename);
     }
-    outDb.insert( { set : set } );
+    outDb.insert( { items : set } );
     // console.log(i);
 }
 

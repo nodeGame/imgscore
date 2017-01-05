@@ -125,8 +125,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             var imgPath;
             var i, len;
 
-            imgPath = node.game.faces.items[++node.game.counter].path;
-            faceImg.src = '/facerank/faces/' + imgPath;
+            imgPath = node.game.faces.items[++node.game.counter];
+            faceImg.src = 'faces/' + imgPath;
             next.disabled = false;
             node.timer.setTimestamp('newpic_displayed');
 

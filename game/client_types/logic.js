@@ -3,8 +3,6 @@
  * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
- * Handles incoming connections, sets the Face Categorization game
- * in each client, and start the game.
  * The state of each player is saved, and in case of disconnections and
  * reconnections the player restart from where it has left.
  * ---
@@ -189,13 +187,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.on('get.NEXT', function(msg) {
             var set, state, secondSet;
             var code;
-
+debugger
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
             
             if (state.newSetNeeded) {
                 // Circular queue.
-                state.setId = ++counter % randomSets.size();
+                state.setId = ++counter % randomSets.length;
                 state.newSetNeeded = false;
                 state.pic = 0;
 
@@ -239,7 +237,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 // The total number of pictures  must be set for the first time.
                 state.setLength = set.items.length;
             }
-
+debugger
             console.log('COUNTER ', counter);
             console.log('SET LENGTH ', set ? set.items.length : 'no set');
       
@@ -249,7 +247,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Client is requesting a random sample.
         node.on('get.sample', function(msg) {
             console.log('**** Received a get SAMPLE! ***');
-            debugger
             checkAndCreateState(msg.from);
             if (gameState[msg.from].randomSetId === null) {
                 gameState[msg.from].randomSetId = J.randomInt(0, randomSets.length);
