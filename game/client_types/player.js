@@ -33,38 +33,52 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         this.counter = -1;
         this.images = {};
         this.previousTags = {};
+
+
+        this.getSample = function() {
+            var that, sampleDiv; 
+            that = this;
+            sampleDiv = W.getElementById('sample');
+            // Preloading the sample
+            node.get('sample', function(sample) {
+                var i, len;
+                var imgPath, img;
+                that.sample = sample;
+                i = -1, len = sample.length;
+                for (; ++i < len;) {
+                    imgPath = sample[i];
+                    img = document.createElement('img');
+                    img.src = node.game.settings.IMG_DIR + imgPath;
+                    img.className = 'imgSample';
+                    sampleDiv.appendChild(img);
+                }
+            });
+        };
+
+        node.on('SOCKET_DISCONNECT', function() {
+            W.clearPage();
+            document.title = 'disconnected';
+            W.writeln('Disconnection detected. Please reconnect to ' +
+                      'resume the task from where you have left.');
+        });
     });
 
     // STAGES and STEPS.
 
     function instructionsText() {
-        var next, sampleDiv;
+        var next;
         console.log('instructions');
 
         W.setInnerHTML('nimages', node.game.settings.NIMAGES);
 
-        sampleDiv = W.getElementById("sample");
         node.game.nextBtn = next = W.getElementById("doneButton");
         next.onclick = function() {
             this.disabled = "disabled";
             node.done();
         };
 
-        // Preloading the sample
-        node.get('sample', function(sample) {
-            var i, len;
-            var imgPath, img;
-            // console.log(sample);
-
-            i = -1, len = sample.length;
-            for (; ++i < len;) {
-                imgPath = sample[i];
-                img = document.createElement('img');
-                img.src = node.game.settings.IMG_DIR + imgPath;
-                img.className = 'imgSample';
-                sampleDiv.appendChild(img);
-            }
-        });
+        // Require sample images.
+        this.getSample();
     }
 
     function sample() {
@@ -102,7 +116,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var $;
         var order;
         var evaTD, evaFace, evaAbstract, evaOverall, evaCreativity;
-        var help, helpLink;
 
         var slOverall, slCreativity, slFace, slAbstract;
 
@@ -119,7 +132,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     node.game.evaHasChanged = true;
                 }
             });
-            $( "#eva_" + slName ).val( $( "#slider_" + slName ).slider( "value" ) );
+            $("#eva_" + slName).val($("#slider_" + slName ).slider("value"));
         }
 
         function displayImage() {
@@ -194,19 +207,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
         }
 
-        // Help.
-
-        node.on('help', function() {
-            if (help.style.display === 'none') {
-                help.style.display = '';
-                helpLink.innerHTML = 'Hide help';
-            }
-            else {
-                help.style.display = 'none';
-                helpLink.innerHTML = 'Show help';
-            }
-        });
-
         // Elements of the page.
 
         // jQuery.
@@ -232,10 +232,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         evaCreativity = W.getElementById('eva_creativity');
         evaFace = W.getElementById('eva_face');
         evaAbstract = W.getElementById('eva_abstract');
-
-        // Help.
-        help = W.getElementById('helpSpan');
-        helpLink = W.getElementById('helpLink');
 
         // Click!
         next.onclick = askForNext;

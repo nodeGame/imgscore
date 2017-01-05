@@ -91,6 +91,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         node.game.sets = new NDDB();
 
+        this.sampleStage = this.plot.normalizeGameStage('instructions.sample');
+
         // This must be done manually for now (maybe change).
         node.on.mreconnect(function(p) {
             node.game.ml.add(p);
@@ -100,22 +102,16 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             var p, code;
 
             console.log('One player reconnected ', p.id);
-
+debugger
             pState = gameState[p.id];
 
-            if (!p) {
+            if (!pState) {
                 console.log('should not happen. no game state: ', p);
                 return;
             }
 
-            if (!pState.disconnected) {
-                // error
-                console.log('should not happen. not disconnected ', p.id);
-            }
-
             // Player will continue from where he has left.
             gameState[p.id].resume = true;
-
         });
 
         // Sends the images (reply to a GET request from client).
@@ -238,6 +234,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             appendToEmailFile(msg.data, code);
         });
     }
+
+    stager.setDefaultProperty('reconnect', function(p, opts) {
+        // Reconnect back to 1.1.1 if disconnection happened in step 'sample'.
+        if (GameStage.compare(p.disconnectedStage, this.sampleStage) === 0) {
+            opts.targetStep = new GameStage('1.1.1');
+        }
+    });
 
     stager.setOnInit(init);
 
