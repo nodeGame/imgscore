@@ -177,13 +177,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 face = faces.items[counter];
 
                 obj = {
-                    session: face.id,
-                    player: face.player,
-                    round: face.round,
-                    morn: face.morn,
-                    path: face.path,
-                    set: face.set,
-                    pos: face.pos,
+                    id: face,
                     scoreOverall: scoreOverall,
                     scoreCreativity: scoreCreativity,
                     scoreFace: scoreFace,
@@ -191,9 +185,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     hasChanged: node.game.evaHasChanged,
                     order: order,
                     time2score: time2score
-
                 };
-                node.set(obj);
+                node.say('score', 'SERVER', obj);
             }
 
             if (!faces.items || counter >= (faces.items.length -1)) {

@@ -61,7 +61,7 @@ function parseFilename(dir, filename) {
     obj = {
         date: tmp[0] + '_' + tmp[1] + '_' + tmp[2],
         treatment: treatment, 
-        player: player,
+        creator: player,
         round: round
     };
     return obj;

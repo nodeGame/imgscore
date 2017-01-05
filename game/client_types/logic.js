@@ -9,6 +9,7 @@
  */
 
 var path = require('path');
+var fs = require('fs');
 var J = require('JSUS').JSUS;
 var ngc = require('nodegame-client');        
 var NDDB = ngc.NDDB;
@@ -25,15 +26,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // 1. Setting up database connection.
 
-    var gameDir, randomSets;
+    var gameDir, randomSets, imgDb;
 
     gameDir = channel.getGameDir();
 
     // Need to load from channel (reduce latency).
     // randomSets = channel.randomSets;
     
-    randomSets = loadRandomSets();
-
     function loadRandomSets() {
         var db, filePath;
         filePath = gameDir + '/scripts/sets-of-images.json';
@@ -42,57 +41,17 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         return db.db;
     }
 
-
-//     // Do not save in memory the data sent by clients.
-//     node.off('in.set.DATA');
-// 
-//     // Establish the connection to database to load face sets.
-//     var Database = require('nodegame-db').Database;
-//     var ngdb = new Database(node);
-//     var mdbLoad = ngdb.getLayer('MongoDB', {
-//         dbName: 'facerank_db',
-//         collectionName: 'facerank_sets_ordered'
-//     });
-// 
-//     // Loads the sets of faces to send to players.
-//     var sets, randomSets;
-// 
-//     mdbLoad.connect(function() {
-//         var collection, db;
-//         db = mdbLoad.getDbObj();
-// 
-//         // var COLLECTION_NAME = 'facecats_sets_random_full';
-//         var COLLECTION_NAME = 'facecats_sets_less_rated_full';
-// 
-//         // Load GAME SETS.
-//         var collection = db.collection(COLLECTION_NAME);
-//         collection.find().toArray(function(err, data) {
-//             console.log('data in facerank_sets_random_full: ', data.length);
-//             console.log();
-//             sets = data;
-//             sets.sort();
-// 
-//             // Load SAMPLE SETS.
-//             collection = db.collection('facecats_sets_random');
-//             collection.find().toArray(function(err, data) {
-//                 console.log('data in facerank_sets_random: ', data.length);
-//                 console.log();
-//                 randomSets = data;
-//                 randomSets.sort();
-//                 mdbLoad.disconnect();
-//             });   
-//         });
-// 
-//     });
-// 
-//     // Open the collection where the categories will be stored.
-//     var mdbWrite = ngdb.getLayer('MongoDB', {
-//         dbName: 'facerank_db',
-//         collectionName: 'facescores'
-//     });
-// 
-//     // Opening the database for writing.
-//     mdbWrite.connect(function(){});
+    function loadImgDb() {
+        var db, filePath;
+        filePath = gameDir + '/scripts/all-images-db.json';
+        db = new NDDB({ update: { indexes: true } });
+        db.index('filename');
+        db.loadSync(filePath);
+        return db;
+    }
+    
+    randomSets = loadRandomSets();
+    imgDb = loadImgDb();
 
     // 2. Defining the single player game.
 
@@ -101,54 +60,32 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     var counter = settings.SET_COUNTER;
     var counterSample = settings.SAMPLE_SET_COUNTER;
 
-//     // Loading the game to send to each connecting client.
-//     // Second parameter makes available to the required file its properties.
-//     var client = channel.require(__dirname + '/includes/game.client', {
-//         Stager: node.Stager,
-//         stepRules: node.stepRules,
-//         settings: settings
-//     });
-
     // State of all players.
     var gameState = {};
 
-    // Sends the BONUS msg to the client.
-    function goodbye(code) {        
-        setTimeout(function() {
-            // Send Win code;
-            node.say('WIN', code.AccessCode, {
-                win: settings.BONUS,
-                exitcode: code.ExitCode
-            });
-        }, 200);
-    }
+    // Size of the last memory dump (size always increasing).
+    var lastDumpSize;
 
-    function checkAndCreateState(pId) {
-        // Creating a state for reconnections.
-        if (!gameState[pId]) {
-            gameState[pId] = {
-                randomSetId: null,
-                // The set of pictures to evaluate.
-                setId: null,
-                // The length of the set (needed to know when to send
-                // a new one).
-                setLength: null,
-                // Current picture of the set being categorized.
-                pic: 0,
-                // Flag: is player reconnecting.
-                resume: false,
-                // Counter: how many sets already completed.
-                completedSets: 0,
-                // User has just finished a set and will need a new one
-                newSetNeeded: true
-            };
-        }
-    }
+    // Dump db every X milliseconds (if there are changes).
+    var dumpDbInterval;
+    dumpDbInterval = 6000;
 
     // Functions.
 
     // Init Function. Will spawn everything.
     function init() {
+
+        setInterval(function() {
+            var s
+            s = node.game.memory.size();
+            if (s > 0 && s !== lastDumpSize) {
+                lastDumpSize = s;
+                node.game.memory.save('.db.json', function() {
+                    fs.createReadStream(gameDir + 'data/.db.json')
+                        .pipe(fs.createWriteStream(gameDir + 'data/db.json'));
+                });
+            }
+        }, dumpDbInterval);
 
         node.game.sets = new NDDB();
 
@@ -163,21 +100,17 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             console.log('One player reconnected ', p.id);
 
             pState = gameState[p.id];
+
             if (!p) {
+                console.log('should not happen. no game state: ', p);
                 return;
             }
+
             if (!pState.disconnected) {
                 // error
-                throw new Error('Player was not disconnected ', p.id); 
+                console.log('should not happen. not disconnected ', p.id); 
             }
             
-            // It is not added automatically.
-            // TODO: add it automatically if we return TRUE? It must be done
-            // both in the alias and the real event handler
-            node.game.pl.add(p);
-            
-            pState.disconnected = false;
-
             // Player will continue from where he has left.
             gameState[p.id].resume = true;
 
@@ -249,17 +182,19 @@ debugger
             console.log('**** Received a get SAMPLE! ***');
             checkAndCreateState(msg.from);
             if (gameState[msg.from].randomSetId === null) {
-                gameState[msg.from].randomSetId = J.randomInt(0, randomSets.length);
+                gameState[msg.from].randomSetId = 
+                    J.randomInt(0, randomSets.length) -1;
             }
-            return randomSets[gameState[msg.from].randomSetId].set;
+            return randomSets[gameState[msg.from].randomSetId].items;
         });
 
         // Client has categorized an image.
         node.on.data('score',function(msg) {
-            var state;
-debugger
-            if (!msg.data) return;
-            console.log('**** Received a CAT! ' + msg.data.round + '***');
+            var state, metadata, obj;
+
+            obj = msg.data;
+            if (!obj) return;
+            console.log('**** Received a CAT! ' + obj.id + '***');
             
             state = gameState[msg.from];
             console.log(state)
@@ -277,9 +212,14 @@ debugger
             }           
             
             // Add the id of the rater to the item.
-            msg.data.rater = msg.from;
-            
-            //mdbWrite.store(msg.data);
+            obj.player = msg.from;
+            obj.stage = msg.stage;
+
+            metadata = imgDb.filename.get(msg.data.id);
+            J.mixin(obj, metadata);
+
+            // Insert in memory.
+            node.game.memory.insert(obj);
         });
     }
     
@@ -288,35 +228,44 @@ debugger
     return {
         nodename: 'imgscore',
         plot: stager.getState(),
-        verbosity: 1,
-        debug: true
+        verbosity: 1
     };
 
+
+    // ## Helper functions.
+
+    // Sends the BONUS msg to the client.
+    function goodbye(code) {        
+        setTimeout(function() {
+            // Send Win code;
+            node.say('WIN', code.AccessCode, {
+                win: settings.BONUS,
+                exitcode: code.ExitCode
+            });
+        }, 200);
+    }
+
+    // Adds a new entry into the gameState obj with player id and img set.
+    function checkAndCreateState(pId) {
+        // Creating a state for reconnections.
+        if (!gameState[pId]) {
+            gameState[pId] = {
+                randomSetId: null,
+                // The set of pictures to evaluate.
+                setId: null,
+                // The length of the set (needed to know when to send
+                // a new one).
+                setLength: null,
+                // Current picture of the set being categorized.
+                pic: 0,
+                // Flag: is player reconnecting.
+                resume: false,
+                // Counter: how many sets already completed.
+                completedSets: 0,
+                // User has just finished a set and will need a new one
+                newSetNeeded: true
+            };
+        }
+    }
+
 };
-
-
-//     function startGameOnClient(pId) {
-//         
-//         checkAndCreateState(pId);
-// 
-// //         // Setting metadata, settings, and plot
-// //         node.remoteSetup('game_metadata',  pId, client.metadata);
-// //         node.remoteSetup('game_settings', pId, client.settings);
-// //         node.remoteSetup('plot', pId, client.plot);
-// //         node.remoteSetup('env', pId, client.env);
-// 
-//         // If players has been checked out already, just send him to
-//         // the last stage;
-//         if (gameState[pId].checkedOut) {           
-//             console.log('Player was already checkedOut ', pId);
-//             node.remoteCommand('start', pId, {
-//                 startStage: new GameStage('2.1.2')
-//             });
-//             goodbye(dk.codes.id.get(pId));
-//             return;            
-//         }
-//         else {
-//             // Start the game on the client.
-//             node.remoteCommand('start', pId);
-//         }
-//     }
