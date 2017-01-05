@@ -1,6 +1,6 @@
 /**
  * # Phantom type implementation of the game stages
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * Handles automatic play.
@@ -26,6 +26,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         o._cb = o.cb;
         o.cb = function() {
             var _cb, stepObj, id;
+            var i, len, delay;
+
             stepObj = this.getCurrentStepObj();
             // Invoking original callback.
             _cb = stepObj._cb;
@@ -52,25 +54,41 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             }
             else if (id === 'facerank') {
+                delay = 2000;
+                i = -1, len = node.game.settings.NIMAGES;
+                for ( ; ++i < len ; ) {                    
+                    node.timer.randomExec(function() {
+                        var $;
+                        $ = W.getFrameWindow().$;
+                        $( "#slider_overall" ).slider( "value",  Math.random()*10);
+                        $( "#eva_overall" ).val( $( "#slider_overall" ).slider( "value" ) );
 
+                        $( "#slider_creativity" ).slider( "value",  Math.random()*10);
+                        $( "#eva_creativity" ).val( $( "#slider_creativity" ).slider( "value" ) );
+
+                        $( "#slider_face" ).slider( "value",  Math.random()*10);
+                        $( "#eva_face" ).val( $( "#slider_face" ).slider( "value" ) );
+
+                        $( "#slider_abstract" ).slider( "value",  Math.random()*10);
+                        $( "#eva_abstract" ).val( $( "#slider_abstract" ).slider( "value" ) );
+
+                        node.game.nextBtn.click();
+
+                    }, delay);
+                    delay = delay + 2000;
+                }
+
+            }
+            else if (id === 'thankyou') {
+                // Nothing to do here.
+                W.getElementById('email').value =
+                    node.JSUS.randomString(9, 'a') + '@' + 'a.com';
+                W.getElementById('submit-email').click();
                 node.timer.randomExec(function() {
-                    var $;
-                    $ = W.getFrameWindow().$;
-                    $( "#slider_overall" ).slider( "value",  Math.random()*10);
-                    $( "#eva_overall" ).val( $( "#slider_overall" ).slider( "value" ) );
-
-                    $( "#slider_creativity" ).slider( "value",  Math.random()*10);
-                    $( "#eva_creativity" ).val( $( "#slider_creativity" ).slider( "value" ) );
-
-                    $( "#slider_face" ).slider( "value",  Math.random()*10);
-                    $( "#eva_face" ).val( $( "#slider_face" ).slider( "value" ) );
-
-                    $( "#slider_abstract" ).slider( "value",  Math.random()*10);
-                    $( "#eva_abstract" ).val( $( "#slider_abstract" ).slider( "value" ) );
-
-                    node.game.nextBtn.click();
-
-                }, 4000);
+                    // Kill phantoms in test mode.
+                    console.log('PHANTOMJS EXITING');
+                });
+                
             }
             else {
               node.timer.randomDone(2000);
