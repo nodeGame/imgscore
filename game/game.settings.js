@@ -20,7 +20,11 @@ module.exports = {
     // Serve sets of images sequentally from set X (it is zero-indexed).
     SET_COUNTER: -1,
 
-    // Payment settings. *
+    // The name of the folder in public/ containing the images.
+    // Keep the trailing slash.
+    IMG_DIR: 'imgscore/',
+
+    // Payment settings.
 
     // Divider ECU / DOLLARS *
     BONUS: 1,

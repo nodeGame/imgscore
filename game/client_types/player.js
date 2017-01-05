@@ -31,7 +31,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         frame = W.generateFrame();
        
         this.counter = -1;
-        this.faces = {};
+        this.images = {};
         this.previousTags = {};
     });
 
@@ -60,7 +60,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             for (; ++i < len;) {
                 imgPath = sample[i];
                 img = document.createElement('img');
-                img.src = '/imgscore/faces/' + imgPath;
+                img.src = node.game.settings.IMG_DIR + imgPath;
                 img.className = 'imgSample';
                 sampleDiv.appendChild(img);
             }
@@ -103,6 +103,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var order;
         var evaTD, evaFace, evaAbstract, evaOverall, evaCreativity;
         var help, helpLink;
+
         var slOverall, slCreativity, slFace, slAbstract;
 
         sliders = [ 'overall', 'creativity', 'face', 'abstract' ];
@@ -121,12 +122,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             $( "#eva_" + slName ).val( $( "#slider_" + slName ).slider( "value" ) );
         }
 
-        function displayFace() {
+        function displayImage() {
             var imgPath;
             var i, len;
 
-            imgPath = node.game.faces.items[++node.game.counter];
-            faceImg.src = 'faces/' + imgPath;
+            imgPath = node.game.images.items[++node.game.counter];
+            faceImg.src = node.game.settings.IMG_DIR + imgPath;
             next.disabled = false;
             node.timer.setTimestamp('newpic_displayed');
 
@@ -141,24 +142,20 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         }
 
-        function onNextFaces(faces) {
-            console.log('******* AAH! received NEXT from server');
-            if ('object' !== typeof faces) {
-                console.log('**** Weird: wrong faces! ');
+        function onNextImages(images) {
+            if ('object' !== typeof images) {
+                console.log('**** Weird: wrong images! ');
                 return;
-            }
-            else {
-                console.log(faces);
             }
 
             node.game.counter = -1;
-            node.game.faces = faces;
+            node.game.images = images;
 
-            displayFace();
+            displayImage();
         }
 
         function askForNext() {
-            var faces, obj, counter;
+            var images, obj, counter;
             var face;
             var time2score;
             var scoreOverall, scoreCreativity, scoreFace, scoreAbstract;
@@ -166,15 +163,15 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             time2score = node.timer.getTimeSince('newpic_displayed');
             next.disabled = true;
             counter = node.game.counter;
-            faces = node.game.faces;
+            images = node.game.images;
             scoreOverall = evaOverall.value;
             scoreCreativity = evaCreativity.value;
             scoreFace = evaFace.value;
             scoreAbstract = evaAbstract.value;
 
-            if (counter !== -1 && counter < faces.items.length) {
+            if (counter !== -1 && counter < images.items.length) {
 
-                face = faces.items[counter];
+                face = images.items[counter];
 
                 obj = {
                     id: face,
@@ -189,11 +186,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.say('score', 'SERVER', obj);
             }
 
-            if (!faces.items || counter >= (faces.items.length -1)) {
-                node.get('NEXT', onNextFaces);
+            if (!images.items || counter >= (images.items.length -1)) {
+                node.get('NEXT', onNextImages);
             }
             else {
-                displayFace();
+                displayImage();
             }
         }
 
