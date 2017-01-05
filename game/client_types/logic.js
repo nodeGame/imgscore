@@ -160,8 +160,7 @@ debugger
             // Player has rated 2 sets (about 60 paitings).
             else if (state.completedSets >= settings.NSETS) {
                 state.checkedOut = true;
-                code = dk.codes.id.get(msg.from);
-                dk.checkOut(code.AccessCode, code.ExitCode, settings.BONUS);
+                code = channel.registry.getClient(msg.from);
                 node.remoteCommand('step', msg.from);
                 goodbye(code);
                 return;
@@ -203,9 +202,9 @@ debugger
             msg.data.setCounter = state.completedSets + 1;
 
             // Update the counter of the last categorized pic.
-            state.pic = msg.data.pos + 1;
+            state.pic++;
             if (state.pic === state.setLength) {
-                ++state.completedSets;
+                state.completedSets++;
                 if (state.completedSets < settings.NSETS) {
                     state.newSetNeeded = true;
                 }
