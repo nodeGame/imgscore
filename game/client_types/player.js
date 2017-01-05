@@ -25,13 +25,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // INIT and GAMEOVER.
 
     stager.setOnInit(function() {
-        var header, frame;
+        var frame;
         console.log('** INIT PLAYER! **');
         
-        header = W.generateHeader();
         frame = W.generateFrame();
-        W.setHeaderPosition('top');
-
+       
         this.counter = -1;
         this.faces = {};
         this.previousTags = {};

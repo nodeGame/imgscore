@@ -3,6 +3,7 @@
 div#root {
     width: 820px;
     margin: auto;
+    margin-top: 20px;
     border: 3px solid #CCC;
     background: #DADCCB;
     padding: 20px;
@@ -35,6 +36,7 @@ dl#instrcat dd {
     display: block;
     margin: auto;
     clear: both;
+    text-align: center;
 }
 
 /* facecat table */
@@ -130,12 +132,6 @@ ul#previousTags li:hover {
     cursor: pointer;
 }
 
-button {
-    font-size: 18px;
-    width: 98%;
-    height: 40px;
-}
-
 p#helpTags {
     width: 635px;
     margin-top: 10px;
@@ -155,6 +151,9 @@ p#helpTags {
 }
 
 button {
+    font-size: 18px;
+    width: 98%;
+    height: 40px;
     cursor: pointer;
     pointer: hand;
 }
