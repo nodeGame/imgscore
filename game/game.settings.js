@@ -1,6 +1,6 @@
 /**
- * # Game settings for Face Categorization  game.
- * Copyright(c) 2014 Stefano Balietti
+ * # Game settings for Images Scoring game.
+ * Copyright(c) 2016 Stefano Balietti
  * MIT Licensed
  *
  * http://www.nodegame.org
@@ -8,20 +8,14 @@
  */
 module.exports = {
 
-    // Waiting Room Settings. *
-    ////////////////////////////
-    
-    // How many sessions should be dispatched.
-    TARGET_SESSIONS: 1,
-
-    // Stop creating new sessions after N sessions has been dispatched.
-    ACCEPT_EXTRA_SESSIONS: false,
-
     // Session Counter start from (not used).
     SESSION_ID: 100,
 
     // Number of sets of pictures to rate per player.
     NSETS: 1,
+
+    // Number of images per set.
+    NIMAGES: 40,
 
     // Serve sets of images sequentally from set X (it is zero-indexed).
     SET_COUNTER: -1,
@@ -29,19 +23,5 @@ module.exports = {
     // Payment settings. *
 
     // Divider ECU / DOLLARS *
-    BONUS: 0,
-
-    // DEBUG.
-    DEBUG: false,
-
-    // AUTO-PLAY.
-    AUTO: false,
-
-    // DATABASE.
-    DB: 'FILE', // FILE, MONGODB
-
-    // AUTHORIZATION.
-    AUTH: 'NO' // MTURK, LOCAL, NO.
-
-    // * = if you change this you need to update instructions and quiz
+    BONUS: 0
 };

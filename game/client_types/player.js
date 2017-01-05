@@ -43,6 +43,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var next, sampleDiv;
         console.log('instructions');
 
+        W.setInnerHTML('nimages', node.game.settings.NIMAGES);
+
         sampleDiv = W.getElementById("sample");
         node.game.nextBtn = next = W.getElementById("doneButton");
         next.onclick = function() {
