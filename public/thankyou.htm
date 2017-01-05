@@ -1,19 +1,30 @@
 <!doctype html>
-<title>Task completed.</title>
+
+<link rel="stylesheet" href="/lib/bootstrap/bootstrap.min.css" />
 <link rel='stylesheet' href='/stylesheets/nodegame.css'></link>
-<link rel='stylesheet' href='/facerank/css/main.css'></link>
+<link rel='stylesheet' href='css/main.css'></link>
+
 <body>
   <div id="root">
-    <h1>Thank you for completing this task!</h1>
-    Please go back to the Amazon Mechanical Turk web site and submit the hit.
-    <br/>
-    We usually pay within 24 hours. For any problem, please look for a HIT called <strong>ETH Descil Trouble Ticket</strong> and file a new trouble ticket reporting the following information:
-    <ul>
-      <li>your turker id</li>
-      <li>the HIT name: <em>FaceRank</em></li>
-      <li>your exit code, as written below</li>
-      <li>your browser name and version</li>
-    </ul>
-    <br/> Notice: you do not need the exit code to submit the HIT, but only in case of trouble with the payment.
+    <div id="instructions">
+      <h1>Thank You for Participating!</h1>
+      You have now completed this task and your data have been saved.<br/>
+      Please go back to the Amazon Mechanical Turk web site and
+      submit the HIT.<br/>
+      <br/>
+      Total Win:<br/>
+      <input id="win" type="text" placeholder="Win" class="form-control" />
+      <br>
+      Your Exit code:<br>
+      <input id="exitCode" type="text" placeholder="ExitCode" class="form-control" />
+      <br/>
+      <label for="Email">
+        Would you like to be contacted again for future experiments?
+        <br/> If so, leave your email here and press submit:
+      </label>
+      <input id="email" type="text" placeholder="Email" class="form-control"/>
+      <br/>
+      <button class="btn btn-info" id="submit-email" type="submit">Submit</button>
+    </div>
   </div>
 </body>

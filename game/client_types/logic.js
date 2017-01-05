@@ -11,7 +11,7 @@
 var path = require('path');
 var fs = require('fs');
 var J = require('JSUS').JSUS;
-var ngc = require('nodegame-client');        
+var ngc = require('nodegame-client');
 var NDDB = ngc.NDDB;
 var GameStage = ngc.GameStage;
 var stepRules = ngc.stepRules;
@@ -32,7 +32,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // Need to load from channel (reduce latency).
     // randomSets = channel.randomSets;
-    
+
     function loadRandomSets() {
         var db, filePath;
         filePath = gameDir + '/scripts/sets-of-images.json';
@@ -49,9 +49,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         db.loadSync(filePath);
         return db;
     }
-    
+
     randomSets = loadRandomSets();
     imgDb = loadImgDb();
+
+    // Write bonus file headers.
+    appendToBonusFile();
 
     // 2. Defining the single player game.
 
@@ -96,7 +99,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         node.on.preconnect(function(p) {
             var p, code;
-            
+
             console.log('One player reconnected ', p.id);
 
             pState = gameState[p.id];
@@ -108,9 +111,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             if (!pState.disconnected) {
                 // error
-                console.log('should not happen. not disconnected ', p.id); 
+                console.log('should not happen. not disconnected ', p.id);
             }
-            
+
             // Player will continue from where he has left.
             gameState[p.id].resume = true;
 
@@ -123,14 +126,14 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 debugger
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
-            
+
             if (state.newSetNeeded) {
                 // Circular queue.
                 state.setId = ++counter % randomSets.length;
                 state.newSetNeeded = false;
                 state.pic = 0;
 
-                // There is actually a difference between setId and the set 
+                // There is actually a difference between setId and the set
                 // of the images actually evaluated. setId is the idx of the
                 // array, but inside the array items are not ordered.
                 node.game.sets.insert({
@@ -172,7 +175,7 @@ debugger
 debugger
             console.log('COUNTER ', counter);
             console.log('SET LENGTH ', set ? set.items.length : 'no set');
-      
+
             return set;
         });
 
@@ -181,7 +184,7 @@ debugger
             console.log('**** Received a get SAMPLE! ***');
             checkAndCreateState(msg.from);
             if (gameState[msg.from].randomSetId === null) {
-                gameState[msg.from].randomSetId = 
+                gameState[msg.from].randomSetId =
                     J.randomInt(0, randomSets.length) -1;
             }
             return randomSets[gameState[msg.from].randomSetId].items;
@@ -194,7 +197,7 @@ debugger
             obj = msg.data;
             if (!obj) return;
             console.log('**** Received a CAT! ' + obj.id + '***');
-            
+
             state = gameState[msg.from];
             console.log(state)
 
@@ -208,8 +211,8 @@ debugger
                 if (state.completedSets < settings.NSETS) {
                     state.newSetNeeded = true;
                 }
-            }           
-            
+            }
+
             // Add the id of the rater to the item.
             obj.player = msg.from;
             obj.stage = msg.stage;
@@ -220,8 +223,23 @@ debugger
             // Insert in memory.
             node.game.memory.insert(obj);
         });
+
+        // Save Email.
+        node.on.data('email', function(msg) {
+            var id, code;
+            id = msg.from;
+
+            code = channel.registry.getClient(id);
+            if (!code) {
+                console.log('ERROR: no code in endgame:', id);
+                return;
+            }
+
+            // Write email.
+            appendToEmailFile(msg.data, code);
+        });
     }
-    
+
     stager.setOnInit(init);
 
     return {
@@ -234,14 +252,24 @@ debugger
     // ## Helper functions.
 
     // Sends the BONUS msg to the client.
-    function goodbye(code) {        
-        setTimeout(function() {
-            // Send Win code;
-            node.say('WIN', code.AccessCode, {
-                win: settings.BONUS,
-                exitcode: code.ExitCode
-            });
-        }, 200);
+    function goodbye(code) {
+        var bonusStr;
+
+        // Send Win code;
+        node.say('WIN', code.AccessCode || code.id, {
+            win: settings.BONUS,
+            exitcode: code.ExitCode
+        });
+
+        // By default Approve is marked."
+        bonusStr = '"' + (code.id || code.AccessCode || 'NA') + '","' +
+            (code.ExitCode || code.id) + '","' +
+            (code.WorkerId || 'NA') + '","' +
+            (code.HITId || 'NA') + '","' +
+            (code.AssignmentId || 'NA') + '",' +
+            bonus + ',' + ',' +
+            totWin + ',' + Number(totWinUsd).toFixed(2) + ',"x",\n';
+        appendToBonusFile(bonusStr);
     }
 
     // Adds a new entry into the gameState obj with player id and img set.
@@ -265,6 +293,47 @@ debugger
                 newSetNeeded: true
             };
         }
+    }
+
+    /**
+     * ### appendToBonusFile
+     *
+     * Appends a row to the bonus file (no checkings)
+     *
+     * @param {string} row Optional. The row to append, or undefined to add header
+     */
+    function appendToBonusFile(row) {
+        if ('undefined' === typeof row) {
+            row = '"access","exit","WorkerId","hid","AssignmentId","points",' +
+                '"points.total","bonus","Approve","Reject"\n';
+        }
+        fs.appendFile(gameDir + 'data/bonus.csv', row, function(err) {
+            if (err) {
+                console.log(err);
+                console.log(row);
+            }
+        });
+    }
+
+    /**
+     * ### appendToEmail
+     *
+     * Appends a row to the email file (no checkings)
+     *
+     * @param {string} email The email
+     * @param {object} code The client object from the registry
+     */
+    function appendToEmailFile(email, code) {
+        var row;
+        row  = '"' + (code.id || code.AccessCode || 'NA') + '", "' +
+            (code.workerId || 'NA') + '", "' + email + '"\n';
+
+        fs.appendFile(gameDir + 'data/email.csv', row, function(err) {
+            if (err) {
+                console.log(err);
+                console.log(row);
+            }
+        });
     }
 
 };

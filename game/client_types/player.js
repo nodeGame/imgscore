@@ -246,16 +246,60 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     function thankyou() {
+        var b, i, errStr, counter;
         console.log('thank you.');
 
         node.on.data('WIN', function(msg) {
             var win, exitcode, codeErr;
+            var exitCodeInput, winInput;
+            var winUsd;
+            // Exit Code.
             codeErr = 'ERROR (code not found)';
-            win = msg.data && msg.data.win || 0;
             exitcode = msg.data && msg.data.exitcode || codeErr;
-            W.writeln('Your bonus in this game is: ' + win);
-            W.writeln('Your exitcode is: ' + exitcode);
+            exitCodeInput = W.getElementById('exitCode');
+            exitCodeInput.value = exitcode;
+       
+            // Total win.
+            win = msg.data && msg.data.win || 0;
+            winInput = W.getElementById('win');
+            winUsd = win / node.game.settings.EXCHANGE_RATE;
+            winInput.value = win +
+                ' Points = ' + Number(winUsd).toFixed(2) + ' USD';
         });
+
+        // Email box.
+        counter = 0;
+        b = W.getElementById('submit-email');
+        i = W.getElementById('email');
+        errStr = 'Check your email and click here again';
+        b.onclick = function() {
+            var email, indexAt, indexDot;
+            email = i.value;
+            if (email.trim().length > 5) {
+                indexAt = email.indexOf('@');
+                if (indexAt !== -1 &&
+                    indexAt !== 0 &&
+                    indexAt !== (email.length-1)) {
+                    indexDot = email.lastIndexOf('.');
+                    if (indexDot !== -1 &&
+                        indexDot !== (email.length-1) &&
+                        indexDot > (indexAt+1)) {
+
+                        b.disabled = true;
+                        i.disabled = true;
+                        node.say('email', 'SERVER', email);
+                        b.onclick = null;
+                        b.innerHTML = 'Sent!';
+                        return;
+                    }
+                }
+            }
+            b.innerHTML = errStr;
+            if (counter) b.innerHTML += '(' + counter + ')';
+            counter++;
+        };
+        // Remove block from leaving page.
+        W.restoreOnleave();
     }
 
     // Creating stages and steps

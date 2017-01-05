@@ -23,5 +23,7 @@ module.exports = {
     // Payment settings. *
 
     // Divider ECU / DOLLARS *
-    BONUS: 0
+    BONUS: 1,
+
+    EXCHANGE_RATE: 1
 };
