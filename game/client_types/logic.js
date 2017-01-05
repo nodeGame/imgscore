@@ -1,6 +1,6 @@
 /**
  * # Logic for Image Scoring
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * The state of each player is saved, and in case of disconnections and
@@ -58,10 +58,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // 2. Defining the single player game.
 
-    // Every new connecting player will receive a new set of faces, indexed
+    // Every new connecting player will receive a new set of images, indexed
     // by counter; also on(NEXT) a new set will be sent.
     var counter = settings.SET_COUNTER;
-    var counterSample = settings.SAMPLE_SET_COUNTER;
 
     // State of all players.
     var gameState = {};
@@ -119,11 +118,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         });
 
-        // Sends the faces (reply to a GET request from client).
+        // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
             var set, state, secondSet;
             var code;
-debugger
+
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
@@ -172,7 +171,7 @@ debugger
                 // The total number of pictures  must be set for the first time.
                 state.setLength = set.items.length;
             }
-debugger
+
             console.log('COUNTER ', counter);
             console.log('SET LENGTH ', set ? set.items.length : 'no set');
 

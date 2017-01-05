@@ -16,12 +16,12 @@ module.exports = function(stager, settings) {
 
     stager
         .next('instructions')
-        .next('facerank')
+        .next('imgscore')
         .next('thankyou')
         .gameover();
 
     stager.extendStage('instructions', {
-        steps: [ 'instructionsText', 'sample' ]
+        steps: [ 'text', 'sample' ]
     });
  
     return stager.getState();

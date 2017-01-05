@@ -94,8 +94,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.game.doneTimer.start();
     }
 
-    function facerank() {
-        console.log('facerank');
+    function imgscore() {
+        console.log('imgscore');
 
         var sliders;
         var next, faceImg;
@@ -305,7 +305,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // in game.stages. This is quite annoying in the case where
     // the logic does not follow the same structure as the client.
 
-    stager.extendStep('instructionsText', {
+    stager.extendStep('text', {
         cb: instructionsText,
         frame: 'instructions.htm'
     });
@@ -314,9 +314,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         cb: sample
     });
 
-    stager.extendStep('facerank', {
-        cb: facerank,
-        frame: 'facepage.htm'
+    stager.extendStep('imgscore', {
+        cb: imgscore,
+        frame: 'scorepage.htm'
     });
 
     stager.extendStep('thankyou', {
