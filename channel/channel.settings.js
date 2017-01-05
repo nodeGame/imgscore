@@ -28,7 +28,7 @@ module.exports = {
      *
      * Default: the name of the game, as found in the package.json file.
      */
-    // name: 'stopgo',
+    // name: 'imgscore',
 
     /**
      * ## alias (string|array) Optional
