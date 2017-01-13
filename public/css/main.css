@@ -1,5 +1,10 @@
 /* Instructions css */
 
+body {
+    padding: 0;
+    margin: 0;
+}
+
 div#root {
     width: 820px;
     margin: auto;
@@ -64,6 +69,7 @@ table#facecat_table {
     border-spacing: 0;
     margin: auto;
     font: "Arial, Verdana, Sans";
+    margin-top: 20px;
 }
 
 table#facecat_table td {

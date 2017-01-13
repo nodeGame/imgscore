@@ -1,6 +1,6 @@
 /**
  * # Game settings for Images Scoring game.
- * Copyright(c) 2016 Stefano Balietti
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * http://www.nodegame.org
