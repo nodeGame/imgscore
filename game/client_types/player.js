@@ -43,6 +43,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             node.get('sample', function(sample) {
                 var i, len;
                 var imgPath, img;
+                var $;
+
+                // jQuery.
+                $ = W.getFrameWindow().$;
+
                 that.sample = sample;
                 i = -1, len = sample.length;
                 for (; ++i < len;) {
@@ -50,7 +55,31 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     img = document.createElement('img');
                     img.src = node.game.settings.IMG_DIR + imgPath;
                     img.className = 'imgSample';
+
+                    // img['data-toggle'] = 'tooltip';
+                    // img.title = '<img src="' + img.src + '" />"';
+
                     sampleDiv.appendChild(img);
+
+                    (function(img) {
+                        var tooltip;                        
+                        tooltip = $('<img src="' + img.src + '" />"');
+
+                        $(img).hover(
+                            function(e) {                               
+                                tooltip.addClass('tooltip');
+                                tooltip.css({
+                                    "left": (5 + e.pageX) + "px",
+                                    "top": -200 + e.pageY + "px"
+                                });
+                                $(this).before(tooltip);
+                               
+                            },
+                            function() {
+                                $(tooltip).remove();
+                            }
+                        );
+                    })(img);
                 }
             });
         };
