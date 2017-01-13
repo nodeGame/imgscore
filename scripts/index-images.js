@@ -6,7 +6,7 @@ var ngc = require('nodegame-client');
 var node = ngc.getClient();
 node.setup('nodegame', {});
 
-var DIR = path.resolve('..', 'public', 'imgscore');
+var DIR = path.resolve('..', 'public', 'imgscore') + '/';
 
 var nddb = new NDDB();
 

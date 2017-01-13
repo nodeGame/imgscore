@@ -102,7 +102,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             var p, code;
 
             console.log('One player reconnected ', p.id);
-debugger
+
             pState = gameState[p.id];
 
             if (!pState) {
