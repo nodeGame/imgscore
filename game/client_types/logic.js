@@ -38,6 +38,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         filePath = gameDir + '/scripts/sets-of-images.json';
         db = new NDDB();
         db.loadSync(filePath);
+        db.sort(function(a, b) {
+            if (a.set < b.set) return -1
+            if (b.set < a.set) return 1;
+            throw new Error('Cannot have same set id!');
+        });
+        console.log(db.first());
         return db.db;
     }
 
