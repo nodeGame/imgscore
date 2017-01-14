@@ -30,34 +30,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     gameDir = channel.getGameDir();
 
-    // Need to load from channel (reduce latency).
-    // randomSets = channel.randomSets;
-
-    function loadRandomSets() {
-        var db, filePath;
-        filePath = gameDir + '/scripts/sets-of-images.json';
-        db = new NDDB();
-        db.loadSync(filePath);
-        db.sort(function(a, b) {
-            if (a.set < b.set) return -1
-            if (b.set < a.set) return 1;
-            throw new Error('Cannot have same set id!');
-        });
-        console.log(db.first());
-        return db.db;
-    }
-
-    function loadImgDb() {
-        var db, filePath;
-        filePath = gameDir + '/scripts/all-images-db.json';
-        db = new NDDB({ update: { indexes: true } });
-        db.index('filename');
-        db.loadSync(filePath);
-        return db;
-    }
-
-    randomSets = loadRandomSets();
-    imgDb = loadImgDb();
+    randomSets = setup.randomSets;
+    imgDb = setup.imgDb;
 
     // Write bonus file headers.
     appendToBonusFile();
