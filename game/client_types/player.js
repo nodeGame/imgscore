@@ -212,6 +212,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             scoreAbstract = evaAbstract.value;
 
             if (counter !== -1 && counter < images.items.length) {
+            
+                next.innerHTML = 'Next (' + (counter + 1) + '/' +
+                    node.game.settings.NIMAGES + ')';
 
                 face = images.items[counter];
 

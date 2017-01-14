@@ -1,6 +1,6 @@
 /**
  * # Game stages definition file
- * Copyright(c) 2016 Stefano Balietti <s.balietti@neu.edu>
+ * Copyright(c) 2017 Stefano Balietti <s.balietti@neu.edu>
  * MIT Licensed
  *
  * Stages are defined using the stager API
