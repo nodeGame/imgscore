@@ -30,11 +30,17 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         frame = W.generateFrame();
 
+        // How many images scored in this set.
         this.counter = -1;
+
+        // Contains data about the images to display, and sets completed.
         this.images = {};
 
-        // If the players has rated all required sets, or if he/she
-        // decided to stop earlier.
+        // Automatically stops from asking the next set of images to rate
+        // (the server would not send them anyway).
+        this.nSetsLimit = this.settings.NSETS -1;
+
+        // If TRUE, the loop at imgscore is broken.
         this.enoughSets = false;
 
         this.getSample = function() {
@@ -57,9 +63,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     img = document.createElement('img');
                     img.src = node.game.settings.IMG_DIR + imgPath;
                     img.className = 'imgSample';
-
-                    // img['data-toggle'] = 'tooltip';
-                    // img.title = '<img src="' + img.src + '" />"';
 
                     sampleDiv.appendChild(img);
 
@@ -148,7 +151,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var order;
         var evaTD, evaFace, evaAbstract, evaOverall, evaCreativity;
         var slOverall, slCreativity, slFace, slAbstract;
-
+     
         W.show('facecat_table');
         W.hide('continue');
 
@@ -235,11 +238,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.say('score', 'SERVER', obj);
             }
 
+            // Ask the server for the next set of images.
             if (!images.items) {
                 node.get('NEXT', onNextImages);
             }
             else if (counter >= (images.items.length -1)) {
-                node.done();
+                W.hide('facecat_table');
+                node.done();                
             }
             else {
                 displayImage();
@@ -279,15 +284,26 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     function continueCb() {
         var yes, no;
-        W.hide('facecat_table');
-        W.show('continue');
-        W.getElementById('yes').onclick = function() {
-            node.done();
-        };
-        W.getElementById('no').onclick = function() {
-            node.game.enoughSets = true;
-            node.done();
-        };
+
+        // Triggers to go to next stage.
+        if (this.images.completedSets >= this.nSetsLimit) {
+            node.get('NEXT', function() {});
+        }
+        else {
+            W.hide('facecat_table');
+            W.show('continue');
+            
+            W.getElementById('yes').onclick = function() {
+                // Need to update both.
+                node.game.counter = -1;
+                node.game.images = {};
+                node.done();
+            };
+            W.getElementById('no').onclick = function() {
+                node.game.enoughSets = true;
+                node.done();
+            };
+        }
     }
 
     function thankyou() {

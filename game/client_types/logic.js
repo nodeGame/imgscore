@@ -126,7 +126,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             set = {                
                 set: origSet.set,
                 items: origSet.items,
-                completedSets: origSet.completedSets
+                completedSets: state.completedSets
             };
 
             // This is a reconnection.
@@ -145,7 +145,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             else if (state.completedSets >= settings.NSETS) {
                 state.checkedOut = true;
                 code = channel.registry.getClient(msg.from);
-                node.remoteCommand('step', msg.from);
+                node.remoteCommand('step', msg.from, { breakStage: true });
                 goodbye(code);
                 return;
             }
@@ -156,7 +156,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             console.log('COUNTER ', counter);
             console.log('SET LENGTH ', set ? set.items.length : 'no set');
-
+            console.log(set);
             return set;
         });
 
