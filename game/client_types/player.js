@@ -146,13 +146,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         console.log('imgscore');
 
         var sliders;
-        var next, faceImg;
+        var next, mainImg;
         var $;
         var order;
         var evaTD, evaFace, evaAbstract, evaOverall, evaCreativity;
         var slOverall, slCreativity, slFace, slAbstract;
      
-        W.show('facecat_table');
+        W.show('image_table');
         W.hide('continue');
 
         sliders = [ 'overall', 'creativity', 'face', 'abstract' ];
@@ -176,7 +176,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             var i, len;
 
             imgPath = node.game.images.items[++node.game.counter];
-            faceImg.src = node.game.settings.IMG_DIR + imgPath;
+            mainImg.src = node.game.settings.IMG_DIR + imgPath;
             next.disabled = false;
             node.timer.setTimestamp('newpic_displayed');
 
@@ -205,7 +205,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         function askForNext() {
             var images, obj, counter;
-            var face;
+            var img;
             var time2score;
             var scoreOverall, scoreCreativity, scoreFace, scoreAbstract;
 
@@ -223,10 +223,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 next.innerHTML = 'Next (' + (counter + 1) + '/' +
                     node.game.settings.NIMAGES + ')';
 
-                face = images.items[counter];
+                img = images.items[counter];
 
                 obj = {
-                    id: face,
+                    id: img,
                     scoreOverall: scoreOverall,
                     scoreCreativity: scoreCreativity,
                     scoreFace: scoreFace,
@@ -243,7 +243,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.get('NEXT', onNextImages);
             }
             else if (counter >= (images.items.length -1)) {
-                W.hide('facecat_table');
+                W.hide('image_table');
                 node.done();                
             }
             else {
@@ -260,7 +260,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.game.nextBtn = next = W.getElementById("doneButton");
 
         // Img.
-        faceImg = W.getElementById('face');
+        mainImg = W.getElementById('image');
 
         // TD with all the sliders
         evaTD = W.getElementById('evaTd');
@@ -290,7 +290,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             node.get('NEXT', function() {});
         }
         else {
-            W.hide('facecat_table');
+            W.hide('image_table');
             W.show('continue');
             
             W.getElementById('yes').onclick = function() {

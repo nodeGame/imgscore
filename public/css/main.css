@@ -61,7 +61,7 @@ dl#instrcat dd {
     width: 300px;
 }
 
-/* facecat table */
+/* scoretable table */
 
 .scoretable {
     width: 800px;
@@ -80,7 +80,7 @@ dl#instrcat dd {
     margin: auto;
 }
 
-.scoretable td#td_face {
+.scoretable td#td_image {
     text-align: center;
 }
 
@@ -88,7 +88,7 @@ dl#instrcat dd {
 /* other */
 
 
-img.face {
+img.image {
     width: 300px;
     border: 3px solid #CCC;
     margin: auto;
@@ -112,7 +112,7 @@ div#container_done {
 }
 
 
-/* Facepage */
+/* Scorepage */
 
 .eva_dis {
     text-align: center;
