@@ -136,3 +136,8 @@ button.yesno {
     width: 200px;
     margin: 10px auto;
 }
+
+.ui-slider .ui-slider-handle {
+    cursor: pointer;
+    pointer: hand;
+}

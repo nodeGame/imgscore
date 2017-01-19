@@ -278,6 +278,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         evaAbstract = W.getElementById('eva_abstract');
 
         // Click!
+        next.disabled = false;
+        next.innerHTML = 'Next';
         next.onclick = askForNext;
         next.click();
     }
