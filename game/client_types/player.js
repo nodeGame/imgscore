@@ -284,13 +284,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     function continueCb() {
         var yes, no;
+        W.hide('image_table');
 
-        // Triggers to go to next stage.
+        // All sets scored.
         if (this.images.completedSets >= this.nSetsLimit) {
-            node.get('NEXT', function() {});
+            W.show('end');
+            W.getElementById('endButton').onclick = function() {
+                // Triggers to go to next stage.
+                node.get('NEXT', function() {});
+            };
         }
+        // Display option to continue.
         else {
-            W.hide('image_table');
             W.show('continue');
             
             W.getElementById('yes').onclick = function() {
