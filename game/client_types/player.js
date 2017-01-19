@@ -27,16 +27,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     stager.setOnInit(function() {
         var frame;
         console.log('** INIT PLAYER! **');
-        
+
         frame = W.generateFrame();
-       
+
         this.counter = -1;
         this.images = {};
-        this.previousTags = {};
 
+        // If the players has rated all required sets, or if he/she
+        // decided to stop earlier.
+        this.enoughSets = false;
 
         this.getSample = function() {
-            var that, sampleDiv; 
+            var that, sampleDiv;
             that = this;
             sampleDiv = W.getElementById('sample');
             // Preloading the sample
@@ -62,18 +64,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     sampleDiv.appendChild(img);
 
                     (function(img) {
-                        var tooltip;                        
+                        var tooltip;
                         tooltip = $('<img src="' + img.src + '" />"');
 
                         $(img).hover(
-                            function(e) {                               
+                            function(e) {
                                 tooltip.addClass('tooltip');
                                 tooltip.css({
                                     "left": (5 + e.pageX) + "px",
                                     "top": -200 + e.pageY + "px"
                                 });
                                 $(this).before(tooltip);
-                               
+
                             },
                             function() {
                                 $(tooltip).remove();
@@ -123,7 +125,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         sampleDiv.style.display = '';
         doneTimerSpan = W.getElementById("doneTimer");
 
-        node.game.doneTimer = 
+        node.game.doneTimer =
             node.widgets.append('VisualTimer', doneTimerSpan, {
                 milliseconds: 2000,
                 update: 1000,
@@ -145,11 +147,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var $;
         var order;
         var evaTD, evaFace, evaAbstract, evaOverall, evaCreativity;
-
         var slOverall, slCreativity, slFace, slAbstract;
 
+        W.show('facecat_table');
+        W.hide('continue');
+
         sliders = [ 'overall', 'creativity', 'face', 'abstract' ];
-        
+
         function buildSlider(slName) {
             $( "#slider_" + slName).slider({
                 value: 5,
@@ -212,7 +216,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             scoreAbstract = evaAbstract.value;
 
             if (counter !== -1 && counter < images.items.length) {
-            
+
                 next.innerHTML = 'Next (' + (counter + 1) + '/' +
                     node.game.settings.NIMAGES + ')';
 
@@ -231,8 +235,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.say('score', 'SERVER', obj);
             }
 
-            if (!images.items || counter >= (images.items.length -1)) {
+            if (!images.items) {
                 node.get('NEXT', onNextImages);
+            }
+            else if (counter >= (images.items.length -1)) {
+                node.done();
             }
             else {
                 displayImage();
@@ -270,6 +277,19 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         next.click();
     }
 
+    function continueCb() {
+        var yes, no;
+        W.hide('facecat_table');
+        W.show('continue');
+        W.getElementById('yes').onclick = function() {
+            node.done();
+        };
+        W.getElementById('no').onclick = function() {
+            node.game.enoughSets = true;
+            node.done();
+        };
+    }
+
     function thankyou() {
         var b, i, errStr, counter;
         console.log('thank you.');
@@ -283,7 +303,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             exitcode = msg.data && msg.data.exitcode || codeErr;
             exitCodeInput = W.getElementById('exitCode');
             exitCodeInput.value = exitcode;
-       
+
             // Total win.
             win = msg.data && msg.data.win || 0;
             winInput = W.getElementById('win');
@@ -328,7 +348,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     // Creating stages and steps
-    
+
     // TODO: At this point, stages must be defined (also steps)
     // in game.stages. This is quite annoying in the case where
     // the logic does not follow the same structure as the client.
@@ -342,9 +362,16 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         cb: sample
     });
 
+    stager.extendStage('imgscore', {
+        frame: 'scorepage.htm'
+    });
+
     stager.extendStep('imgscore', {
         cb: imgscore,
-        frame: 'scorepage.htm'
+    });
+
+    stager.extendStep('continue', {
+        cb: continueCb,
     });
 
     stager.extendStep('thankyou', {

@@ -26,10 +26,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // 1. Setting up database connection.
 
-    var gameDir, randomSets, imgDb;
+    var gameDir, sets, randomSets, imgDb;
 
     gameDir = channel.getGameDir();
 
+    sets = setup.sets;
     randomSets = setup.randomSets;
     imgDb = setup.imgDb;
 
@@ -50,7 +51,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // Dump db every X milliseconds (if there are changes).
     var dumpDbInterval;
-    dumpDbInterval = 6000;
+    dumpDbInterval = 30000;
 
     // Functions.
 
@@ -96,7 +97,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
-            var set, state, secondSet;
+            var set, origSet, state, secondSet;
             var code;
 
             console.log('***** Received NEXT ******');
@@ -104,7 +105,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             if (state.newSetNeeded) {
                 // Circular queue.
-                state.setId = ++counter % randomSets.length;
+                state.setId = ++counter % sets.length;
                 state.newSetNeeded = false;
                 state.pic = 0;
 
@@ -120,8 +121,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             console.log(state);
 
-            // We need to clone it, otherwise it gets overwritten.
-            set = J.clone(randomSets[state.setId]);
+            // Manual clone it, otherwise it might get overwritten (see below).
+            origSet = sets[state.setId];
+            set = {                
+                set: origSet.set,
+                items: origSet.items,
+                completedSets: origSet.completedSets
+            };
 
             // This is a reconnection.
             if (state.resume) {
@@ -135,7 +141,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 // Since pictures are 1-based, we do not need to do -1.
                 set.items = set.items.slice(state.pic);
             }
-            // Player has rated 2 sets (about 60 paitings).
+            // Player has rated all sets..
             else if (state.completedSets >= settings.NSETS) {
                 state.checkedOut = true;
                 code = channel.registry.getClient(msg.from);

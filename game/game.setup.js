@@ -27,9 +27,9 @@ module.exports = function(settings, stages, gameDir, level) {
     // We load them here to save time, as compared to when
     // the game room is created for the first time.
 
-    function loadRandomSets() {
+    function loadSets(file) {
         var db, filePath;
-        filePath = gameDir + '/scripts/sets-of-images.json';
+        filePath = gameDir + '/scripts/' + file;
         db = new NDDB();
         db.loadSync(filePath);
         db.sort(function(a, b) {
@@ -49,16 +49,12 @@ module.exports = function(settings, stages, gameDir, level) {
         return db;
     }
 
-    setup.randomSets = loadRandomSets();
+    //Sets of 20 images.
+    setup.sets = loadSets('sets-of-images.json');
+    // Sets of 40 images each.
+    setup.randomSets = loadSets('sets-of-images-40.json');
+    // All images paths, etc.
     setup.imgDb = loadImgDb();
-
-    // Metadata. Taken from package.json. Can be overwritten.
-
-    // setup.metadata = {
-    //    name: 'another name',
-    //    version: 'another version',
-    //    description: 'another descr'
-    // };
 
     return setup;
 };

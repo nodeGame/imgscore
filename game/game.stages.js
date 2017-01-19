@@ -16,13 +16,19 @@ module.exports = function(stager, settings) {
 
     stager
         .next('instructions')
-        .next('imgscore')
+        .loop('imgscore', function() {
+            return !this.enoughSets;
+        })
         .next('thankyou')
         .gameover();
 
     stager.extendStage('instructions', {
         steps: [ 'text', 'sample' ]
     });
- 
+
+    stager.extendStage('imgscore', {
+        steps: [ 'imgscore', 'continue' ]
+    });
+
     return stager.getState();
 };

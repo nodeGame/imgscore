@@ -5,13 +5,12 @@ var fs = require('fs');
 var ngc = require('nodegame-client');
 var Matcher = ngc.Matcher;
 
-
-
-var PICS4SET = 40;
+var PICS4SET = 20;
 
 // Tot images: 4182
 // 4182 / 40 * 5 = 522.75
-var NSETS = 523; // 1071
+// var NSETS = 523; // 1071
+var NSETS = 4182 / 20 * 5; //  = 1046; // 1045.5
 
 var i, j, idx, item;
 var out, totItems;
@@ -45,7 +44,7 @@ var outDb =  new NDDB();
 var globalCounter = {};
 var idxLimit = 5;
 var niter = 0;
-var niterLimit = 5000;
+var niterLimit = 10000;
 
 // Here we go.
 

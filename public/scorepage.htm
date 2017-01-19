@@ -15,7 +15,7 @@
 <!-- end -->
 
 <body>
-<table id="facecat_table">
+<table id="facecat_table" class="scoretable">
 <tr>
   <td id="td_face"><img class="face" id="face" src="/images/loading.gif" /></td>
 </tr>
@@ -70,5 +70,13 @@
     <button class="btn btn-info" id="doneButton">Next</button>
   </td>
 </tr>
+</table>
+<table id="continue" style="display:none" class="scoretable" >
+  <tr>
+    <td>
+      You have successfully completed this set of images. Would you like to start another one?
+      <button class="btn btn-success yesno" id="yes">Yes</button>
+      <button class="btn btn-danger yesno" id="no">No</button>
+    </td>
 </table>
 </body>
