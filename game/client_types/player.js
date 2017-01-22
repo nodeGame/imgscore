@@ -100,10 +100,14 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // STAGES and STEPS.
 
     function instructionsText() {
-        var next;
+        var next, s, highBound;
         console.log('instructions');
-
-        W.setInnerHTML('nimages', node.game.settings.NIMAGES);
+        s = node.game.settings;
+        W.setInnerHTML('nimages', s.NIMAGES);
+        W.setInnerHTML('nimages2', s.NIMAGES);
+        highBound = s.NIMAGES * s.NSETS;
+        W.setInnerHTML('nimages_highbound', highBound);
+        W.setInnerHTML('nimages_highbound2', highBound);
 
         node.game.nextBtn = next = W.getElementById("doneButton");
         next.onclick = function() {
@@ -115,23 +119,29 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         this.getSample();
     }
 
+    function instructionsText2() {
+        var next;
+        console.log('instructions2');
+        
+        W.hide('instructions');
+        W.show("instructions2");
+        W.getElementById("doneButton").disabled = false;
+    }
+
     function sample() {
-        var sampleDiv, instructions, next;
-        var doneTimerSpan;
+        var next, doneTimerSpan;
 
         console.log('*** sample ! ***');
 
+        W.hide('instructions2');
+        W.show("sample");
+        
         next = W.getElementById("doneButton");
-        instructions = W.getElementById("instructions");
-        sampleDiv = W.getElementById("sample");
-        instructions.style.display = 'none';
-        sampleDiv.style.display = '';
         doneTimerSpan = W.getElementById("doneTimer");
 
         node.game.doneTimer =
             node.widgets.append('VisualTimer', doneTimerSpan, {
                 milliseconds: 2000,
-                update: 1000,
                 name: 'candonext',
                 listeners: false,
                 timeup: function() {
@@ -376,27 +386,32 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // in game.stages. This is quite annoying in the case where
     // the logic does not follow the same structure as the client.
 
-    stager.extendStep('text', {
-        cb: instructionsText,
+    // Instructions.
+    stager.extendStage('instructions', {
         frame: 'instructions.htm'
     });
-
+    stager.extendStep('text', {
+        cb: instructionsText
+    });
+    stager.extendStep('text2', {
+        cb: instructionsText2
+    });
     stager.extendStep('sample', {
         cb: sample
     });
 
+    // Scoring.
     stager.extendStage('imgscore', {
         frame: 'scorepage.htm'
     });
-
     stager.extendStep('imgscore', {
-        cb: imgscore,
+        cb: imgscore
     });
-
     stager.extendStep('continue', {
-        cb: continueCb,
+        cb: continueCb
     });
 
+    // Thank you.
     stager.extendStep('thankyou', {
         cb: thankyou,
         frame: 'thankyou.htm'

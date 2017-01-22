@@ -23,7 +23,7 @@ module.exports = function(stager, settings) {
         .gameover();
 
     stager.extendStage('instructions', {
-        steps: [ 'text', 'sample' ]
+        steps: [ 'text', 'text2', 'sample' ]
     });
 
     stager.extendStage('imgscore', {

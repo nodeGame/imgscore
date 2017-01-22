@@ -12,7 +12,7 @@ module.exports = {
     SESSION_ID: 100,
 
     // Number of sets of pictures to rate per player.
-    NSETS: 2,
+    NSETS: 5,
 
     // Number of images per set.
     NIMAGES: 20,

@@ -222,8 +222,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     stager.setDefaultProperty('reconnect', function(p, opts) {
-        // Reconnect back to 1.1.1 if disconnection happened in step 'sample'.
-        if (GameStage.compare(p.disconnectedStage, this.sampleStage) === 0) {
+        // Reconnect back to 1.1.1 if disconnection happened in instructions.
+        if (p.disconnectedStage.stage === 1) {
             opts.targetStep = new GameStage('1.1.1');
         }
     });
