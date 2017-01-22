@@ -100,14 +100,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // STAGES and STEPS.
 
     function instructionsText() {
-        var next, s, highBound;
+        var next, s;
         console.log('instructions');
         s = node.game.settings;
         W.setInnerHTML('nimages', s.NIMAGES);
-        W.setInnerHTML('nimages2', s.NIMAGES);
-        highBound = s.NIMAGES * s.NSETS;
-        W.setInnerHTML('nimages_highbound', highBound);
-        W.setInnerHTML('nimages_highbound2', highBound);
+        W.setInnerHTML('nimages_highbound', s.NSETS);
+        W.setInnerHTML('nimages_highbound2', s.NSETS);
 
         node.game.nextBtn = next = W.getElementById("doneButton");
         next.onclick = function() {
