@@ -119,8 +119,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 });
             }
 
-            console.log(state);
-
             // Manual clone it, otherwise it might get overwritten (see below).
             origSet = sets[state.setId];
             set = {                

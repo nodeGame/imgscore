@@ -25,26 +25,28 @@
 
       <p>
         Image scoring is done in sets. Each set
-        contains <strong id="nimages">_</strong> images, and you can
-        do up to <strong id="nimages_highbound">_</strong> sets:
+        contains <strong id="nimages">_</strong> images, and you:
         
         <ul>
           <li>
-            you need to score at least <em>1</em> set, so that you can
-            gain experience in making
-            <strong>relative</strong> comparisons;
+            need to score at
+            least <strong id="sets_lowbound">_</strong> <span id="set_plural">set</span>,
+            so that you can gain experience in making
+            <em>relative comparisons</em>;
           </li>
           
           <li>
-            you cannot score more
-            than <em id="nimages_highbound2">_</em> sets, because we
-            want to collect assessments from multiple people.
+            cannot score more
+            than <strong id="sets_highbound">_</strong> sets, because
+            we want to collect assessments from <em>multiple
+            people</em>.
           </li>
         </ul>
       </p>
 
       <p>
-        Important! You will only be compensated for complete sets.
+        Important! You need to <em>fully</em> complete each set you
+        start in order to get compensated.
       </p>
       
       <h3>Scientific Research</h3>
@@ -64,16 +66,12 @@
 
       <h3>Scoring Scale</h3>
   
-      Score each image by moving a slider on a scale
-      from <strong>0</strong> (lowest grade) to <strong>10</strong>
-      (highest grade) on four dimensions:
+      Score each image on a scale
+      from <strong id="grade_lowest">_</strong> (lowest grade)
+      to <strong id="grade_highest">_</strong> (highest grade) on the
+      following dimensions:
       
-      <ul>
-        <li>Creativity</li>
-        <li>Interestingness as a face</li>
-        <li>Abstractness</li>
-        <li>Overall appeal or quality </li>                
-      </ul>
+      <ul id="dimensions_list"></ul>
       
       <!-- In your evaluation, <strong>do not</strong> consider the color of the lines, but just the shapes and figures they form. -->
       

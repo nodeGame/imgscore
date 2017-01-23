@@ -1,6 +1,6 @@
 /**
  * # Channel settings
- * Copyright(c) 2016 brenste <myemail>
+ * Copyright(c) 2017 Stefano Balietti
  * MIT Licensed
  *
  * The channel is divided into two internal servers: player and admin.

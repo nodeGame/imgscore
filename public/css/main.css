@@ -84,9 +84,24 @@ dl#instrcat dd {
     text-align: center;
 }
 
+table#score td {
+    width: 70px;
+} 
+
+table#score td.choicetable-left {
+    width: 200px;
+    height: 50px;
+} 
+
+.dimension {
+    font-weight: bold;
+} 
+
+.choicetable .panel-body {
+    background: #DADCCB;
+}
 
 /* other */
-
 
 img.image {
     width: 300px;
@@ -96,11 +111,9 @@ img.image {
     background: white;
 }
 
-
 ul {
     margin: 10px;
 }
-
 
 div#container_done {
     height: 100px;

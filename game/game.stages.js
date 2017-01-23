@@ -30,5 +30,7 @@ module.exports = function(stager, settings) {
         steps: [ 'imgscore', 'continue' ]
     });
 
+    // stager.skip('instructions');
+
     return stager.getState();
 };

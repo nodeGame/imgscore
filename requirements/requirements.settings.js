@@ -10,7 +10,7 @@ module.exports = {
 
     // If enabled a Requirements room will be created in the channel,
     // and all incoming connections will be tested there.
-    enabled: true, // [false] Default: TRUE.
+    enabled: false, // [false] Default: TRUE.
 
     // Path the requirement room logic.
     // logicPath: './requirements.room.js',
