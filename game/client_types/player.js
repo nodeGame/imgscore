@@ -273,6 +273,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             if (counter !== -1 && counter < images.items.length) {
 
+                obj = node.game.score.getValues();
+                if (obj.missValues) {
+                    next.disabled = false;
+                    return;
+                }
+
                 next.innerHTML = 'Next (' + (counter + 1) + '/' +
                     node.game.settings.NIMAGES + ')';
 
@@ -289,7 +295,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 //                     time2score: time2score
 //                 };
 
-                obj = node.game.score.getValues();
                 obj.id = img;
 
                 node.say('score', 'SERVER', obj);
