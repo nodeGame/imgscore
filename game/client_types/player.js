@@ -272,8 +272,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 //             scoreAbstract = evaAbstract.value;
 
             if (counter !== -1 && counter < images.items.length) {
-
-                obj = node.game.score.getValues();
+                obj = node.game.score.getValues({ 
+                    reset: { shuffleItems: true }
+                });
                 if (obj.missValues) {
                     next.disabled = false;
                     return;
