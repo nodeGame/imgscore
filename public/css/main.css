@@ -154,3 +154,81 @@ button.yesno {
     cursor: pointer;
     pointer: hand;
 }
+
+/* Reformatting the button
+   (importing the whole bootstrap messes up things */
+
+.btn-copy {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.btn-copy:focus {
+    outline: thin dotted #333;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+.btn-copy:hover,
+.btn-copy:focus {
+    text-decoration: none;
+}
+.btn-copy:active,
+.btn-copy.active {
+    outline: 0;
+    background-image: none;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-copy.disabled,
+.btn-copy[disabled] {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-info-copy {
+    color: #ffffff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+.btn-info-copy:hover,
+.btn-info-copy:focus,
+.btn-info-copy:active,
+.btn-info-copy.active,
+.btn-info:active,
+.btn-info.active {
+    color: #ffffff;
+    background-color: #39b3d7;
+    border-color: #269abc;
+}
+.btn-info-copy.disabled,
+.btn-info-copy[disabled],
+.btn-info-copy.disabled:hover,
+.btn-info-copy[disabled]:hover,
+.btn-info-copy.disabled:focus,
+.btn-info-copy[disabled]:focus,
+.btn-info-copy.disabled:active,
+.btn-info-copy[disabled]:active,
+.btn-info-copy.disabled.active,
+.btn-info-copy[disabled].active {
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
