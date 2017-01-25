@@ -287,8 +287,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     function continueCb() {
         var yes, no;
+        var remainingSets;
         W.hide('image_table');
-
+        remainingSets = this.settings.SETS_MAX - (this.images.completedSets+1);
+        W.setInnerHTML('remaining', remainingSets);
         // All sets scored.
         if (this.images.completedSets >= this.nSetsLimit) {
             W.show('end');
