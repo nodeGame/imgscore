@@ -119,7 +119,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     function instructionsText2() {
-        var next, s, ul, li;
+        var s, ul, li;
         var i, len;
 
         console.log('instructions2');
@@ -170,7 +170,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         console.log('imgscore');
 
         var next, mainImg;
-        var order;
         var ctgOptions, ctgRoot;
         var i, len, items;
 
@@ -286,7 +285,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     }
 
     function continueCb() {
-        var yes, no;
         var remainingSets;
         W.hide('image_table');
         remainingSets = this.settings.SETS_MAX - (this.images.completedSets+1);

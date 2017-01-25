@@ -59,7 +59,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     function init() {
 
         setInterval(function() {
-            var s
+            var s;
             s = node.game.memory.size();
             if (s > 0 && s !== lastDumpSize) {
                 lastDumpSize = s;
@@ -80,12 +80,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         });
 
         node.on.preconnect(function(p) {
-            var p, code;
+            var pState;
 
             console.log('One player reconnected ', p.id);
 
             pState = gameState[p.id];
-
             if (!pState) {
                 console.log('should not happen. no game state: ', p);
                 return;
@@ -97,7 +96,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
-            var set, origSet, state, secondSet;
+            var set, origSet, state;
             var code;
 
             console.log('***** Received NEXT ******');
@@ -178,7 +177,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             console.log('**** Received a CAT! ' + obj.id + '***');
 
             state = gameState[msg.from];
-            console.log(state)
+            // console.log(state);
 
             // Add the setCounter in the received data.
             msg.data.setCounter = state.completedSets + 1;
