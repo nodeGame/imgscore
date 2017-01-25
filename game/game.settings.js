@@ -30,13 +30,13 @@ module.exports = {
     // for creating the scoring interface.
     SCORE_OPTIONS: {
 
-        mainText: 'Give a score to the image above on a scale from ' +
-            '<strong>' + ratingScale[0] + ' </strong> (lowest) to ' +
-            '<strong>' + ratingScale[(ratingScale.length-1)] + 
-            '</strong> (highest). <br/><br/> ' +
+        mainText: '<h4><strong>Score the image above on a scale from ' +
+            ratingScale[0] + ' (lowest) to ' +
+            ratingScale[(ratingScale.length-1)] + 
+            ' (highest).</strong></h4>' +
             'Try to consider the value of the image ' +
             '<strong>relative</strong> to the others you have ' +
-            'observed in the sample.<br/><br/>',
+            'observed in the sample.<br/>',
 
         items: [
             'Overall Appeal or Quality',

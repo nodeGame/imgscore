@@ -102,8 +102,8 @@ table#score td.choicetable-left {
 }
 
 table#score td.choicetable-left {
-    width: 140px;
-    height: 50px;
+    width: 220px;
+    height: 40px;
 }
 
 table.choicetable {
@@ -136,16 +136,6 @@ div#container_done {
 
 
 /* Scorepage */
-
-.eva_dis {
-    text-align: center;
-    border: 0;
-    color: #f6931f;
-    font-weight: bold;
-    background: white;
-    width: 50px;
-    margin-left: 10px;
-}
 
 button {
     font-size: 18px;

@@ -201,6 +201,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 };
             }
             ctgOptions.items = items;
+            ctgOptions.orientation = 'H';
            
             node.game.score = node.widgets.append('ChoiceTableGroup', ctgRoot,
                                                   ctgOptions);
@@ -209,39 +210,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         W.show('image_table');
         W.hide('continue');
 
-
-//         function buildSlider(slName) {
-//             $( "#slider_" + slName).slider({
-//                 value: 5,
-//                 min: 0,
-//                 max: 10,
-//                 step: 0.1,
-//                 slide: function( event, ui ) {
-//                     $( "#eva_" + slName ).val( ui.value );
-//                     node.game.evaHasChanged = true;
-//                 }
-//             });
-//             $("#eva_" + slName).val($("#slider_" + slName ).slider("value"));
-//         }
-
         function displayImage() {
             var imgPath;
-            var i, len;
-
             imgPath = node.game.images.items[++node.game.counter];
             mainImg.src = node.game.settings.IMG_DIR + imgPath;
             next.disabled = false;
             node.timer.setTimestamp('newpic_displayed');
-
-//            node.game.evaHasChanged = false;
-
-//             order = JSUS.shuffleElements(evaTD, JSUS.sample(0,3));
-
-//             i = -1, len = sliders.length;
-//             for ( ; ++i < len ; ) {
-//                 buildSlider(sliders[i]);
-//             }
-
         }
 
         function onNextImages(images) {
@@ -249,27 +223,19 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 console.log('**** Weird: wrong images! ');
                 return;
             }
-
             node.game.counter = -1;
             node.game.images = images;
-
             displayImage();
         }
 
         function askForNext() {
             var images, obj, counter;
-            var img;
-            var time2score;
-            // var scoreOverall, scoreCreativity, scoreFace, scoreAbstract;
+            var img, time2score;
 
             time2score = node.timer.getTimeSince('newpic_displayed');
             next.disabled = true;
             counter = node.game.counter;
             images = node.game.images;
-//             scoreOverall = evaOverall.value;
-//             scoreCreativity = evaCreativity.value;
-//             scoreFace = evaFace.value;
-//             scoreAbstract = evaAbstract.value;
 
             if (counter !== -1 && counter < images.items.length) {
                 obj = node.game.score.getValues({ 
@@ -283,19 +249,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 next.innerHTML = 'Next (' + (counter + 1) + '/' +
                     node.game.settings.NIMAGES + ')';
 
+                // Path to the image, used as id.
                 img = images.items[counter];
-
-//                 obj = {
-//                     id: img,
-//                     scoreOverall: scoreOverall,
-//                     scoreCreativity: scoreCreativity,
-//                     scoreFace: scoreFace,
-//                     scoreAbstract: scoreAbstract,
-//                     hasChanged: node.game.evaHasChanged,
-//                     order: order,
-//                     time2score: time2score
-//                 };
-
                 obj.id = img;
 
                 node.say('score', 'SERVER', obj);
@@ -316,29 +271,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Elements of the page.
 
-        // jQuery.
-        // $ = W.getFrameWindow().$;
-
         // Next button.
         node.game.nextBtn = next = W.getElementById("doneButton");
 
         // Img.
         mainImg = W.getElementById('image');
 
-        // TD with all the sliders
-        // evaTD = W.getElementById('evaTd');
-
-        // Slider.
-//         slOverall = W.getElementById('slider_overall');
-//         slCreativity = W.getElementById('slider_creativity');
-//         slFace = W.getElementById('slider_face');
-//         slAbstract = W.getElementById('slider_abstract');
-// 
-//         // Disabled input with score.
-//         evaOverall = W.getElementById('eva_overall');
-//         evaCreativity = W.getElementById('eva_creativity');
-//         evaFace = W.getElementById('eva_face');
-//         evaAbstract = W.getElementById('eva_abstract');
 
         // Click!
         next.disabled = false;
