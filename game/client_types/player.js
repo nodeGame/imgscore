@@ -155,7 +155,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         node.game.doneTimer =
             node.widgets.append('VisualTimer', doneTimerSpan, {
-                milliseconds: 2000,
+                milliseconds: 30000,
                 name: 'candonext',
                 listeners: false,
                 timeup: function() {

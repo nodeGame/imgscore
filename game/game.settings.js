@@ -41,7 +41,7 @@ module.exports = {
         items: [
             'Overall Appeal or Quality',
             'Creativity',
-            'Interestingness as a Face',
+            'Goodness as a Face',
             'Abstractness'
         ],
 
