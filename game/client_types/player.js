@@ -38,7 +38,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Automatically stops from asking the next set of images to rate
         // (the server would not send them anyway).
-        this.nSetsLimit = this.settings.NSETS -1;
+        this.nSetsLimit = this.settings.SETS_MAX -1;
 
         // If TRUE, the loop at imgscore is broken.
         this.enoughSets = false;
@@ -308,7 +308,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Display option to continue.
         else {
             W.show('continue');
-            
+            // Hide old image.
+            W.getElementById('image').src = '/images/loading.gif';
+            // Set listeners.
             W.getElementById('yes').onclick = function() {
                 // Need to update both.
                 node.game.counter = -1;
