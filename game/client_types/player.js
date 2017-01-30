@@ -331,7 +331,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.on.data('WIN', function(msg) {
             var win, exitcode, codeErr;
             var exitCodeInput, winInput;
-            var winUsd;
+            // var winUsd;
+
             // Exit Code.
             codeErr = 'ERROR (code not found)';
             exitcode = msg.data && msg.data.exitcode || codeErr;
@@ -378,8 +379,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             if (counter) b.innerHTML += '(' + counter + ')';
             counter++;
         };
+
         // Remove block from leaving page.
         W.restoreOnleave();
+        W.restoreEscape();
+        W.disableBackButton(false);
     }
 
     // Creating stages and steps
@@ -420,7 +424,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     });
 
     game.plot = stager.getState();
-    game.verbosity = 0;
+    game.verbosity = setup.verbosity;
+    game.debug = setup.debug;
+    game.window = setup.window;
 
     return game;
 };

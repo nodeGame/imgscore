@@ -231,7 +231,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     return {
         nodename: 'imgscore',
         plot: stager.getState(),
-        verbosity: 0
+        verbosity: setup.verbosity,
+        debug: setup.debug
     };
 
     // ## Helper functions.

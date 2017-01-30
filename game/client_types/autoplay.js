@@ -8,7 +8,7 @@
  * http://www.nodegame.org
  */
 
- var ngc = require('nodegame-client');
+var ngc = require('nodegame-client');
 
 module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 

@@ -17,10 +17,11 @@ module.exports = function(settings, stages, gameDir, level) {
     // This settings will be made available to all client types.
     // It is up to them to use them.
 
-    setup.debug = true;
-    setup.verbosity = 1;
-    setup.window = {
-        promptOnleave: !setup.debug
+    setup.debug = false;
+    setup.verbosity = 0;
+    setup.window = { 
+        promptOnleave: !setup.debug,
+        disableBackButton: !setup.debug        
     };
 
     // We can also pre-load data (will be used by logic.js).
