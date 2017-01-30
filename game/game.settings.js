@@ -66,11 +66,11 @@ module.exports = {
     // Payment settings.
 
     // Fixed amount of money.
-    FEE: 4,
+    FEE: 0.4,
 
     // Bonus for every completed set.
-    BONUS: 4,
+    BONUS: 0.4,
 
     // Divider ECU / DOLLARS *
-    EXCHANGE_RATE: 10
+    EXCHANGE_RATE: 1
 };

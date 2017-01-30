@@ -35,43 +35,22 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             id = stepObj.id
 
-            // TODO: Adapt to specific steps.
-            if (id === 'instructionsText') {
-                
-                node.timer.randomExec(function() {
-                    node.game.nextBtn.click();
-                }, 2000);
-                
-            }
-
             if (id === 'sample') {
-
-                node.on.data('sample', function() {                    
-                    node.timer.randomExec(function() {
-                        node.game.nextBtn.click();
-                    }, 2000);
-                });
-
+                node.timer.randomDone(10000);                
             }
-            else if (id === 'facerank') {
+
+            else if (id === 'continue') {
+                node.timer.randomExec(function() {
+                    if (Math.random() > 0.5) W.getElementById('no').click();
+                    else W.getElementById('yes').click();
+                }, 3000);
+            }
+            else if (id === 'imgscore') {
                 delay = 2000;
                 i = -1, len = node.game.settings.NIMAGES;
                 for ( ; ++i < len ; ) {                    
                     node.timer.randomExec(function() {
-                        var $;
-                        $ = W.getFrameWindow().$;
-                        $( "#slider_overall" ).slider( "value",  Math.random()*10);
-                        $( "#eva_overall" ).val( $( "#slider_overall" ).slider( "value" ) );
-
-                        $( "#slider_creativity" ).slider( "value",  Math.random()*10);
-                        $( "#eva_creativity" ).val( $( "#slider_creativity" ).slider( "value" ) );
-
-                        $( "#slider_face" ).slider( "value",  Math.random()*10);
-                        $( "#eva_face" ).val( $( "#slider_face" ).slider( "value" ) );
-
-                        $( "#slider_abstract" ).slider( "value",  Math.random()*10);
-                        $( "#eva_abstract" ).val( $( "#slider_abstract" ).slider( "value" ) );
-
+                        node.game.score.setValues();
                         node.game.nextBtn.click();
 
                     }, delay);
