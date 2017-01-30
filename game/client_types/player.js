@@ -342,8 +342,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             win = msg.data && msg.data.win || 0;
             winInput = W.getElementById('win');
             winUsd = win / node.game.settings.EXCHANGE_RATE;
-            winInput.value = win +
-                ' Points = ' + Number(winUsd).toFixed(2) + ' USD';
+            // winInput.value = win +
+            //    ' Points = ' + Number(winUsd).toFixed(2) + ' USD';
+            winInput.value =  Number(winUsd).toFixed(2) + ' USD';
         });
 
         // Email box.

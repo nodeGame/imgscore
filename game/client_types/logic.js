@@ -251,7 +251,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         state.checkedOut = true;
         node.remoteCommand('step', pId, { breakStage: true });
         
-        bonus = settings.BONUS;
+        bonus = settings.FEE + (settings.BONUS * state.completedSets);
 
         // Send Win code;
         node.say('WIN', code.AccessCode || code.id, {
