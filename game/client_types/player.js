@@ -200,7 +200,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 };
             }
             ctgOptions.items = items;
-            ctgOptions.orientation = 'H';
            
             node.game.score = node.widgets.append('ChoiceTableGroup', ctgRoot,
                                                   ctgOptions);

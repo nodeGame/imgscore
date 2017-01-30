@@ -230,7 +230,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     return {
         nodename: 'imgscore',
         plot: stager.getState(),
-        verbosity: 1
+        verbosity: 0
     };
 
 
