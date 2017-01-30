@@ -98,7 +98,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.on('get.NEXT', function(msg) {
             var set, origSet, state;
             var code;
-
+debugger
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
@@ -108,6 +108,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 state.newSetNeeded = false;
                 state.pic = 0;
 
+                // TODO: use it!
                 // There is actually a difference between setId and the set
                 // of the images actually evaluated. setId is the idx of the
                 // array, but inside the array items are not ordered.
@@ -186,7 +187,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             state.pic++;
             if (state.pic === state.setLength) {
                 state.completedSets++;
-                if (state.completedSets < settings.NSETS) {
+                if (state.completedSets < settings.SETS_MAX) {
                     state.newSetNeeded = true;
                 }
             }
