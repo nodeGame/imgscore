@@ -97,7 +97,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
             var set, origSet, state;
-            var code;
 
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
@@ -140,11 +139,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 set.items = set.items.slice(state.pic);
             }
             // Player has rated all sets..
-            else if (state.completedSets >= settings.SETS_MAX) {
-                state.checkedOut = true;
-                code = channel.registry.getClient(msg.from);
-                node.remoteCommand('step', msg.from, { breakStage: true });
-                goodbye(code);
+            else if (state.completedSets >= settings.SETS_MAX) {               
+                goodbye(msg.from);
                 return;
             }
             else {
@@ -203,6 +199,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             node.game.memory.insert(obj);
         });
 
+        node.on.data('enoughSets', function(msg) {
+            goodbye(msg.from);
+        });
+
         // Save Email.
         node.on.data('email', function(msg) {
             var id, code;
@@ -210,7 +210,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             code = channel.registry.getClient(id);
             if (!code) {
-                console.log('ERROR: no code in endgame:', id);
+                console.log('ERROR: no codewen in endgame:', id);
                 return;
             }
 
@@ -234,12 +234,23 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         verbosity: 0
     };
 
-
     // ## Helper functions.
+    
+    /**
+     * ### goodbye
+     *
+     * Advances a player to the next stage (the final) and sends the bonus
+     *
+     * @param {string} pId The id of the player
+     */
+    function goodbye(pId) {
+        var bonusStr, bonus, code, state;
 
-    // Sends the BONUS msg to the client.
-    function goodbye(code) {
-        var bonusStr, bonus;
+        code = channel.registry.getClient(pId);
+        state = gameState[pId];
+        state.checkedOut = true;
+        node.remoteCommand('step', pId, { breakStage: true });
+        
         bonus = settings.BONUS;
 
         // Send Win code;
@@ -258,7 +269,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         appendToBonusFile(bonusStr);
     }
 
-    // Adds a new entry into the gameState obj with player id and img set.
+    /**
+     * ### checkAndCreateState
+     *
+     * Adds a new entry into the gameState obj with player id and img set
+     *
+     * @param {string} pId The id of the player
+     */
     function checkAndCreateState(pId) {
         // Creating a state for reconnections.
         if (!gameState[pId]) {
@@ -286,7 +303,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
      *
      * Appends a row to the bonus file (no checkings)
      *
-     * @param {string} row Optional. The row to append, or undefined to add header
+     * @param {string} row Optional. The row to append, or undefined for header
      */
     function appendToBonusFile(row) {
         if ('undefined' === typeof row) {

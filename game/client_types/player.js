@@ -318,8 +318,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.done();
             };
             W.getElementById('no').onclick = function() {
-                node.game.enoughSets = true;
-                node.done();
+                node.game.enoughSets = true;                
+                node.say('enoughSets');
             };
         }
     }
