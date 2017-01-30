@@ -266,7 +266,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             (code.WorkerId || 'NA') + '","' +
             (code.HITId || 'NA') + '","' +
             (code.AssignmentId || 'NA') + '",' +
-            bonus + ',' + Number(bonus).toFixed(2) + ',"x",\n';
+            bonus + ',"x",\n';
         appendToBonusFile(bonusStr);
     }
 
@@ -308,8 +308,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
      */
     function appendToBonusFile(row) {
         if ('undefined' === typeof row) {
-            row = '"access","exit","WorkerId","hid","AssignmentId","points",' +
-                '"points.total","bonus","Approve","Reject"\n';
+            row = '"access","exit","WorkerId","hid","AssignmentId",' +
+                '"bonus","Approve","Reject"\n';
         }
         fs.appendFile(gameDir + 'data/bonus.csv', row, function(err) {
             if (err) {
