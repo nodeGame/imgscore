@@ -217,12 +217,15 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         }
 
         function onNextImages(images) {
-            if ('object' !== typeof images) {
-                console.log('**** Weird: wrong images! ');
-                return;
-            }
+            var len;
             node.game.counter = -1;
             node.game.images = images;
+            len = images.items.length;
+            // A reconnection.
+            if (len !== node.game.settings.NIMAGES) {
+                node.game.images.offset = node.game.settings.NIMAGES - len;
+                updateNextButton();
+            }
             displayImage();
         }
 
@@ -243,9 +246,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     next.disabled = false;
                     return;
                 }
-
-                next.innerHTML = 'Next (' + (counter + 1) + '/' +
-                    node.game.settings.NIMAGES + ')';
+                updateNextButton(counter+1);
 
                 // Path to the image, used as id.
                 img = images.items[counter];
@@ -265,6 +266,14 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             else {
                 displayImage();
             }
+        }
+
+        function updateNextButton(counter) {
+            var offset;
+            counter = counter || 0;
+            offset = node.game.images.offset || 0;
+            next.innerHTML = 'Next (' + (offset + counter) + '/' +
+                node.game.settings.NIMAGES + ')';
         }
 
         // Elements of the page.
