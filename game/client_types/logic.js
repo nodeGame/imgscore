@@ -98,7 +98,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         node.on('get.NEXT', function(msg) {
             var set, origSet, state;
             var code;
-debugger
+
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
@@ -140,7 +140,7 @@ debugger
                 set.items = set.items.slice(state.pic);
             }
             // Player has rated all sets..
-            else if (state.completedSets >= settings.NSETS) {
+            else if (state.completedSets >= settings.SETS_MAX) {
                 state.checkedOut = true;
                 code = channel.registry.getClient(msg.from);
                 node.remoteCommand('step', msg.from, { breakStage: true });
@@ -152,15 +152,15 @@ debugger
                 state.setLength = set.items.length;
             }
 
-            console.log('COUNTER ', counter);
-            console.log('SET LENGTH ', set ? set.items.length : 'no set');
-            console.log(set);
+            // console.log('COUNTER ', counter);
+            // console.log('SET LENGTH ', set ? set.items.length : 'no set');
+            // console.log(set);
             return set;
         });
 
         // Client is requesting a random sample.
         node.on('get.sample', function(msg) {
-            console.log('**** Received a get SAMPLE! ***');
+            console.log('**** Get SAMPLE! ' + msg.from + ' ***');
             checkAndCreateState(msg.from);
             if (gameState[msg.from].randomSetId === null) {
                 gameState[msg.from].randomSetId =
@@ -175,7 +175,7 @@ debugger
 
             obj = msg.data;
             if (!obj) return;
-            console.log('**** Received a CAT! ' + obj.id + '***');
+            console.log('**** CAT! ' + obj.id + ' ' + msg.from + ' ***');
 
             state = gameState[msg.from];
             // console.log(state);

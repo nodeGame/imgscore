@@ -419,7 +419,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     });
 
     game.plot = stager.getState();
-    game.verbosity = 1000;
+    game.verbosity = 0;
 
     return game;
 };
