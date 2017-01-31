@@ -58,6 +58,37 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // Init Function. Will spawn everything.
     function init() {
 
+        // Saves time, id and worker id of connected clients (with timeout).
+        var saveWhoConnected;
+        var cacheToSave, timeOutSave;
+        cacheToSave = [];
+        saveWhoConnected = function(p) {
+
+            cacheToSave.push(Date.now() + "," + p.id + "," +
+                             (p.WorkerId || 'NA') + "," +
+                             (p.userAgent ? '"' + p.userAgent + '"' : 'NA'));
+
+            if (!timeOutSave) {
+                timeOutSave = setTimeout(function() {
+                    var txt;
+                    txt = cacheToSave.join("\n") + "\n";
+                    cacheToSave = [];
+                    timeOutSave = null;
+                    fs.appendFile(dataDir + 'codes.csv', txt, function(err) {
+                        if (err) {
+                            console.log(txt);
+                            console.log(err);
+                        }
+                    });
+                }, dumpDbInterval);
+            }
+        }
+        if (node.game.pl.size()) node.game.pl.each(saveWhoConnected);
+        node.on.pconnect(saveWhoConnected);
+        //////////////////////////////////
+
+
+        // Save data with timeout.
         setInterval(function() {
             var s;
             s = node.game.memory.size();
@@ -69,7 +100,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 });
             }
         }, dumpDbInterval);
-
+        ///////////////////
+        
         this.sampleStage = this.plot.normalizeGameStage('instructions.sample');
 
         // This must be done manually for now (maybe change).
