@@ -384,6 +384,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         W.restoreOnleave();
         W.restoreEscape();
         W.disableBackButton(false);
+
+        // Was a reconnection.
+        if (!node.game.enoughSets) node.say('enoughSets');
+            
     }
 
     // Creating stages and steps

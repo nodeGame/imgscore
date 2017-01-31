@@ -70,8 +70,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
         }, dumpDbInterval);
 
-        node.game.sets = new NDDB();
-
         this.sampleStage = this.plot.normalizeGameStage('instructions.sample');
 
         // This must be done manually for now (maybe change).
@@ -107,13 +105,14 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 state.newSetNeeded = false;
                 state.pic = 0;
 
-                // TODO: use it!
                 // There is actually a difference between setId and the set
                 // of the images actually evaluated. setId is the idx of the
                 // array, but inside the array items are not ordered.
-                node.game.sets.insert({
-                    rater: msg.from,
+                node.game.memory.insert({
+                    stage: node.player.stage,
+                    player: msg.from,
                     setId: state.setId,
+                    setCounter: (state.completedSets+1),
                     randomSetId: state.randomSetId
                 });
             }
@@ -247,28 +246,35 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     function goodbye(pId) {
         var bonusStr, bonus, code, state;
 
-        code = channel.registry.getClient(pId);
         state = gameState[pId];
-        state.checkedOut = true;
-        node.remoteCommand('step', pId, { breakStage: true });
+        code = channel.registry.getClient(pId);
+
+        // If TRUE, it is a reconnection.
+        if (!state.checkedOut) {
+            state.checkedOut = true;
+            node.remoteCommand('step', pId, { breakStage: true });
         
-        bonus = settings.FEE + (settings.BONUS * state.completedSets);
-        bonus = Number(bonus).toFixed(2);
+            bonus = settings.FEE + (settings.BONUS * state.completedSets);
+            bonus = Number(bonus).toFixed(2);
+            state.finalBonus = bonus;
+
+            // Save record.
+
+            // By default Approve is marked."
+            bonusStr = '"' + (code.AccessCode || pId) + '","' +
+                (code.ExitCode || 'NA') + '","' +
+                (code.WorkerId || 'NA') + '","' +
+                (code.HITId || 'NA') + '","' +
+                (code.AssignmentId || 'NA') + '",' +
+                bonus + ',"x",\n';
+            appendToBonusFile(bonusStr);
+        }
 
         // Send Win code;
         node.say('WIN', pId, {
-            win: bonus,
+            win: state.finalBonus,
             exitcode: code.ExitCode
         });
-
-        // By default Approve is marked."
-        bonusStr = '"' + (code.AccessCode || pId) + '","' +
-            (code.ExitCode || 'NA') + '","' +
-            (code.WorkerId || 'NA') + '","' +
-            (code.HITId || 'NA') + '","' +
-            (code.AssignmentId || 'NA') + '",' +
-            bonus + ',"x",\n';
-        appendToBonusFile(bonusStr);
     }
 
     /**
