@@ -9,8 +9,9 @@ Session.vim
 \#*
 .\#*
 
+codes.imported.*
 game/csv
 data
 descil.conf.js
 *.csv
-
+*.bak

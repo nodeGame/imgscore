@@ -256,14 +256,14 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         bonus = Number(bonus).toFixed(2);
 
         // Send Win code;
-        node.say('WIN', code.AccessCode || code.id, {
+        node.say('WIN', pId, {
             win: bonus,
             exitcode: code.ExitCode
         });
 
         // By default Approve is marked."
-        bonusStr = '"' + (code.id || code.AccessCode || 'NA') + '","' +
-            (code.ExitCode || code.id) + '","' +
+        bonusStr = '"' + (code.AccessCode || pId) + '","' +
+            (code.ExitCode || 'NA') + '","' +
             (code.WorkerId || 'NA') + '","' +
             (code.HITId || 'NA') + '","' +
             (code.AssignmentId || 'NA') + '",' +

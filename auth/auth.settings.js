@@ -107,7 +107,7 @@ module.exports = {
      * Modes: 'dummy', 'auto', 'local', 'remote', 'custom'
      * Default: 'codes.imported.csv'
      */
-    // outFile: 'my.imported.codes.csv',
+    outFile: 'my.imported.codes.csv',
 
     /**
      * ## claimId
@@ -137,7 +137,7 @@ module.exports = {
      *
      * Manipulates the client object after the claim id process succeeded
      */
-    //claimIdPostProcess: function(code, query, headers) {
+    // claimIdPostProcess: function(code, query, headers) {
     //    code.WorkerId = query.id;
     //}
 
