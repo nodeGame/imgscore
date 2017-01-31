@@ -164,13 +164,4 @@ module.exports = {
 
     // page: 'login.htm'
 
-    /**
-     * ## getcode
-     *
-     * function that returns true or a string with the error. ??
-     *
-     * @xperimental
-     */
-    getcode: true,
-
 };
