@@ -34,9 +34,9 @@ module.exports = {
             ratingScale[0] + ' (lowest) to ' +
             ratingScale[(ratingScale.length-1)] + 
             ' (highest).</strong></h4>' +
-            'Try to consider the value of the image ' +
+            'Try to consider the value of this image ' +
             '<strong>relative</strong> to the others you have ' +
-            'observed in the sample.<br/>',
+            'observed so far.<br/>',
 
         items: [
             'Overall Appeal or Quality',
