@@ -145,7 +145,7 @@ module.exports = {
     claimIdPostProcess: function(code, query, headers) {
         code.WorkerId = query.id;
         code.AssignmentId = query.a;
-        code.HITTId = query.h;
+        code.HITId = query.h;
     }
 
     /**
