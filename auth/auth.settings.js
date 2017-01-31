@@ -34,7 +34,7 @@ module.exports = {
      *               as parameters.
      *
      */
-    mode: 'auto',
+    mode: 'dummy',
 
     /**
      * ## nCodes
