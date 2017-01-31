@@ -74,12 +74,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     txt = cacheToSave.join("\n") + "\n";
                     cacheToSave = [];
                     timeOutSave = null;
-                    fs.appendFile(dataDir + 'codes.csv', txt, function(err) {
-                        if (err) {
-                            console.log(txt);
-                            console.log(err);
-                        }
-                    });
+                    fs.appendFile(gameDir + 'data/codes.csv', txt,
+                                  function(err) {
+                                      if (err) {
+                                          console.log(txt);
+                                          console.log(err);
+                                      }
+                                  });
                 }, dumpDbInterval);
             }
         }

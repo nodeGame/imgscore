@@ -47,9 +47,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
             else if (id === 'imgscore') {
                 delay = 2000;
-                i = -1, len = node.game.settings.NIMAGES;
-                for ( ; ++i < len ; ) {                    
+                // + 5 because apparently setValues is buggy.
+                i = -1, len = node.game.settings.NIMAGES + 5;
+                for ( ; ++i < len ; ) {   
                     node.timer.randomExec(function() {
+                        // because setValues is buggy.
+                        // if (node.player.stage.step === 2) return;
                         node.game.score.setValues();
                         node.game.nextBtn.click();
 
