@@ -37,11 +37,23 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // Write bonus file headers.
     appendToBonusFile();
 
-    // 2. Defining the single player game.
+    // 2. Sets variables.
 
     // Every new connecting player will receive a new set of images, indexed
     // by counter; also on(NEXT) a new set will be sent.
     var counter = settings.SET_COUNTER;
+
+    // Sets that are not available given previously scored sets.
+    // Increases as players rate new sets.
+    // { id: { set1, set2, set3 ... } }
+    var notAvailableSets = {};
+
+    // Skipped sets are those that a player could not use,
+    // because in conflict (containing images already used
+    // in another sets). We try to give them to the NEXT
+    var skippedSets = [];
+
+    // 3. Game stuff.
 
     // State of all players.
     var gameState = {};
@@ -102,7 +114,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
         }, dumpDbInterval);
         ///////////////////
-        
+
         this.sampleStage = this.plot.normalizeGameStage('instructions.sample');
 
         // This must be done manually for now (maybe change).
@@ -127,14 +139,21 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
-            var set, origSet, state;
+            var set, origSet, state, setId;
 
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
             if (state.newSetNeeded) {
-                // Circular queue.
-                state.setId = ++counter % sets.length;
+                // Get new set id (will be equal to -1, if none is available).
+                setId = getNextSetId(msg.from);
+
+                if (state.completedSets || setId === -1) {
+                    state.noMoreCompatible = true
+                    return { noMore: true };
+                }
+
+                state.setId = setId;
                 state.newSetNeeded = false;
                 state.pic = 0;
 
@@ -144,15 +163,15 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.game.memory.insert({
                     stage: node.player.stage,
                     player: msg.from,
-                    setId: state.setId,
+                    setId: setId,
                     setCounter: (state.completedSets+1),
                     randomSetId: state.randomSetId
                 });
             }
 
             // Manual clone it, otherwise it might get overwritten (see below).
-            origSet = sets[state.setId];
-            set = {                
+            origSet = sets[setId];
+            set = {
                 set: origSet.set,
                 items: origSet.items,
                 completedSets: state.completedSets
@@ -171,7 +190,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 set.items = set.items.slice(state.pic);
             }
             // Player has rated all sets..
-            else if (state.completedSets >= settings.SETS_MAX) {               
+            else if (state.completedSets >= settings.SETS_MAX) {
                 goodbye(msg.from);
                 return;
             }
@@ -268,7 +287,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     };
 
     // ## Helper functions.
-    
+
     /**
      * ### goodbye
      *
@@ -286,7 +305,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         if (!state.checkedOut) {
             state.checkedOut = true;
             node.remoteCommand('step', pId, { breakStage: true });
-        
+
             bonus = settings.FEE + (settings.BONUS * state.completedSets);
             bonus = Number(bonus).toFixed(2);
             state.finalBonus = bonus;
@@ -378,6 +397,51 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 console.log(row);
             }
         });
+    }
+
+    /**
+     * ### Assigns sets to players taking into account already scored images
+     *
+     * @param {string} email The email
+     *
+     * @return {number} A position in the sets array, or -1
+     *    if there are no more sets available.
+     */
+    function getNextSetId(pid) {
+        var setId, moreLoops, skippedIdx, wasSkipped;
+        moreLoops = true;
+        skippedIdx = -1;
+        while (moreLoops) {
+            wasSkipped = false;
+            // First try to re-use previously skipped sets by other players.
+            if (skippedSets.length && ++skippedIdx < skippedSets.length) {
+                setId = skippedSets[skippedIdx]
+                wasSkipped = true;
+            }
+            // If none of the skipped sets are usable, try a new set.
+            else {
+                setId = ++counter;
+                if (setId > sets.length) return -1;
+            }
+
+            // Check if this set is usable.
+            if (notAvailableSets[pid] && notAvailableSets[pid][setId]) {
+                // If not, and if it was not already a skipped set,
+                // add it to the list of skipped sets.
+                if (!wasSkipped) skippedSets.push(setId);                
+            }
+            else {
+                // The set is good.
+                moreLoops = false;
+                // Other sets become unavailable to this participant.
+                if (!notAvailableSets[pid]) notAvailableSets[pid] = {};
+                J.mixin(notAvailableSets[pid], sets[setId].allIncompatibleSets);
+                // If it was a skipped set, remove it from the list.
+                if (wasSkipped) skippedSets = skippedSets.splice(skippedIdx, 1);
+            }
+        }
+        // As it was before.
+        return setId;
     }
 
 };

@@ -50,8 +50,8 @@ module.exports = function(settings, stages, gameDir, level) {
         return db;
     }
 
-    //Sets of 20 images.
-    setup.sets = loadSets('sets-of-images.json');
+    // Sets of 20 images (-extra contains info about incompatible sets).
+    setup.sets = loadSets('sets-of-images-extra.json');
     // Sets of 40 images each.
     setup.randomSets = loadSets('sets-of-images-40.json');
     // All images paths, etc.

@@ -218,6 +218,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         function onNextImages(images) {
             var len;
+            if (images.noMore) {
+                alert('Unfortunately, all remaning sets have been taken. ' +
+                     'You will now be moved to the final stage.');
+                node.game.enoughSets = true;                
+                node.say('enoughSets');
+                return;
+            }
             node.game.counter = -1;
             node.game.images = images;
             len = images.items.length;
