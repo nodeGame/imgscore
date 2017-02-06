@@ -41,16 +41,15 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             else if (id === 'continue') {
                 node.timer.randomExec(function() {
-                    if (Math.random() > 0.5) W.getElementById('no').click();
+                    if (Math.random() > 0.65) W.getElementById('no').click();
                     else W.getElementById('yes').click();
                 }, 3000);
             }
             else if (id === 'imgscore') {
                 delay = 2000;
-                // + 5 because apparently setValues is buggy.
-                i = -1, len = node.game.settings.NIMAGES + 5;
+                i = -1, len = node.game.settings.NIMAGES;
                 for ( ; ++i < len ; ) {   
-                    node.timer.randomExec(function() {
+                    setTimeout(function() {
                         // because setValues is buggy.
                         // if (node.player.stage.step === 2) return;
                         node.game.score.setValues();

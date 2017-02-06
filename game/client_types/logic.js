@@ -148,7 +148,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 // Get new set id (will be equal to -1, if none is available).
                 setId = getNextSetId(msg.from);
 
-                if (state.completedSets || setId === -1) {
+                if (setId === -1) {
                     state.noMoreCompatible = true
                     return { noMore: true };
                 }
@@ -170,7 +170,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
 
             // Manual clone it, otherwise it might get overwritten (see below).
-            origSet = sets[setId];
+            // Must be state.setId, because of If above.
+            origSet = sets[state.setId];
+
             set = {
                 set: origSet.set,
                 items: origSet.items,
@@ -426,11 +428,16 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             // Check if this set is usable.
             if (notAvailableSets[pid] && notAvailableSets[pid][setId]) {
+
+                // console.log('SSSSSSSSSSSKIPPING ', setId, ' for ', pid);
+                // console.log('TO SKIP  ', notAvailableSets[pid]);
                 // If not, and if it was not already a skipped set,
                 // add it to the list of skipped sets.
-                if (!wasSkipped) skippedSets.push(setId);                
+                if (!wasSkipped) skippedSets.push(setId);          
             }
-            else {
+            else {                
+                // console.log('FFFFOUND ', setId, ' for ', pid);
+
                 // The set is good.
                 moreLoops = false;
                 // Other sets become unavailable to this participant.
