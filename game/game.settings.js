@@ -57,7 +57,7 @@ module.exports = {
     },
 
     // Serve sets of images sequentally from set X (it is zero-indexed).
-    SET_COUNTER: -1,
+    SET_COUNTER: 148,
 
     // The name of the folder in public/ containing the images.
     // Keep the trailing slash.
