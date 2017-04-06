@@ -34,7 +34,7 @@ module.exports = {
      *               as parameters.
      *
      */
-    mode: 'auto',
+    mode: 'local',
 
     /**
      * ## nCodes
@@ -44,7 +44,7 @@ module.exports = {
      * Modes: 'dummy', 'auto'
      * Default: 100
      */
-    nCodes: 500,
+    // nCodes: 500,
 
     /**
      * ## addPwd
@@ -116,7 +116,7 @@ module.exports = {
      *
      * Default: FALSE
      */
-    claimId: true,
+    // claimId: true,
 
     /**
      * ## claimIdValidateRequest
@@ -127,26 +127,26 @@ module.exports = {
      *
      * Default: undefined
      */
-    claimIdValidateRequest: function(query, headers) {
-        if ('string' !== typeof query.a || query.a === '') {
-            return 'missing or invalid AssignmentId';
-        }
-        if ('string' !== typeof query.h || query.h === '') {
-            return 'missing or invalid HITId';
-        }
-        return true;
-    },
+    // claimIdValidateRequest: function(query, headers) {
+    //    if ('string' !== typeof query.a || query.a === '') {
+    //        return 'missing or invalid AssignmentId';
+    //    }
+    //    if ('string' !== typeof query.h || query.h === '') {
+    //        return 'missing or invalid HITId';
+    //    }
+    //    return true;
+    //},
 
     /**
      * ## claimIdPostProcess
      *
      * Manipulates the client object after the claim id process succeeded
      */
-    claimIdPostProcess: function(code, query, headers) {
-        code.WorkerId = query.id;
-        code.AssignmentId = query.a;
-        code.HITId = query.h;
-    }
+    // claimIdPostProcess: function(code, query, headers) {
+    //     code.WorkerId = query.id;
+    //     code.AssignmentId = query.a;
+    //     code.HITId = query.h;
+    // }
 
     /**
      * ## importer
