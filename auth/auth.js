@@ -101,9 +101,9 @@ module.exports = function(auth) {
             }
             amtData = atob(info.query.id);
             if ('object' === typeof amtData) {
-                clientObject.WorkerId = amtData.w;
+                clientObject.WorkerId = amtData.id;
                 clientObject.AssignmentId = amtData.a;
-                clientObject.HitId = amtData.h;
+                clientObject.HITId = amtData.h;
             }
             else {
                 clientObject.amtData = info.query.id;
