@@ -32,13 +32,13 @@ console.log();
 var item, set, incompSet;
 
 i = -1;
-for ( ; ++i < (NSETS-1) ; ) {
+for ( ; ++i < NSETS ; ) {
     j = -1;
     set = db.db[i];
     set.previousIncompatibleSets = {};
     set.nextIncompatibleSets = {};
     set.allIncompatibleSets = {};
-debugger
+
     for ( ; ++j < PICS4SET ; ) {
         item = set.items[j];
         for (incompSet in sets4images[item]) {
@@ -49,7 +49,8 @@ debugger
             }
         }
     }
-
+    // console.log(set);
+    // debugger
 }
 
 
