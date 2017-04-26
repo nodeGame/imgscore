@@ -17,6 +17,7 @@ var GameStage = ngc.GameStage;
 var stepRules = ngc.stepRules;
 
 module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
+    var used = {};
 
     var node = gameRoom.node;
     var channel = gameRoom.channel;
@@ -50,7 +51,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // Skipped sets are those that a player could not use,
     // because in conflict (containing images already used
-    // in another sets). We try to give them to the NEXT
+    // in another sets). We try to give them to the NEXT request.
     var skippedSets = [];
 
     // 3. Game stuff.
@@ -444,9 +445,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 if (!notAvailableSets[pid]) notAvailableSets[pid] = {};
                 J.mixin(notAvailableSets[pid], sets[setId].allIncompatibleSets);
                 // If it was a skipped set, remove it from the list.
-                if (wasSkipped) skippedSets = skippedSets.splice(skippedIdx, 1);
+                if (wasSkipped) skippedSets.splice(skippedIdx, 1);                
             }
         }
+        
+        console.log('NEXT ID: ', setId, used);
+        if (used[setId]) throw new Error('WTF');
+        used[setId] = true;
         // As it was before.
         return setId;
     }
