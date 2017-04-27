@@ -14,7 +14,7 @@ var EVAS4PIC = 5;
 // If FALSE, it throws an error if cannot make a set.
 // If TRUE, it tries to use one item just already above the limit
 // to complete the set. If not possible, it throws an error.
-var BEST_EFFORT = true;
+var BEST_EFFORT = false;
 
 // Set variables.
 var outDb =  new NDDB();
@@ -30,7 +30,6 @@ var setIds;
 
 // This is the some of remaining evaluations per image.
 var requiredEvas = 0;
-var nImagesRequiringEvas = 0;
 var availableIdxs = [];
 
 // Full db: all images.
@@ -75,7 +74,6 @@ partialsDb.on('insert', function(item, idx) {
     diffEvas = Math.max(EVAS4PIC - item.N, 0);
     if (diffEvas > 0) {
         requiredEvas += diffEvas;
-        nImagesRequiringEvas++;
         availableIdxs.push(fullItem.idx);
     }
 });
@@ -115,21 +113,31 @@ var NSETS = requiredEvas / PICS4SET;
 console.log();
 console.log(' ** example image: ', db.db[0]);
 console.log(' ** n images: ', totItems);
+console.log(' ** n images requiring evas: ', availableIdxs.length);
+console.log(' ** required evaluations: ', requiredEvas);
 console.log(' ** required sets: ', NSETS);
 console.log();
 if (partialsDb.size() !== fullDb.size()) {
     console.log('!!!partialsDb images: ' + partialsDb.size());
 }
 
+var i, len;
+i = -1, len = availableIdxs.length;
+for ( ; ++i < len ; ) {
+    if (globalCounter[availableIdxs[i]] >= 5) debugger
+}
+
+
 var bestEfforted;
 var setInfo;
 
+// TODO closure and eliminate last index.
 function getNextIdx() {
     var internalIdx, idx;
     if (!availableIdxs.length) throw new Error('No more Idxs!');
     internalIdx = J.randomInt(-1, (availableIdxs.length-1));
     idx = availableIdxs[internalIdx];
-    if (globalCounter[idx] >= 5) debugger;
+    // if (globalCounter[idx] >= 5) debugger;
     return idx;
 }
 
@@ -161,10 +169,11 @@ for ( ; ++i < NSETS ; ) {
         }
 
         if (niter >= niterLimit) {
+            debugger
             if (BEST_EFFORT) {
                 // console.log('Pic ', j, 'Set ', i);
                 
-                debugger;
+                //debugger;
                 item = auxDb.next();
                 db.insert(item);
                 idx = (db.db.length-1)
