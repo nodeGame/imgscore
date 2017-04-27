@@ -235,21 +235,21 @@ debugger
 // Do last set with left over images, and repeat some other.
 var set = [], setsIds = {};
 var i, len;
-i = -1, len = availableIdxs.length;
-for ( ; ++i < len ; ) {
-    idx = availableIdxs[i];
+j = -1, len = availableIdxs.length;
+for ( ; ++j < len ; ) {
+    idx = availableIdxs[j];
     item = db.db[idx];
     set.push(item.filename);
     setsIds[idx] = true;
     // console.log(globalCounter[idx]);
     globalCounter[idx]++;
     if (idxManager.shouldBeCleared(idx)) {
-        idxManager.clear(i);
+        idxManager.clear(j);
         len--;
-        i--;
+        j--;
     }
 }
-j = set.length;
+j = -1;
 for ( ; ++j < PICS4SET ; ) {
      //debugger;
     item = auxDb.next();
@@ -259,6 +259,7 @@ for ( ; ++j < PICS4SET ; ) {
     globalCounter[idx]++;
     set.push(item.filename);            
 }
+outDb.insert( { set: i++, items : J.shuffle(set), bestEffort: true } );
 
 if (availableIdxs.length) {
     console.log('noooooooooo ', availableIdxs.length);
