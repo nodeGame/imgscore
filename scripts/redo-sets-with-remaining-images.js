@@ -80,7 +80,8 @@ partialsDb.on('insert', function(item, idx) {
 partialsDb.loadSync('./all-images-list-nreviews.csv');
 //////////////////////////////////////////////////////
 
-var db = fullDb.select('N', '<', EVAS4PIC).execute();
+//var db = fullDb.select('N', '<', EVAS4PIC).execute();
+
 var db = fullDb;
 var auxDb = fullDb
     .select('N', '==', EVAS4PIC)
@@ -132,19 +133,35 @@ var bestEfforted;
 var setInfo;
 
 // TODO closure and eliminate last index.
-function getNextIdx() {
-    var internalIdx, idx;
-    if (!availableIdxs.length) throw new Error('No more Idxs!');
-    internalIdx = J.randomInt(-1, (availableIdxs.length-1));
-    idx = availableIdxs[internalIdx];
-    // if (globalCounter[idx] >= 5) debugger;
-    return idx;
-}
+var idxManager = (function() {
+    var idx, internalIdx;
+    return {
+        // Return the next idx in fullDb.
+        // Stores local references of both idx and internalIdx.
+        getNext: function() {
+            if (!availableIdxs.length) throw new Error('No more Idxs!');
+            internalIdx = J.randomInt(-1, (availableIdxs.length-1));
+            idx = availableIdxs[internalIdx];
+            return idx;
+        },
+        // If reached the target of evaluations, we remove it.
+        clearIfNeeded: function(idxTarget) {
+            if (idxTarget !== idx) throw new Error('Wrong idx ' + idxTarget);
+            if (idxManager.shouldBeCleared(idx)) idxManager.clear(internalIdx);
+        },
+        shouldBeCleared: function(idx) {
+            return globalCounter[idx] >= EVAS4PIC;
+        },
+        clear: function(idx) {
+            availableIdxs.splice(idx, 1);
+        }
+    }
+})();
 
 // Here we go.
 
 i = -1;
-for ( ; ++i < NSETS ; ) {
+for ( ; ++i < (NSETS-1) ; ) {
     j = -1;
     set = [];
     setIds = {};
@@ -153,7 +170,7 @@ for ( ; ++i < NSETS ; ) {
     for ( ; ++j < PICS4SET ; ) {
 
         niter = 1;
-        idx = getNextIdx();
+        idx = idxManager.getNext();
 
         // Generate random idx until a valid one is found.
 
@@ -165,7 +182,7 @@ for ( ; ++i < NSETS ; ) {
                niter < niterLimit) {
             
             niter++;
-            idx = getNextIdx();
+            idx = idxManager.getNext();
         }
 
         if (niter >= niterLimit) {
@@ -189,7 +206,6 @@ for ( ; ++i < NSETS ; ) {
         // console.log(item);
 
         if ('undefined' === typeof item) {
-            // debugger;
             throw new Error('No item found with idx: ' + idx);
         }
 
@@ -200,11 +216,7 @@ for ( ; ++i < NSETS ; ) {
         }
         else {
             globalCounter[idx]++;
-            // If reached the target of evaluations, we do not waste
-            // time with random number generation, and remove it.
-            if (globalCounter[idx] === EVAS4PIC) {
-                availableIdxs.splice(idx, 1);
-            }
+            idxManager.clearIfNeeded(idx);
         }
 
         // Add item to current set.
@@ -217,12 +229,49 @@ for ( ; ++i < NSETS ; ) {
     outDb.insert(setInfo);
     // console.log(i);
 }
+
+debugger
+
+// Do last set with left over images, and repeat some other.
+var set = [], setsIds = {};
+var i, len;
+i = -1, len = availableIdxs.length;
+for ( ; ++i < len ; ) {
+    idx = availableIdxs[i];
+    item = db.db[idx];
+    set.push(item.filename);
+    setsIds[idx] = true;
+    // console.log(globalCounter[idx]);
+    globalCounter[idx]++;
+    if (idxManager.shouldBeCleared(idx)) {
+        idxManager.clear(i);
+        len--;
+        i--;
+    }
+}
+j = set.length;
+for ( ; ++j < PICS4SET ; ) {
+     //debugger;
+    item = auxDb.next();
+    idx = item.idx;
+    bestEfforted++;
+    setIds[idx] = true;
+    globalCounter[idx]++;
+    set.push(item.filename);            
+}
+
+if (availableIdxs.length) {
+    console.log('noooooooooo ', availableIdxs.length);
+    return;
+}
+
+debugger
+
 var tmp = outDb.fetchValues('bestEffort');
 console.log(tmp.bestEffort.length);
 
 debugger
 
-return;
 // Save db.
 outDb.save('./sets-of-images-final.json');
 

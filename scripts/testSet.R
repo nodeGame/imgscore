@@ -2,7 +2,7 @@ TESTDIR <- '/home/stefano/www/ngtest/games/imgscore/scripts/'
 
 data <- read.table(paste0(TESTDIR, 'sets_test.csv'), sep=",", head=TRUE)
 
-data <- read.table(paste0(TESTDIR, 'sets-of-images.csv'), sep=",", head=TRUE)
+data <- read.table(paste0(TESTDIR, 'sets-of-images-final.csv'), sep=",", head=TRUE)
 a <- table(data$items)
 hist(a)
 

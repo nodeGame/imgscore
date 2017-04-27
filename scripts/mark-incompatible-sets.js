@@ -18,7 +18,7 @@ db.on('insert', function(item) {
 });
 
 // Load db of iamges.
-db.loadSync('./sets-of-images.json');
+db.loadSync('./sets-of-images-final.json');
 NSETS = db.size();
 PICS4SET = db.db[0].items.length;
 console.log('n sets: ', NSETS);
@@ -57,7 +57,7 @@ for ( ; ++i < NSETS ; ) {
 console.log('sample updated set: ', db.db[0]);
 
 // Save db.
-db.save('./sets-of-images-extra.json');
+db.save('./sets-of-images-final-extra.json');
 
 console.log('You are served.');
 
