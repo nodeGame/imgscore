@@ -26,6 +26,10 @@ db.index('filename', function(item) {
 
 // Load db of iamges.
 db.loadSync('./all-images-db.json');
+
+// Save all images as a list.
+// db.save('./all-images-list.csv', { headers: [ 'filename' ] });
+
 totItems = db.size();
 console.log('image example: ', db.db[0]);
 console.log('n images: ', totItems);
