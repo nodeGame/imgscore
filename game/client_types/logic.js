@@ -424,31 +424,27 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             // If none of the skipped sets are usable, try a new set.
             else {
                 setId = ++counter;
-                if (setId > sets.length) return -1;
+                if (setId > (sets.length-1)) return -1;
             }
 
             // Check if this set is usable.
             if (notAvailableSets[pid] && notAvailableSets[pid][setId]) {
 
-                // console.log('SSSSSSSSSSSKIPPING ', setId, ' for ', pid);
-                // console.log('TO SKIP  ', notAvailableSets[pid]);
                 // If not, and if it was not already a skipped set,
                 // add it to the list of skipped sets.
-                if (!wasSkipped) skippedSets.push(setId);          
+                if (!wasSkipped) skippedSets.push(setId);
             }
-            else {                
-                // console.log('FFFFOUND ', setId, ' for ', pid);
-
+            else {
                 // The set is good.
                 moreLoops = false;
                 // Other sets become unavailable to this participant.
                 if (!notAvailableSets[pid]) notAvailableSets[pid] = {};
                 J.mixin(notAvailableSets[pid], sets[setId].allIncompatibleSets);
                 // If it was a skipped set, remove it from the list.
-                if (wasSkipped) skippedSets.splice(skippedIdx, 1);                
+                if (wasSkipped) skippedSets.splice(skippedIdx, 1);
             }
         }
-        
+
         console.log('NEXT ID: ', setId, used);
         if (used[setId]) throw new Error('WTF');
         used[setId] = true;
