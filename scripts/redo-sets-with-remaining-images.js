@@ -77,7 +77,7 @@ partialsDb.on('insert', function(item, idx) {
         availableIdxs.push(fullItem.idx);
     }
 });
-partialsDb.loadSync('./all-images-list-nreviews.csv');
+partialsDb.loadSync('./all-images-list-nreviews-MAY03.csv');
 //////////////////////////////////////////////////////
 
 //var db = fullDb.select('N', '<', EVAS4PIC).execute();
@@ -92,12 +92,12 @@ totItems = db.size();
 
 
 // Shuffle it nicely.
-db.shuffle(true);
-db.shuffle(true);
-db.shuffle(true);
-db.shuffle(true);
-db.shuffle(true);
-db.shuffle(true);
+J.shuffle(availableIdxs);
+J.shuffle(availableIdxs);
+J.shuffle(availableIdxs);
+J.shuffle(availableIdxs);
+J.shuffle(availableIdxs);
+J.shuffle(availableIdxs);
 
 auxDb.shuffle(true);
 auxDb.shuffle(true);
@@ -125,7 +125,7 @@ if (partialsDb.size() !== fullDb.size()) {
 var i, len;
 i = -1, len = availableIdxs.length;
 for ( ; ++i < len ; ) {
-    if (globalCounter[availableIdxs[i]] >= 5) debugger
+    if (globalCounter[availableIdxs[i]] >= 5) debugger    
 }
 
 
@@ -209,6 +209,10 @@ for ( ; ++i < (NSETS-1) ; ) {
             throw new Error('No item found with idx: ' + idx);
         }
 
+        if (globalCounter[idx] >= EVAS4PIC || item.N >= EVAS4PIC) {
+            throw new Error('This item is wrong: ' + idx);
+        }
+
         // Update registers.
         setIds[idx] = true;
         if ('undefined' === typeof globalCounter[idx]) {
@@ -274,10 +278,10 @@ console.log(tmp.bestEffort.length);
 debugger
 
 // Save db.
-outDb.save('./sets-of-images-final.json');
+outDb.save('./sets-of-images-final-MAY03.json');
 
 // Save test db (to be loaded by R).
-outDb.split('items').save('./sets-of-images-final.csv');
+outDb.split('items').save('./sets-of-images-final-MAY03.csv');
 
 console.log('You are served.');
 
