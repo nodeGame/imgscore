@@ -77,7 +77,7 @@ partialsDb.on('insert', function(item, idx) {
         availableIdxs.push(fullItem.idx);
     }
 });
-partialsDb.loadSync('./all-images-list-nreviews-MAY03.csv');
+partialsDb.loadSync('./all-images-list-nreviews-MAY04.csv');
 //////////////////////////////////////////////////////
 
 //var db = fullDb.select('N', '<', EVAS4PIC).execute();
@@ -278,10 +278,10 @@ console.log(tmp.bestEffort.length);
 debugger
 
 // Save db.
-outDb.save('./sets-of-images-final-MAY03.json');
+outDb.save('./sets-of-images-final-MAY04.json');
 
 // Save test db (to be loaded by R).
-outDb.split('items').save('./sets-of-images-final-MAY03.csv');
+outDb.split('items').save('./sets-of-images-final-MAY04.csv');
 
 console.log('You are served.');
 
