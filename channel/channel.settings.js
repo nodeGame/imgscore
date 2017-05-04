@@ -176,7 +176,7 @@ module.exports = {
      *
      * Default: TRUE
      */
-    sioQuery: false,
+    sioQuery: true,
 
     // If TRUE, it will be the default channel of the server.
     // All the static files will be served from '/'.

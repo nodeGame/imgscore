@@ -299,7 +299,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
      * @param {string} pId The id of the player
      */
     function goodbye(pId) {
-        var bonusStr, bonus, code, state;
+        var bonusStr, bonus, bonusAndFee, code, state;
 
         state = gameState[pId];
         code = channel.registry.getClient(pId);
@@ -309,9 +309,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             state.checkedOut = true;
             node.remoteCommand('step', pId, { breakStage: true });
 
-            bonus = settings.FEE + (settings.BONUS * state.completedSets);
+            bonus = settings.BONUS * state.completedSets;
+            bonusAndFee = settings.FEE + bonus;
             bonus = Number(bonus).toFixed(2);
-            state.finalBonus = bonus;
+            bonusAndFee = Number(bonusAndFee).toFixed(2);
+            state.finalBonus = bonusAndFee;
 
             // Save record.
 
@@ -424,7 +426,20 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             // If none of the skipped sets are usable, try a new set.
             else {
                 setId = ++counter;
-                if (setId > (sets.length-1)) return -1;
+                if (setId > (sets.length-1)) {
+                    // All sets finished.
+                    if (!skippedSets.length) {
+                        // Mark the end.
+                        fs.writeFile(gameDir + 'data/finished', 'ok',
+                                     function(err) {
+                                         if (err) {
+                                             console.log(txt);
+                                             console.log(err);
+                                         }
+                                     });
+                    }
+                    return -1;
+                }
             }
 
             // Check if this set is usable.
@@ -445,7 +460,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
         }
 
-        console.log('NEXT ID: ', setId, used);
+        console.log('NEXT ID: ', setId);
         if (used[setId]) throw new Error('WTF');
         used[setId] = true;
         // As it was before.
