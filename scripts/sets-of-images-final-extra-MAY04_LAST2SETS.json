@@ -1,0 +1,103 @@
+[{
+    "set": 0,
+    "items": [
+        "2016_10_24_part1_MFdIIxYp_0.png",
+        "10_11_2016_rank_same_Wwx1EdYX_7.png",
+        "09_29_2016_rank_skew_M5dggpIs_1.png",
+        "10_19_2016_rank_same_m47AUbEP_11.png",
+        "10_19_2016_rank_skew_SA79gTw2_1.png",
+        "10_24_2016_rank_skew_Bv3t2lS4_12.png",
+        "10_25_2016_rank_skew_TDK1511i_10.png",
+        "2016_10_11_part1_X8pvLdhS_0.png",
+        "10_19_2016_rank_same_HeRjQTD9_12.png",
+        "2016_09_08_part1_f1HS19XY_0.png",
+        "09_08_2016_rank_skew_0wZD2rVg_2.png",
+        "10_19_2016_rank_skew_9LCEuvAj_5.png",
+        "09_30_2016_rank_same_HvK49fkM_1.png",
+        "10_25_2016_rank_same_Hl84OAKD_5.png",
+        "09_08_2016_rank_same_i0kFR58U_1.png",
+        "09_29_2016_rank_skew_bKQ5UQ2e_9.png",
+        "10_25_2016_rank_skew_BQ7beMcS_4.png",
+        "09_30_2016_rank_same_6YSTtdXk_7.png",
+        "10_24_2016_rank_skew_9LviYa8K_4.png",
+        "08_29_2016_rank_skew_73KSnvx7_11.png"
+    ],
+    "previousIncompatibleSets": {
+        "0": true
+    },
+    "nextIncompatibleSets": {
+        "1": true,
+        "2": true
+    },
+    "allIncompatibleSets": {
+        "0": true,
+        "1": true,
+        "2": true
+    }
+}, {
+    "set": 1,
+    "items": [
+        "10_25_2016_rank_skew_OBStf09O_10.png",
+        "10_19_2016_rank_same_25KlRT7Z_12.png",
+        "09_30_2016_rank_same_w3jHVZa1_4.png",
+        "10_11_2016_rank_same_sbAHI4gf_1.png",
+        "10_25_2016_rank_skew_0fF2tjXv_10.png",
+        "10_19_2016_rank_same_CBttQ1eF_1.png",
+        "2016_09_08_part1_E1kb2lcU_0.png",
+        "10_24_2016_rank_skew_U2mVi0eC_5.png",
+        "09_29_2016_rank_skew_epTQc6Cg_6.png",
+        "2016_10_11_part1_X8pvLdhS_0.png",
+        "09_30_2016_rank_same_w3jHVZa1_8.png",
+        "08_29_2016_rank_skew_hGblPwWC_11.png",
+        "10_24_2016_rank_skew_b5oXmoct_1.png",
+        "09_08_2016_rank_skew_3vh8NcDt_7.png",
+        "10_25_2016_rank_same_hTQWoO0q_1.png",
+        "08_29_2016_rank_skew_Ip2Yvbgx_10.png",
+        "09_30_2016_rank_same_UcSxQjHl_7.png",
+        "09_08_2016_rank_skew_E1kb2lcU_4.png",
+        "09_29_2016_rank_skew_XJyp4DGM_3.png",
+        "10_24_2016_rank_skew_zYWm4gW6_9.png"
+    ],
+    "previousIncompatibleSets": {
+        "0": true,
+        "1": true
+    },
+    "nextIncompatibleSets": {},
+    "allIncompatibleSets": {
+        "0": true,
+        "1": true
+    }
+}, {
+    "set": 2,
+    "items": [
+        "10_19_2016_rank_same_HeRjQTD9_4.png",
+        "10_25_2016_rank_skew_TDK1511i_4.png",
+        "2016_09_29_part1_XJyp4DGM_0.png",
+        "10_25_2016_rank_skew_msxHV05v_7.png",
+        "08_29_2016_rank_same_bevZs6A8_8.png",
+        "10_25_2016_rank_skew_RwYUChUM_1.png",
+        "09_29_2016_rank_same_E2vGoUDb_11.png",
+        "10_24_2016_rank_skew_iLJCUWvH_11.png",
+        "10_11_2016_rank_same_GFYbui2u_3.png",
+        "10_11_2016_rank_skew_R7nU44VR_9.png",
+        "09_29_2016_rank_same_XIC0Ij6l_8.png",
+        "10_25_2016_rank_skew_vMcLvI8P_1.png",
+        "10_24_2016_rank_skew_F1WM7cg1_7.png",
+        "10_24_2016_rank_skew_Jfe2bQof_5.png",
+        "10_11_2016_rank_skew_tDIQOCgE_8.png",
+        "10_19_2016_rank_same_m47AUbEP_11.png",
+        "10_11_2016_rank_skew_tDIQOCgE_7.png",
+        "09_08_2016_rank_same_vIL88abp_8.png",
+        "2016_10_11_part1_VLTAzvM8_0.png",
+        "09_08_2016_rank_same_ACDmnbYF_11.png"
+    ],
+    "previousIncompatibleSets": {
+        "0": true,
+        "2": true
+    },
+    "nextIncompatibleSets": {},
+    "allIncompatibleSets": {
+        "0": true,
+        "2": true
+    }
+}]
