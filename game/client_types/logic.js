@@ -69,7 +69,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     var timeouts = {};
     var time4Set = 1800000;
-    var time4Set = 10000;
+    var time4Set = 30000;
 
     // Functions.
 
@@ -472,9 +472,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     return -1;
                 }
             }
-
-            console.log('-0-0-0-0-0-');
-            console.log(notAvailableSets[pid]);
 
             // Check if this set is usable.
             if (notAvailableSets[pid] && notAvailableSets[pid][setId]) {
