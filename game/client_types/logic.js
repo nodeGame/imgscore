@@ -66,6 +66,11 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     var dumpDbInterval;
     dumpDbInterval = 30000;
 
+
+    var timeouts = {};
+    var time4Set = 1800000;
+    var time4Set = 10000;
+
     // Functions.
 
     // Init Function. Will spawn everything.
@@ -140,12 +145,21 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
-            var set, origSet, state, setId;
+            var set, origSet, state, setId, oldSetId;
 
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
 
             if (state.newSetNeeded) {
+                oldSetId = state.setId;
+                // Mark the old set (if any) as completed.
+                if ('number' === typeof oldSetId) {
+                    sets[oldSetId].completed = true;
+                    clearTimeout(timeouts[oldSetId]);
+                    timeouts[oldSetId] = null;
+                    console.log('set completed: ', oldSetId);
+                }
+
                 // Get new set id (will be equal to -1, if none is available).
                 setId = getNextSetId(msg.from);
 
@@ -179,6 +193,23 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 items: origSet.items,
                 completedSets: state.completedSets
             };
+
+            // Start a timeout to complete a set, 
+            // will become active again if expires.
+            if (time4Set) {
+                setId = state.setId;
+                timeouts[setId] = setTimeout(function() {
+                    if (timeouts[setId]) clearTimeout(timeouts[setId]);
+                    // If old set was not completed, re-enabled it.
+                    if (!sets[setId].completed) {
+                        console.log('re-nabling set:' , setId);
+                        skippedSets.push(setId);
+                        used[setId] = false;
+                        // TODO: Check if player is still connectected?
+                        // If so disconnect it?
+                    }
+                }, time4Set);
+            }
 
             // This is a reconnection.
             if (state.resume) {
@@ -264,7 +295,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             code = channel.registry.getClient(id);
             if (!code) {
-                console.log('ERROR: no codewen in endgame:', id);
+                console.log('ERROR: no code in endgame:', id);
                 return;
             }
 
@@ -441,6 +472,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     return -1;
                 }
             }
+
+            console.log('-0-0-0-0-0-');
+            console.log(notAvailableSets[pid]);
 
             // Check if this set is usable.
             if (notAvailableSets[pid] && notAvailableSets[pid][setId]) {
