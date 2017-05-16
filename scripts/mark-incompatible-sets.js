@@ -2,6 +2,13 @@ var J = require('JSUS').JSUS;
 var NDDB = require('NDDB').NDDB;
 var path = require('path');
 var fs = require('fs');
+var util = require('util');
+
+var log = require('./log').log;
+var logln = require('./log').logln;
+var logln2 = require('./log').logln2;
+
+
 
 var PICS4SET, NSETS;
 var db =  new NDDB({ update: { indexes: true } });
@@ -17,14 +24,25 @@ db.on('insert', function(item) {
 
 });
 
-// Load db of iamges.
-db.loadSync('./sets-of-images-final-MAY04_LAST2SETS.json');
+// Load db of images.
+
+var inFile, outFile;
+
+// inFile = './sets-of-images-final-MAY04_LAST2SETS.json';
+// Without extension.
+inFile = './sets-of-images-vs';
+
+// outFile = './sets-of-images-final-extra-MAY04_LAST2SETS.json';
+outFile = inFile + '-inc';
+
+
+db.loadSync(inFile + '.json');
+
 NSETS = db.size();
 PICS4SET = db.db[0].items.length;
-console.log('n sets: ', NSETS);
-console.log('images for set: ', PICS4SET);
-console.log('sample set: ', db.db[0]);
-console.log();
+logln('n sets: ' + NSETS);
+log('images for set: ' + PICS4SET);
+log('sample set: ' +  util.inspect(db.db[0]));
 
 
 // Here we go.
@@ -54,10 +72,10 @@ for ( ; ++i < NSETS ; ) {
 }
 
 
-console.log('sample updated set: ', db.db[0]);
+logln('sample updated set: ' + util.inspect(db.db[0]));
 
 // Save db.
-db.save('./sets-of-images-final-extra-MAY04_LAST2SETS.json');
+db.save(outFile + '.json');
 
-console.log('You are served.');
+logln2('You are served.');
 
