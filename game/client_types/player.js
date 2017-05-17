@@ -335,57 +335,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var b, i, errStr, counter;
         console.log('thank you.');
 
-        node.on.data('WIN', function(msg) {
-            var win, exitcode, codeErr;
-            var exitCodeInput, winInput;
-            // var winUsd;
-
-            // Exit Code.
-            codeErr = 'ERROR (code not found)';
-            exitcode = msg.data && msg.data.exitcode || codeErr;
-            exitCodeInput = W.getElementById('exitCode');
-            exitCodeInput.value = exitcode;
-
-            // Total win.
-            win = msg.data && msg.data.win || 0;
-            winInput = W.getElementById('win');
-            // winUsd = win / node.game.settings.EXCHANGE_RATE;
-            // winInput.value = win +
-            //    ' Points = ' + Number(winUsd).toFixed(2) + ' USD';
-            winInput.value = win + ' USD';
-        });
-
-        // Email box.
-        counter = 0;
-        b = W.getElementById('submit-email');
-        i = W.getElementById('email');
-        errStr = 'Check your email and click here again';
-        b.onclick = function() {
-            var email, indexAt, indexDot;
-            email = i.value;
-            if (email.trim().length > 5) {
-                indexAt = email.indexOf('@');
-                if (indexAt !== -1 &&
-                    indexAt !== 0 &&
-                    indexAt !== (email.length-1)) {
-                    indexDot = email.lastIndexOf('.');
-                    if (indexDot !== -1 &&
-                        indexDot !== (email.length-1) &&
-                        indexDot > (indexAt+1)) {
-
-                        b.disabled = true;
-                        i.disabled = true;
-                        node.say('email', 'SERVER', email);
-                        b.onclick = null;
-                        b.innerHTML = 'Sent!';
-                        return;
-                    }
-                }
-            }
-            b.innerHTML = errStr;
-            if (counter) b.innerHTML += '(' + counter + ')';
-            counter++;
-        };
+        // The Score, as in the AMT version, is remvoed from here.
+        
+        // Post to volunteer science.
 
         // Remove block from leaving page.
         W.restoreOnleave();
@@ -431,7 +383,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     // Thank you.
     stager.extendStep('thankyou', {
         cb: thankyou,
-        frame: 'thankyou.htm'
+        frame: 'thankyou-vs.htm'
     });
 
     game.plot = stager.getState();
