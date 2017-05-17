@@ -338,6 +338,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // The Score, as in the AMT version, is remvoed from here.
         
         // Post to volunteer science.
+        parent.postMessage('consent', '*');
 
         // Remove block from leaving page.
         W.restoreOnleave();

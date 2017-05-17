@@ -32,5 +32,5 @@ window.onload = function() {
         }
     });
     // Connect to channel.
-    node.connect();
+    node.connect('/imgscore');
 };
