@@ -1,13 +1,16 @@
 /**
  * # Index script for nodeGame
- * Copyright(c) 2016 brenste <myemail>
+ * Copyright(c) 2017 Stefano Balietti <ste@nodegame.org>
  * MIT Licensed
  *
  * http://nodegame.org
  * ---
  */
 window.onload = function() {
-    var node = parent.node;
+    if ('undefined' === typeof node) {
+        throw new Error('node is not loaded. Aborting.');
+    }
+
     // All these properties will be overwritten
     // by remoteSetup from server.
     node.setup('nodegame', {
@@ -29,5 +32,5 @@ window.onload = function() {
         }
     });
     // Connect to channel.
-    node.connect('/imgscore');
+    node.connect();
 };
