@@ -27,7 +27,7 @@ function initialize() {
   window.addEventListener("message", receiveMessage, false);
 
   // Default link.
-  link = 'https://nodesim.org;
+  link = 'https://nodesim.org';
 
   // Extra variables.
   if ('undefined' !== typeof seed && 'undefined' !== typeof myid) {
@@ -43,4 +43,4 @@ function initialize() {
   document.getElementById("nodegameframe").src = link;
 }
 </script>
-<iframe id="nodegameframe" src="#" style="width:100%; height:800px"></iframe>
+<iframe id="nodegameframe" style="width:100%; height:800px"></iframe>
