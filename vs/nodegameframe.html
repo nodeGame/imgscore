@@ -1,6 +1,7 @@
 <script>
 function receiveMessage(event) {
   var id;
+  var tokens, name, value;
   id = event.data;
 
   // Back compatibility naming.
@@ -15,8 +16,16 @@ function receiveMessage(event) {
   else if (id === "experimentComplete") {
     experimentComplete();
   }
+  else if (id.indexOf("readUserHT") === 0) {
+    tokens = id.split("^__^");
+    name = tokens[1];
+    value = tokens[2];
+    readUserHT(function(data) {
+      if (data.value === null) writeUserHT(name, value);
+    }, name)
+  }
   else {
-    console.log('Received unknown post message:', event.data);
+    console.log('Received unknown post message:', id);
   }
 }
 
@@ -31,7 +40,7 @@ function initialize() {
 
   // Extra variables.
   if ('undefined' !== typeof seed && 'undefined' !== typeof myid) {
-    extraVars = '?gid=' + seed + '&sid=' + myid;
+    extraVars = '?vsgid=' + seed + '&vspid=' + myid;
   }
   // Autoplay (if permitted by server).
   extraVars += '&clientType=autoplay';
