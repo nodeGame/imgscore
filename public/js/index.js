@@ -35,9 +35,17 @@ window.onload = function() {
     node.connect('/imgscore');
 
     // Save nodegame id in vs.
-    
-    if ('function' === typeof parent.readUserHT) {
-        window.postMessage("readUserHT^__^ngid^__^" + node.player.id);
-    }
+    node.on('NODEGAME_READY', function() {
+        console.log("sending readUserHT");
+        parent.postMessage("readUserHT__ngid__" + node.player.id, '*');
+    });
+
+    node.once('STEPPING', function() {
+        var vsGid, vsPid;
+        vsGid = JSUS.getQueryString("vsgid");
+        vsPid = JSUS.getQueryString("vspid");
+        console.log("sending VS GID PID: ", vsGid, vsPid);
+        node.set({ vsgid: vsGid, vspid: vsPid });
+   });
 
 };
