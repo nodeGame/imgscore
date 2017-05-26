@@ -33,4 +33,14 @@ window.onload = function() {
     });
     // Connect to channel.
     node.connect('/imgscore');
+
+    // Save nodegame id in vs.
+    if ('function' === typeof parent.readUserHT) {
+        parent.readUserHT(function(data) {
+            if (data.value === null) {
+                parent.writeUserHT("ngid", node.player.id);
+            }
+        }, "ngid")
+    }
+
 };

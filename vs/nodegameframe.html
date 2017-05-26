@@ -1,0 +1,23 @@
+<script>
+function receiveMessage(event) {
+  // Back compatibility naming.
+  if (event.data === "closeQSIWindow" || event.data === "quit") {
+    quit();
+  }
+  // Back compatibility naming.
+  else if (event.data === "popupConsent" || event.data === "requestConsent") {
+    if (REQUEST_CONSENT) {
+      requestConsent();
+    }
+  }
+  else {
+    console.log('Received unknown post message:', event.data);
+  }
+}
+
+function initialize() {
+ // Add post messages listener.
+ window.addEventListener("message", receiveMessage, false);
+}
+</script>
+<iframe src="https://nodesim.org?clientType=autoplay" style="width:100%; height:800px"></iframe>
