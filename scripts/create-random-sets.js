@@ -5,12 +5,8 @@ var fs = require('fs');
 var ngc = require('nodegame-client');
 var Matcher = ngc.Matcher;
 
-var PICS4SET = 20;
-
-// Tot images: 4182
-// 4182 / 40 * 5 = 522.75
-// var NSETS = 523; // 1071
-var NSETS = 4182 / 20 * 5; //  = 1046; // 1045.5
+var PICS4SET = 8;
+var MAXSETS = 5;
 
 var i, j, idx, item;
 var out, totItems;
@@ -50,6 +46,10 @@ var idxLimit = 5;
 var niter = 0;
 var niterLimit = 10000;
 
+
+// How many sets we need to create.
+var NSETS = totItems / PICS4SET * MAXSETS; 
+debugger
 // Here we go.
 
 i = -1;
@@ -107,6 +107,7 @@ for ( ; ++i < (NSETS-1) ; ) {
     outDb.insert( { set: i, items : set } );
     // console.log(i);
 }
+
 debugger
 
 // Do last set with left over images, and repeat some other.
@@ -122,7 +123,7 @@ for (idx in globalCounter) {
         }
     }
 }
-debugger
+
 j = set.length;
 for ( ; ++j < PICS4SET ; ) {
     idx = J.randomInt(-1, (totItems-1));
@@ -135,7 +136,6 @@ for ( ; ++j < PICS4SET ; ) {
     set.push(item.filename);
             
 }
-debugger
 outDb.insert( { set: i++, items : J.shuffle(set) } );
 console.log('---');
 
@@ -152,7 +152,6 @@ for (idx in globalCounter) {
         }
     }
 }
-debugger
 j = set.length;
 for ( ; ++j < PICS4SET ; ) {
     idx = J.randomInt(-1, (totItems-1));
@@ -165,7 +164,6 @@ for ( ; ++j < PICS4SET ; ) {
     set.push(item.filename);
             
 }
-debugger
 outDb.insert( { set: i++, items : J.shuffle(set) } );
 console.log('---');
 
