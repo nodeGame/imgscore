@@ -21,7 +21,7 @@ module.exports = {
     SETS_MAX: 5,
 
     // Number of images per set.
-    NIMAGES: 20,
+    NIMAGES: 8,
 
     // Number of images per set.
     SKIPSETS: true,

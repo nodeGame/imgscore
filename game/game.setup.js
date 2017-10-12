@@ -52,7 +52,7 @@ module.exports = function(settings, stages, gameDir, level) {
     }
 
     // Sets of 20 images (-extra contains info about incompatible sets).
-    setup.sets = loadSets('sets-of-images-final-extra-MAY04_LAST2SETS.json');
+    setup.sets = loadSets('sets-of-images.json');
 
     // Optional. Restrict sets.
     // tmp = [ setup.sets[73], setup.sets[7], setup.sets[53],
@@ -61,7 +61,7 @@ module.exports = function(settings, stages, gameDir, level) {
     // setup.sets = tmp;
 
     // Sets of 40 images each.
-    setup.randomSets = loadSets('sets-of-images-40.json');
+    setup.randomSets = loadSets('sets-of-images.json');
     // All images paths, etc.
     setup.imgDb = loadImgDb();
 
