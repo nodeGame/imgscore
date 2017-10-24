@@ -16,9 +16,6 @@ var constants = ngc.constants;
 // its options.
 module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
-    var game;
-    game = {};
-
     // Default Step Rule.
     stager.setDefaultStepRule(stepRules.SOLO);
 
@@ -182,15 +179,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             i = -1, len = ctgOptions.items.length;
             items = new Array(len);
-//             for ( ; ++i < len ; ) {
-//                 items[i] = {
-//                     id: ctgOptions.items[i],
-//                     choices: ctgOptions.choices,
-//                     left: '<span class="dimension">' + 
-//                         ctgOptions.items[i] + ':</span> ' + ctgOptions.left,
-//                     right: ctgOptions.right
-//                 };
-//             }
             for ( ; ++i < len ; ) {
                 items[i] = {
                     id: ctgOptions.items[i],
@@ -397,11 +385,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             
     }
 
-    // Creating stages and steps
-
-    // TODO: At this point, stages must be defined (also steps)
-    // in game.stages. This is quite annoying in the case where
-    // the logic does not follow the same structure as the client.
+    // Creating stages and steps.
 
     // Instructions.
     stager.extendStage('instructions', {
@@ -434,10 +418,4 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         frame: 'thankyou.htm'
     });
 
-    game.plot = stager.getState();
-    game.verbosity = setup.verbosity;
-    game.debug = setup.debug;
-    game.window = setup.window;
-
-    return game;
 };

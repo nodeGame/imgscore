@@ -109,8 +109,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             if (s > 0 && s !== lastDumpSize) {
                 lastDumpSize = s;
                 node.game.memory.save('.db.json', function() {
-                    fs.createReadStream(gameDir + 'data/.db.json')
-                        .pipe(fs.createWriteStream(gameDir + 'data/db.json'));
+                    fs.createReadStream(gameRoom.dataDir + '.db.json')
+                        .pipe(fs.createWriteStream(gameRoom.dataDir + 'db.json'));
                 });
             }
         }, dumpDbInterval);
@@ -281,13 +281,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     });
 
     stager.setOnInit(init);
-
-    return {
-        nodename: 'imgscore',
-        plot: stager.getState(),
-        verbosity: setup.verbosity,
-        debug: setup.debug
-    };
 
     // ## Helper functions.
 
