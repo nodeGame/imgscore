@@ -87,7 +87,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     txt = cacheToSave.join("\n") + "\n";
                     cacheToSave = [];
                     timeOutSave = null;
-                    fs.appendFile(gameDir + 'data/codes.csv', txt,
+                    fs.appendFile(gameRoom.dataDir + 'codes.csv', txt,
                                   function(err) {
                                       if (err) {
                                           console.log(txt);
@@ -368,7 +368,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             row = '"access","exit","WorkerId","hid","AssignmentId",' +
                 '"bonus","Approve","Reject"\n';
         }
-        fs.appendFile(gameDir + 'data/bonus.csv', row, function(err) {
+        fs.appendFile(gameRoom.dataDir + 'bonus.csv', row, function(err) {
             if (err) {
                 console.log(err);
                 console.log(row);
@@ -389,7 +389,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         row  = '"' + (code.id || code.AccessCode || 'NA') + '", "' +
             (code.workerId || 'NA') + '", "' + email + '"\n';
 
-        fs.appendFile(gameDir + 'data/email.csv', row, function(err) {
+        fs.appendFile(gameRoom.dataDir + 'email.csv', row, function(err) {
             if (err) {
                 console.log(err);
                 console.log(row);
