@@ -1,5 +1,6 @@
 {
   "name": "imgscore",
+  "url": "https://github.com/nodeGame/imgscore/",
   "description": "Score images on given dimensions",
   "version": "3.5.0",
   "author": {
