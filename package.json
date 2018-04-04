@@ -4,6 +4,7 @@
   "url": "https://github.com/nodeGame/imgscore/",
   "description": "Score images on given dimensions.",
   "version": "3.5.0",
+  "icon": "photo",
   "author": {
     "name": "Stefano Balietti",
     "email": "s.balietti@neu.edu",
