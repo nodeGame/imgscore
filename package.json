@@ -2,7 +2,7 @@
   "name": "imgscore",
   "abstract": "http://www.pnas.org/content/113/30/8414.abstract",
   "url": "https://github.com/nodeGame/imgscore/",
-  "description": "Score images on given dimensions.",
+  "description": "Give your ratings to images on given dimensions (single-player).",
   "version": "3.5.0",
   "icon": "photo",
   "author": {
