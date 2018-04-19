@@ -1,21 +1,16 @@
 {
   "name": "imgscore",
-<<<<<<< HEAD
   "card": {
     "icon": "photo",
     "publication": "http://www.pnas.org/content/113/30/8414.abstract",
     "url": "https://github.com/nodeGame/imgscore/",
-    "description": "Score images on given dimensions."
+    "description": "Give your ratings to images on given dimensions (single-player)."
   },
   "description": "Score images on given dimensions.",
   "version": "3.5.0", 
-=======
   "abstract": "http://www.pnas.org/content/113/30/8414.abstract",
   "url": "https://github.com/nodeGame/imgscore/",
-  "description": "Give your ratings to images on given dimensions (single-player).",
-  "version": "3.5.0",
   "icon": "photo",
->>>>>>> 5a8661a7602cde18ea54acb53cb1c99c74b9fa4a
   "author": {
     "name": "Stefano Balietti",
     "email": "s.balietti@neu.edu",
