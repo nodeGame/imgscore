@@ -1,10 +1,13 @@
 {
   "name": "imgscore",
-  "abstract": "http://www.pnas.org/content/113/30/8414.abstract",
-  "url": "https://github.com/nodeGame/imgscore/",
+  "card": {
+    "icon": "photo",
+    "publication": "http://www.pnas.org/content/113/30/8414.abstract",
+    "url": "https://github.com/nodeGame/imgscore/",
+    "description": "Score images on given dimensions."
+  },
   "description": "Score images on given dimensions.",
-  "version": "3.5.0",
-  "icon": "photo",
+  "version": "3.5.0", 
   "author": {
     "name": "Stefano Balietti",
     "email": "s.balietti@neu.edu",
