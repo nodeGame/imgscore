@@ -7,7 +7,7 @@
     "description": "Give your ratings to images on given dimensions (single-player)."
   },
   "description": "Score images on given dimensions (works with nodeGame).",
-  "version": "3.5.0", 
+  "version": "1.0.0", 
   "url": "https://github.com/nodeGame/imgscore/",
   "icon": "photo",
   "author": {
