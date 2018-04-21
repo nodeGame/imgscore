@@ -6,9 +6,8 @@
     "url": "https://github.com/nodeGame/imgscore/",
     "description": "Give your ratings to images on given dimensions (single-player)."
   },
-  "description": "Score images on given dimensions.",
+  "description": "Score images on given dimensions (works with nodeGame).",
   "version": "3.5.0", 
-  "abstract": "http://www.pnas.org/content/113/30/8414.abstract",
   "url": "https://github.com/nodeGame/imgscore/",
   "icon": "photo",
   "author": {
@@ -25,6 +24,6 @@
 ,
   "engines": {
     "node": "*",
-    "nodegame": ">= 3.5.0"
+    "nodegame": ">= 4.0.0"
   }
 }
