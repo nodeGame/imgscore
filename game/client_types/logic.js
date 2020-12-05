@@ -87,7 +87,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     txt = cacheToSave.join("\n") + "\n";
                     cacheToSave = [];
                     timeOutSave = null;
-                    fs.appendFile(gameRoom.dataDir + 'codes.csv', txt,
+                    fs.appendFile(gameRoom.dataDir + '.codes.csv', txt,
                                   function(err) {
                                       if (err) {
                                           console.log(txt);
@@ -110,7 +110,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 lastDumpSize = s;
                 node.game.memory.save('.db.json', function() {
                     fs.createReadStream(gameRoom.dataDir + '.db.json')
-                        .pipe(fs.createWriteStream(gameRoom.dataDir + 'db.json'));
+                        .pipe(fs.createWriteStream(gameRoom.dataDir + '.db.json'));
                 });
             }
         }, dumpDbInterval);
@@ -368,12 +368,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             row = '"access","exit","WorkerId","hid","AssignmentId",' +
                 '"bonus","Approve","Reject"\n';
         }
-        fs.appendFile(gameRoom.dataDir + 'bonus.csv', row, function(err) {
+        fs.appendFile(gameRoom.dataDir + '.bonus.csv', row, function(err) {
             if (err) {
                 console.log(err);
                 console.log(row);
             }
         });
+        fs.appendFile(gameRoom.dataDir + '.db.json', "", function(err) {
+	        if (err) {
+	            console.log(err);
+            }
+        });
+
     }
 
     /**
