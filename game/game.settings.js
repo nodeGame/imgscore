@@ -32,7 +32,7 @@ module.exports = {
 
         mainText: '<h4><strong>Score the image above on a scale from ' +
             ratingScale[0] + ' (lowest) to ' +
-            ratingScale[(ratingScale.length-1)] + 
+            ratingScale[(ratingScale.length-1)] +
             ' (highest).</strong></h4>' +
             'Try to consider the value of this image ' +
             '<strong>relative</strong> to the others you have ' +
@@ -47,13 +47,15 @@ module.exports = {
 
         choices: ratingScale,
 
-        shuffleItems: true, 
+        shuffleItems: true,
 
         requiredChoice: true,
 
         left: 'Lowest',
 
         right: 'Highest',
+
+        destroyOnExit: false // we want to keep it between steps.
     },
 
     // Serve sets of images sequentally from set X (it is zero-indexed).

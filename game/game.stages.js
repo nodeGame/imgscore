@@ -30,6 +30,7 @@ module.exports = function(stager, settings) {
         steps: [ 'imgscore', 'continue' ]
     });
 
+    // Cannot be skipped, because it loads the images.
     // stager.skip('instructions');
 
     return stager.getState();
