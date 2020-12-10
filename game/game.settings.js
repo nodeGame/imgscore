@@ -53,9 +53,7 @@ module.exports = {
 
         left: 'Lowest',
 
-        right: 'Highest',
-
-        destroyOnExit: false // we want to keep it between steps.
+        right: 'Highest'
     },
 
     // Serve sets of images sequentally from set X (it is zero-indexed).
