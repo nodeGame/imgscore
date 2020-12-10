@@ -11,7 +11,7 @@ For further information see [https://nodegame.org](https://nodegame.org).
 ## Add Your Images
 
 1. Place your image files in folder: `public/imgscore/`.
-2. Index your images: 
+2. Index your images:
 ```
 cd scripts/
 node index-images.js
@@ -28,12 +28,8 @@ node create-random-sets.js
 
 ## Version
 
-nodeGame >= 4.0
+nodeGame 6.x
 
 ## License
 
 [MIT](LICENSE)
-
-
-
-
