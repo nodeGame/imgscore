@@ -7,10 +7,10 @@
  * ---
  */
 
-var ngc = require('nodegame-client');
-var Stager = ngc.Stager;
-var stepRules = ngc.stepRules;
-var constants = ngc.constants;
+const ngc = require('nodegame-client');
+const Stager = ngc.Stager;
+const stepRules = ngc.stepRules;
+const constants = ngc.constants;
 
 // Export the game-creating function. It needs the name of the treatment and
 // its options.
@@ -120,7 +120,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         var i, len;
 
         console.log('instructions2');
-        
+
         W.hide('instructions');
         W.show("instructions2");
 
@@ -146,7 +146,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         W.hide('instructions2');
         W.show("sample");
-        
+
         next = W.getElementById("doneButton");
         doneTimerSpan = W.getElementById("doneTimer");
 
@@ -183,12 +183,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 items[i] = {
                     id: ctgOptions.items[i],
                     choices: ctgOptions.choices,
-                    left: '<span class="dimension">' + 
+                    left: '<span class="dimension">' +
                         ctgOptions.items[i] + ':</span> '
                 };
             }
             ctgOptions.items = items;
-           
+
             node.game.score = node.widgets.append('ChoiceTableGroup', ctgRoot,
                                                   ctgOptions);
         }
@@ -209,7 +209,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             if (images.noMore) {
                 alert('Unfortunately, all remaning sets have been taken. ' +
                      'You will now be moved to the final stage.');
-                node.game.enoughSets = true;                
+                node.game.enoughSets = true;
                 node.say('enoughSets');
                 return;
             }
@@ -234,7 +234,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             images = node.game.images;
 
             if (counter !== -1 && counter < images.items.length) {
-                obj = node.game.score.getValues({ 
+                obj = node.game.score.getValues({
                     reset: { shuffleItems: true }
                 });
                 if (obj.missValues) {
@@ -256,7 +256,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             }
             else if (counter >= (images.items.length -1)) {
                 W.hide('image_table');
-                node.done();                
+                node.done();
             }
             else {
                 displayImage();
@@ -313,7 +313,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                 node.done();
             };
             W.getElementById('no').onclick = function() {
-                node.game.enoughSets = true;                
+                node.game.enoughSets = true;
                 node.say('enoughSets');
             };
         }
@@ -382,7 +382,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Was a reconnection.
         if (!node.game.enoughSets) node.say('enoughSets');
-            
+
     }
 
     // Creating stages and steps.
