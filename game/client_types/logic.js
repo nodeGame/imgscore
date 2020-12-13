@@ -82,7 +82,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                              (p.userAgent ? '"' + p.userAgent + '"' : 'NA'));
 
             if (!timeOutSave) {
-                timeOutSave = setTimeout(function() {
+                timeOutSave = node.timer.setTimeout(function() {
                     let txt;
                     txt = cacheToSave.join("\n") + "\n";
                     cacheToSave = [];
