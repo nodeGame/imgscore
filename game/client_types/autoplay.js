@@ -36,7 +36,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             id = stepObj.id
 
             if (id === 'sample') {
-                node.timer.randomDone(10000);                
+                node.timer.randomDone(10000);
             }
 
             else if (id === 'continue') {
@@ -48,8 +48,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             else if (id === 'imgscore') {
                 delay = 2000;
                 i = -1, len = node.game.settings.NIMAGES;
-                for ( ; ++i < len ; ) {   
-                    setTimeout(function() {
+                for ( ; ++i < len ; ) {
+                    node.timer.setTimeout(function() {
                         // because setValues is buggy.
                         // if (node.player.stage.step === 2) return;
                         node.game.score.setValues();
@@ -69,7 +69,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     // Kill phantoms in test mode.
                     console.log('PHANTOMJS EXITING');
                 });
-                
+
             }
             else {
               node.timer.randomDone(2000);
