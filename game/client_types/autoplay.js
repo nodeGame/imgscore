@@ -14,9 +14,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     let channel = gameRoom.channel;
     let node = gameRoom.node;
-
-    var stager;
-
     let game = gameRoom.getClientType('player');
     game.nodename = 'autoplay';
 
@@ -36,7 +33,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             id = stepObj.id
 
             if (id === 'sample') {
-                node.timer.randomDone(10000);
+                node.timer.random(10000).done();
             }
 
             else if (id === 'continue') {
@@ -72,7 +69,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
             }
             else {
-              node.timer.randomDone(2000);
+              node.timer.random(2000).done();
             }
         };
         return o;
