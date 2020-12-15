@@ -8,16 +8,13 @@
  * http://www.nodegame.org
  */
 
-var ngc = require('nodegame-client');
+const ngc = require('nodegame-client');
 
 module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
-    var channel = gameRoom.channel;
-    var node = gameRoom.node;
-
-    var game, stager;
-
-    game = gameRoom.getClientType('player');
+    let channel = gameRoom.channel;
+    let node = gameRoom.node;
+    let game = gameRoom.getClientType('player');
     game.nodename = 'autoplay';
 
     stager = ngc.getStager(game.plot);
@@ -36,7 +33,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             id = stepObj.id
 
             if (id === 'sample') {
-                node.timer.randomDone(10000);                
+                node.timer.random(10000).done();
             }
 
             else if (id === 'continue') {
@@ -48,8 +45,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             else if (id === 'imgscore') {
                 delay = 2000;
                 i = -1, len = node.game.settings.NIMAGES;
-                for ( ; ++i < len ; ) {   
-                    setTimeout(function() {
+                for ( ; ++i < len ; ) {
+                    node.timer.setTimeout(function() {
                         // because setValues is buggy.
                         // if (node.player.stage.step === 2) return;
                         node.game.score.setValues();
@@ -69,10 +66,10 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     // Kill phantoms in test mode.
                     console.log('PHANTOMJS EXITING');
                 });
-                
+
             }
             else {
-              node.timer.randomDone(2000);
+              node.timer.random(2000).done();
             }
         };
         return o;

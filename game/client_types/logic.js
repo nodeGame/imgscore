@@ -8,26 +8,26 @@
  * ---
  */
 
-var path = require('path');
-var fs = require('fs');
-var J = require('JSUS').JSUS;
-var ngc = require('nodegame-client');
-var NDDB = ngc.NDDB;
-var GameStage = ngc.GameStage;
-var stepRules = ngc.stepRules;
+const path = require('path');
+const fs = require('fs');
+const J = require('JSUS').JSUS;
+const ngc = require('nodegame-client');
+const NDDB = ngc.NDDB;
+const GameStage = ngc.GameStage;
+const stepRules = ngc.stepRules;
 
 module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
-    var used = {};
+    let used = {};
 
-    var node = gameRoom.node;
-    var channel = gameRoom.channel;
+    let node = gameRoom.node;
+    let channel = gameRoom.channel;
 
     // Default Step Rule.
     stager.setDefaultStepRule(stepRules.SOLO);
 
     // 1. Setting up database connection.
 
-    var gameDir, sets, randomSets, imgDb;
+    let gameDir, sets, randomSets, imgDb;
 
     gameDir = channel.getGameDir();
 
@@ -42,28 +42,28 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
     // Every new connecting player will receive a new set of images, indexed
     // by counter; also on(NEXT) a new set will be sent.
-    var counter = settings.SET_COUNTER;
+    let counter = settings.SET_COUNTER;
 
     // Sets that are not available given previously scored sets.
     // Increases as players rate new sets.
     // { id: { set1, set2, set3 ... } }
-    var notAvailableSets = {};
+    let notAvailableSets = {};
 
     // Skipped sets are those that a player could not use,
     // because in conflict (containing images already used
     // in another sets). We try to give them to the NEXT request.
-    var skippedSets = [];
+    let skippedSets = [];
 
     // 3. Game stuff.
 
     // State of all players.
-    var gameState = {};
+    let gameState = {};
 
     // Size of the last memory dump (size always increasing).
-    var lastDumpSize;
+    let lastDumpSize;
 
     // Dump db every X milliseconds (if there are changes).
-    var dumpDbInterval;
+    let dumpDbInterval;
     dumpDbInterval = 30000;
 
     // Functions.
@@ -72,8 +72,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
     function init() {
 
         // Saves time, id and worker id of connected clients (with timeout).
-        var saveWhoConnected;
-        var cacheToSave, timeOutSave;
+        let saveWhoConnected;
+        let cacheToSave, timeOutSave;
         cacheToSave = [];
         saveWhoConnected = function(p) {
 
@@ -82,8 +82,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                              (p.userAgent ? '"' + p.userAgent + '"' : 'NA'));
 
             if (!timeOutSave) {
-                timeOutSave = setTimeout(function() {
-                    var txt;
+                timeOutSave = node.timer.setTimeout(function() {
+                    let txt;
                     txt = cacheToSave.join("\n") + "\n";
                     cacheToSave = [];
                     timeOutSave = null;
@@ -104,7 +104,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Save data with timeout.
         setInterval(function() {
-            var s;
+            let s;
             s = node.game.memory.size();
             if (s > 0 && s !== lastDumpSize) {
                 lastDumpSize = s;
@@ -124,7 +124,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         });
 
         node.on.preconnect(function(p) {
-            var pState;
+            let pState;
 
             console.log('One player reconnected ', p.id);
 
@@ -140,7 +140,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Sends the images (reply to a GET request from client).
         node.on('get.NEXT', function(msg) {
-            var set, origSet, state, setId;
+            let set, origSet, state, setId;
 
             console.log('***** Received NEXT ******');
             state = gameState[msg.from];
@@ -221,7 +221,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Client has categorized an image.
         node.on.data('score',function(msg) {
-            var state, metadata, obj;
+            let state, metadata, obj;
 
             obj = msg.data;
             if (!obj) return;
@@ -259,7 +259,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         // Save Email.
         node.on.data('email', function(msg) {
-            var id, code;
+            let id, code;
             id = msg.from;
 
             code = channel.registry.getClient(id);
@@ -292,7 +292,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
      * @param {string} pId The id of the player
      */
     function goodbye(pId) {
-        var bonusStr, bonus, bonusAndFee, code, state;
+        let bonusStr, bonus, bonusAndFee, code, state;
 
         state = gameState[pId];
         code = channel.registry.getClient(pId);
@@ -391,7 +391,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
      * @param {object} code The client object from the registry
      */
     function appendToEmailFile(email, code) {
-        var row;
+        let row;
         row  = '"' + (code.id || code.AccessCode || 'NA') + '", "' +
             (code.workerId || 'NA') + '", "' + email + '"\n';
 
@@ -412,7 +412,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
      *    if there are no more sets available.
      */
     function getNextSetId(pid) {
-        var setId, moreLoops, skippedIdx, wasSkipped;
+        let setId, moreLoops, skippedIdx, wasSkipped;
         moreLoops = true;
         skippedIdx = -1;
         while (moreLoops) {
